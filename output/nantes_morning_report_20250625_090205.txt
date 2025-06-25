@@ -1,0 +1,25 @@
+🌅 MORGENBERICHT NANTES (44000)
+==================================================
+📅 Datum: 25.06.2025 09:02
+📍 Standort: Nantes, Loire-Atlantique (44)
+
+🌡️ AKTUELLE WETTERLAGE:
+   Temperatur: 20.4°C
+   Wetterlage: {'icon': 'p3j', 'desc': 'Très nuageux'}
+   Datenquelle: meteofrance-api
+
+⚡ GEWITTERANALYSE:
+   No thunderstorm conditions detected (meteofrance-api)
+
+✅ Keine aktiven Wetterwarnungen
+
+💡 EMPFEHLUNGEN:
+   - Gewitter möglich, Indoor-Aktivitäten bevorzugen
+   - Wetterlage regelmäßig überprüfen
+
+🔗 LINKS:
+   - Météo-France: https://www.meteofrance.com
+   - Vigilance: https://vigilance.meteofrance.com
+
+📱 Bericht generiert von GR20 Weather Autobot
+==================================================

@@ -1,0 +1,29 @@
+Dateiname: docs/messaging_architecture_gr20.txt
+
+Titel: Nachrichtenarchitektur GR20 – Wetterberichte über Satellit
+
+Ziel:
+Empfang von Wetterwarnungen während der GR20-Wanderung – auch ohne Mobilfunknetz.
+
+Systemübersicht:
+Wetterserver (Python-Skript, z. B. Raspberry Pi Zuhause oder anderer Internetserver)
+→ sendet E-Mails über SMTP (Google Mail mit App-Passwort)
+→ an eine dedizierte E-Mail-Adresse von SOTAmāt
+→ SOTAmāt empfängt die Mail, verarbeitet sie
+→ überträgt die Nachricht via Iridium-Satellitennetz
+→ an den Garmin inReach Messenger (Textempfang via Satellit)
+
+Bedingungen:
+- Keine Emojis oder Links in der Nachricht (max. 160 Zeichen, reiner Text)
+- Versandzeiten: morgens (4:30), abends (19:00), tagsüber bei Bedarf (max. 3x)
+- Der Server muss dauerhaft online sein (oder über Wake-on-LAN/LAN Trigger aktiviert werden)
+
+Konfigurationsabhängigkeiten:
+- GMAIL_APP_PW als Umgebungsvariable muss gesetzt sein
+- SMTP-Login erfolgt über das Google-App-Passwort
+- Zieladresse für SOTAmāt muss hinterlegt sein
+- Regeln zur Entscheidung, ob eine Nachricht verschickt wird, in config.yaml definiert
+
+Tests:
+- Lokaler Test möglich mit SMTP-Debug-Modus oder Mailtrap.io
+- End-zu-End-Test erfordert SOTAmāt-Adresse und aktiven Garmin-Messenger

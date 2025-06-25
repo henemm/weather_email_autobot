@@ -1,0 +1,49 @@
+{
+  "openmeteo": {
+    "status": "success",
+    "data": {
+      "latitude": 41.6875,
+      "longitude": 9.3125,
+      "generationtime_ms": 0.07033348083496094,
+      "utc_offset_seconds": 7200,
+      "timezone": "Europe/Paris",
+      "timezone_abbreviation": "GMT+2",
+      "elevation": 304.0,
+      "current_units": {
+        "time": "iso8601",
+        "interval": "seconds",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "apparent_temperature": "°C",
+        "precipitation": "mm",
+        "weather_code": "wmo code",
+        "wind_speed_10m": "km/h",
+        "wind_direction_10m": "°"
+      },
+      "current": {
+        "time": "2025-06-22T18:30",
+        "interval": 900,
+        "temperature_2m": 25.2,
+        "relative_humidity_2m": 67,
+        "apparent_temperature": 27.5,
+        "precipitation": 0.0,
+        "weather_code": 3,
+        "wind_speed_10m": 6.4,
+        "wind_direction_10m": 117
+      }
+    },
+    "timestamp": "2025-06-22T18:44:33.646307"
+  },
+  "wcs": {
+    "status": "error",
+    "error": "wcs_error",
+    "message": "HTTP error 404: {\"code\":\"404\",\"type\":\"Status report\",\"message\":\"Runtime Error\",\"description\":\"No matching resource found for given API Request\"}",
+    "timestamp": "2025-06-22T18:44:34.039572"
+  },
+  "vigilance": {
+    "status": "error",
+    "error": "vigilance_error",
+    "message": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+    "timestamp": "2025-06-22T18:44:34.270282"
+  }
+}

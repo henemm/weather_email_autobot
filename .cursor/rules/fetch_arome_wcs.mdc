@@ -1,0 +1,37 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+
+## Umsetzung
+
+- Implementiere ein Modul `src/wetter/fetch_arome_wcs.py`
+- Nutze `requests` oder `httpx` für HTTP-Zugriffe
+- Lade das Ergebnis (NetCDF-Datei) temporär und extrahiere daraus:
+  - Gitterdaten (`numpy`)
+  - Zeit- und Raumbezug (z. B. mit `xarray`)
+
+---
+
+## Fehlerverhalten
+
+- Kein Token: `RuntimeError`
+- HTTP-Code ≠ 200 → Exception mit Statuscode und Antwortinhalt
+- Leere Daten → Rückgabe `None`
+
+---
+
+## Ablageort
+
+- Implementierung: `src/wetter/fetch_arome_wcs.py`
+- Tests: `tests/test_arome.py`
+
+---
+
+## Hinweise
+
+- Verwende `python-dotenv` zur Token-Initialisierung
+- Unterstützte Variablen: siehe `GetCapabilities_WCS.txt`
+- Ausgabe: temperatur- oder windbezogene Gitterwerte (als NumPy-Array oder ähnliches)

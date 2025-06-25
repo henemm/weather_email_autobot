@@ -1,0 +1,38 @@
+{
+  "location": "Pouillac",
+  "coordinates": [
+    44.857,
+    -0.178
+  ],
+  "target_timestamp": "2025-06-25T15:00:00Z",
+  "target_time_cest": "2025-06-25 17:00 CEST",
+  "analysis_timestamp": "2025-06-24T17:57:13.864405",
+  "risks": {
+    "AROME_HR": {
+      "CAPE": 171.337890625,
+      "CAPE_risk": "niedrig",
+      "SHEAR": null,
+      "SHEAR_risk": "niedrig",
+      "risk": "niedrig"
+    },
+    "PIAF_NOWCAST": {
+      "rainrate": 0.0,
+      "risk": "niedrig"
+    },
+    "OPENMETEO_GLOBAL": {
+      "temp": null,
+      "wind_speed": null,
+      "wind_direction": null,
+      "rain": null,
+      "humidity": null,
+      "risk": "niedrig"
+    }
+  },
+  "overall_risk": "niedrig",
+  "api_status": {
+    "AROME_HR": "available",
+    "AROME_HR_NOWCAST": "available",
+    "PIAF_NOWCAST": "available",
+    "OPENMETEO_GLOBAL": "not_available"
+  }
+}

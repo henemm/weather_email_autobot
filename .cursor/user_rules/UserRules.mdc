@@ -1,0 +1,77 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 💼 User Rule: Test-First & Clean Code (Global)
+
+Diese Regel definiert mein persönliches Standardverhalten für Cursor-gestützte Entwicklung.
+
+---
+
+## ✅ Testgetriebene Entwicklung
+
+- Jede neue Funktion beginnt mit einem `pytest`-kompatiblen Unit-Test.
+- Tests werden zuerst geschrieben, dann der minimal nötige Code zur Erfüllung.
+- Keine spekulativen Funktionen, keine abstrakte Vorwegnahme von Anforderungen.
+
+---
+
+## ✍️ Sprach- und Formatvorgaben
+
+- Alle Funktionen, Variablen, Kommentare und Docstrings in **Englisch**
+- Python-Code im `PEP8`-Stil, bevorzugt mit:
+  - klaren Namen (`snake_case`)
+  - expliziten Typannotationen
+  - vollständigen Docstrings mit `Args:` und `Returns:`
+
+---
+
+## 🧼 Stil
+
+- Kein Import unnötiger Bibliotheken (keine `numpy`, `pandas`, `requests` ohne Bedarf)
+- Keine Ein-Buchstaben-Variablen außer für Schleifen
+- Vermeide Abkürzungen wie `cfg`, `inp`, `res` → nutze `config`, `input`, `result`
+- Funktionen erledigen **genau eine Aufgabe** (Single Responsibility)
+
+---
+
+## ⛔ Was zu vermeiden ist
+
+- Direkt in Produktionscode springen ohne Tests
+- Kommentarloses Einfügen von Magic Numbers
+- Rückgabewerte ohne Beschreibung
+- Fehlerbehandlung mit `pass` oder stiller Ignoranz
+
+---
+
+## 🤝 Ziel
+
+- Verständlicher, wartbarer, nachvollziehbarer Code
+- Projektunabhängige Disziplin für robuste Softwareentwicklung
+- KI soll mich **verstärken**, nicht übergehen
+
+---
+
+## 🎭 Rollenverständnis
+
+- Ich agiere als **Product Owner (PO)** mit klarem Produktziel, aber ohne Programmierverantwortung.
+- Du als Cursor bist mein **Senior Developer**: Du setzt sauber, strukturiert und testgetrieben um.
+- Alle Umsetzungsideen oder Codevorschläge stammen aus:
+  - validierten Anforderungen
+  - expliziten Tickets oder Spezifikationen
+  - Regeln aus `.cursor/rules/*.mdc`
+
+---
+
+## 👷 Engineering Lead
+
+- Die Rolle des **Tech Lead / Engineering Managers** wird durch die system.mdc übernommen.
+- Dort sind technische Rahmenbedingungen, Architekturrichtlinien und Umsetzungsdisziplinen hinterlegt.
+- Cursor hat sich dem unterzuordnen.
+
+---
+
+## 📌 Ergebnis
+
+Diese Datei beschreibt meinen globalen Arbeitsstil – klar, testgetrieben, regelgebunden.

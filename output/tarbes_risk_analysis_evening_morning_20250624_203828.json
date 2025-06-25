@@ -1,0 +1,319 @@
+{
+  "location": "Tarbes, France",
+  "coordinates": [
+    43.2333,
+    0.0833
+  ],
+  "test_timestamp": "2025-06-24T20:32:58.457230+02:00",
+  "time_points": [
+    {
+      "timestamp": "2025-06-24T15:00:00Z",
+      "apis": {
+        "AROME_HR": {
+          "cape_j_kg": 462.740956664,
+          "temperature_c": 34.593261719,
+          "precipitation_mmh": null,
+          "time_diff_hours": null
+        },
+        "AROME_HR_NOWCAST": {
+          "cape_j_kg": 454.008579254,
+          "temperature_c": 34.035075000000006,
+          "time_diff_hours": null
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "time_diff_hours": null
+        },
+        "OPENMETEO_GLOBAL": {
+          "error": "No data available"
+        }
+      },
+      "thunderstorm_risk": {
+        "risk_score": 0.35,
+        "risk_level": "moderat",
+        "raw_score": 7,
+        "factors": {
+          "CAPE": {
+            "value": 462.740956664,
+            "risk": 1,
+            "weight": 3
+          },
+          "Wind_Gusts": {
+            "value": null,
+            "risk": 0,
+            "weight": 2
+          },
+          "Precipitation": {
+            "value": null,
+            "risk": 0,
+            "weight": 1
+          },
+          "Temperature": {
+            "value": 34.593261719,
+            "risk": 4,
+            "weight": 1
+          }
+        },
+        "note": "SHEAR data not available - using CAPE, wind gusts, precipitation, and temperature"
+      }
+    },
+    {
+      "timestamp": "2025-06-24T18:00:00Z",
+      "apis": {
+        "AROME_HR": {
+          "cape_j_kg": 634.770014329,
+          "temperature_c": 21.784535027000004,
+          "precipitation_mmh": 0.0,
+          "time_diff_hours": null
+        },
+        "AROME_HR_NOWCAST": {
+          "cape_j_kg": 645.52295953,
+          "temperature_c": 37.67285000000004,
+          "time_diff_hours": null
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "time_diff_hours": null
+        },
+        "OPENMETEO_GLOBAL": {
+          "error": "No data available"
+        }
+      },
+      "thunderstorm_risk": {
+        "risk_score": 0.45,
+        "risk_level": "moderat",
+        "raw_score": 9,
+        "factors": {
+          "CAPE": {
+            "value": 634.770014329,
+            "risk": 2,
+            "weight": 3
+          },
+          "Wind_Gusts": {
+            "value": null,
+            "risk": 0,
+            "weight": 2
+          },
+          "Precipitation": {
+            "value": 0.0,
+            "risk": 1,
+            "weight": 1
+          },
+          "Temperature": {
+            "value": 21.784535027000004,
+            "risk": 2,
+            "weight": 1
+          }
+        },
+        "note": "SHEAR data not available - using CAPE, wind gusts, precipitation, and temperature"
+      }
+    },
+    {
+      "timestamp": "2025-06-25T06:00:00Z",
+      "apis": {
+        "AROME_HR": {
+          "cape_j_kg": 0.97699626167,
+          "temperature_c": 23.510287481000034,
+          "precipitation_mmh": 0.0,
+          "time_diff_hours": null
+        },
+        "AROME_HR_NOWCAST": {
+          "cape_j_kg": null,
+          "temperature_c": null,
+          "time_diff_hours": null
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "time_diff_hours": null
+        },
+        "OPENMETEO_GLOBAL": {
+          "error": "No data available"
+        }
+      },
+      "thunderstorm_risk": {
+        "risk_score": 0.3,
+        "risk_level": "moderat",
+        "raw_score": 6,
+        "factors": {
+          "CAPE": {
+            "value": 0.97699626167,
+            "risk": 1,
+            "weight": 3
+          },
+          "Wind_Gusts": {
+            "value": null,
+            "risk": 0,
+            "weight": 2
+          },
+          "Precipitation": {
+            "value": 0.0,
+            "risk": 1,
+            "weight": 1
+          },
+          "Temperature": {
+            "value": 23.510287481000034,
+            "risk": 2,
+            "weight": 1
+          }
+        },
+        "note": "SHEAR data not available - using CAPE, wind gusts, precipitation, and temperature"
+      }
+    },
+    {
+      "timestamp": "2025-06-25T09:00:00Z",
+      "apis": {
+        "AROME_HR": {
+          "cape_j_kg": 1.28173828125,
+          "temperature_c": 40.965524292,
+          "precipitation_mmh": 0.0,
+          "time_diff_hours": null
+        },
+        "AROME_HR_NOWCAST": {
+          "cape_j_kg": null,
+          "temperature_c": null,
+          "time_diff_hours": null
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "time_diff_hours": null
+        },
+        "OPENMETEO_GLOBAL": {
+          "error": "No data available"
+        }
+      },
+      "thunderstorm_risk": {
+        "risk_score": 0.4,
+        "risk_level": "moderat",
+        "raw_score": 8,
+        "factors": {
+          "CAPE": {
+            "value": 1.28173828125,
+            "risk": 1,
+            "weight": 3
+          },
+          "Wind_Gusts": {
+            "value": null,
+            "risk": 0,
+            "weight": 2
+          },
+          "Precipitation": {
+            "value": 0.0,
+            "risk": 1,
+            "weight": 1
+          },
+          "Temperature": {
+            "value": 40.965524292,
+            "risk": 4,
+            "weight": 1
+          }
+        },
+        "note": "SHEAR data not available - using CAPE, wind gusts, precipitation, and temperature"
+      }
+    },
+    {
+      "timestamp": "2025-06-25T12:00:00Z",
+      "apis": {
+        "AROME_HR": {
+          "cape_j_kg": 109.6875,
+          "temperature_c": -27.181549999999987,
+          "precipitation_mmh": 0.0,
+          "time_diff_hours": null
+        },
+        "AROME_HR_NOWCAST": {
+          "cape_j_kg": null,
+          "temperature_c": null,
+          "time_diff_hours": null
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "time_diff_hours": null
+        },
+        "OPENMETEO_GLOBAL": {
+          "error": "No data available"
+        }
+      },
+      "thunderstorm_risk": {
+        "risk_score": 0.25,
+        "risk_level": "moderat",
+        "raw_score": 5,
+        "factors": {
+          "CAPE": {
+            "value": 109.6875,
+            "risk": 1,
+            "weight": 3
+          },
+          "Wind_Gusts": {
+            "value": null,
+            "risk": 0,
+            "weight": 2
+          },
+          "Precipitation": {
+            "value": 0.0,
+            "risk": 1,
+            "weight": 1
+          },
+          "Temperature": {
+            "value": -27.181549999999987,
+            "risk": 1,
+            "weight": 1
+          }
+        },
+        "note": "SHEAR data not available - using CAPE, wind gusts, precipitation, and temperature"
+      }
+    },
+    {
+      "timestamp": "2025-06-25T15:00:00Z",
+      "apis": {
+        "AROME_HR": {
+          "cape_j_kg": 348.081812263,
+          "temperature_c": -23.96320683799999,
+          "precipitation_mmh": 0.0,
+          "time_diff_hours": null
+        },
+        "AROME_HR_NOWCAST": {
+          "cape_j_kg": null,
+          "temperature_c": null,
+          "time_diff_hours": null
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "time_diff_hours": null
+        },
+        "OPENMETEO_GLOBAL": {
+          "error": "No data available"
+        }
+      },
+      "thunderstorm_risk": {
+        "risk_score": 0.25,
+        "risk_level": "moderat",
+        "raw_score": 5,
+        "factors": {
+          "CAPE": {
+            "value": 348.081812263,
+            "risk": 1,
+            "weight": 3
+          },
+          "Wind_Gusts": {
+            "value": null,
+            "risk": 0,
+            "weight": 2
+          },
+          "Precipitation": {
+            "value": 0.0,
+            "risk": 1,
+            "weight": 1
+          },
+          "Temperature": {
+            "value": -23.96320683799999,
+            "risk": 1,
+            "weight": 1
+          }
+        },
+        "note": "SHEAR data not available - using CAPE, wind gusts, precipitation, and temperature"
+      }
+    }
+  ],
+  "vigilance_warnings": {
+    "error": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+  }
+}

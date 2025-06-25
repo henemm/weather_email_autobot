@@ -1,0 +1,29 @@
+# Ziel
+Die Wetterdaten aus der AROME-WCS-API sollen vollständig ausgewertet und numerisch nutzbar gemacht werden, insbesondere die Temperatur (in °C).
+
+# Problem
+Das aktuelle Parsing der WCS-Response funktioniert technisch (kein HTTP-Fehler), aber der Wert für Temperaturdaten (z. B. über GML-Coverage) wird nicht korrekt extrahiert oder ist unbrauchbar formatiert.
+
+# Anforderungen
+- Das GML-Parsing (aus WCS-Responses) muss:
+  - Die numerischen Werte (z. B. Temperatur) korrekt aus der GML-Struktur extrahieren.
+  - Mit optionalen BoundingBox-Einschränkungen arbeiten können (z. B. „nur Conca“).
+  - Alle Einheiten korrekt interpretieren (°C, mm/h etc.).
+  - Bei Fehlschlägen verständliche Fehlermeldungen liefern.
+
+# Datenquelle
+WCS-Response (GML/XML) von z. B.:
+https://public-api.meteofrance.fr/public/arome/1.0/wcs/MF-NWP-HIGHRES-AROME-001-FRANCE-WCS
+
+# Technische Hinweise
+- Das Format ist GML-basiert und enthält CoverageDescriptions.
+- Die relevanten Informationen befinden sich meist in `gml:rangeSet`, ggf. kodiert als float-Array oder Textblock.
+- Die BoundingBox wird ggf. über `gml:domainSet/gml:RectifiedGrid/gml:limits` und `gml:offsetVector` definiert.
+
+# Testkriterien
+- Die extrahierte Temperatur für Koordinaten rund um Bustanico/Conca ist numerisch lesbar.
+- Fehler bei leerem Dataset oder falscher Koordinate sind verständlich.
+- Ein einfacher CLI-Test (`scripts/demo_parse_wcs_response.py`) validiert die Extraktion exemplarisch.
+
+# Status
+Dieses Ticket ist eine Fortsetzung der produktiv gesetzten Architektur für Token und WCS-Nutzung. Alle Zugriffsvoraussetzungen sind erfüllt. Es geht ausschließlich um die Verarbeitung des WCS-Antwortformats.

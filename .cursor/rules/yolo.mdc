@@ -1,0 +1,26 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# YOLO-Modus: erlaubte Befehle
+
+## ✅ Erlaubt:
+- pytest
+- black .
+- git status
+- mkdir
+- tree
+- echo
+- cat
+- cp
+- mv
+- pip install
+- curl
+- python
+
+## ❌ Verboten:
+- rm
+- push
+- wget
+- systemctl

@@ -1,0 +1,48 @@
+Datei: docs/oauth2_strategy.txt
+Titel: OAuth2-Strategie für Météo-France API
+
+Ziel:
+Dokumentation der technischen Architektur für die Authentifizierung und Token-Verwaltung beim Zugriff auf die Météo-France API über OAuth2.
+
+---
+
+1. Ausgangslage:
+Die Météo-France API unterstützt die Authentifizierung via OAuth2 (Client Credentials Flow).
+Tokens sind ca. 1 Stunde gültig und müssen danach automatisch erneuert werden.
+Tokens werden beim Zugriff auf mehrere APIs (z. B. AROME WCS, Instability, Thunder, Vigilance) gemeinsam genutzt.
+
+2. Anforderungen laut offizieller Dokumentation:
+- Token-Generierung über POST auf: https://portail-api.meteofrance.fr/token
+- Header: Authorization: Basic <base64(client_id:client_secret)>
+- Body: grant_type=client_credentials
+- Token muss regelmäßig erneuert werden (z. B. bei 401-Fehlern)
+- Token erlaubt Zugriff auf alle abonnierten APIs
+
+3. Umsetzung im Projekt:
+✓ src/auth/meteo_token_provider.py implementiert TokenProvider-Klasse:
+  - Nutzt METEOFRANCE_CLIENT_ID und METEOFRANCE_CLIENT_SECRET aus der Umgebung
+  - Baut den Authorization-Header dynamisch in Base64
+  - Verwaltet den Token zentral (Singleton)
+  - Holt automatisch einen neuen Token bei Ablauf oder 401-Fehler
+  - Verwendet `requests.Session()` zur Wiederverwendung von Verbindungen
+
+✓ TokenProvider wird von allen API-Modulen verwendet
+✓ Fehlerbehandlung und Retry-Logik bei Token-Fehlern sind implementiert
+
+4. Vorteile der Lösung:
+✓ Konform zur offiziellen Météo-France OAuth2-Dokumentation
+✓ Kein manuelles Token-Handling mehr nötig
+✓ Reduziert Risiko für „Invalid Token“-Fehler
+✓ Trägt zu stabiler Produktion und robuster Testbarkeit bei
+
+5. Teststrategie:
+✓ Eigene Live-Tests testen Tokenabruf mit echten Credentials
+✓ Token wird korrekt abgerufen, gespeichert und verwendet
+✓ Fehlerfälle (z. B. abgelaufener Token) werden abgedeckt
+
+6. Nächste Schritte:
+[optional] Integration in andere Module prüfen
+[optional] Explicite Dokumentation für Nutzer in README ergänzen
+
+Fazit:
+Das Projekt folgt exakt dem empfohlenen Sicherheits- und Zugriffsmuster von Météo-France und ist für kontinuierlichen API-Zugriff ausgelegt.

@@ -1,0 +1,25 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# ⚙️ Permissions Rule: Auto-run safe code blocks
+
+## Ziel
+Reduziere Rückfragen durch Cursor IDE bei ungefährlichen, bekannten Mustern wie `python -c` oder `pytest`-Aufrufen.
+
+## Verhalten
+- Cursor darf Skripte mit `python -m`, `pytest`, `python -c` ohne Rückfrage ausführen
+- Nur wenn Datei in `scripts/` oder `tests/` liegt
+- Nur wenn keine `os.remove`, `shutil.rmtree`, `subprocess`-Aufrufe enthalten sind
+
+## Beispielkonfiguration (pseudocode)
+```yaml
+auto_execute:
+  enabled: true
+  allow_if:
+    - file.startswith("scripts/")
+    - file.startswith("tests/")
+    - "import os" not in code
+    - "subprocess" not in code
+    - "rm -rf" not in code

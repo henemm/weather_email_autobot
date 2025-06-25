@@ -1,0 +1,41 @@
+Title: Live-OAuth2‑Token für Meteo‑France optimal nutzen
+
+Problem:
+- Momentan wird kein echter OAuth2‑Client‑Credentials‑Flow genutzt: Wir arbeiten manuell mit fest kodierten Tokens.
+- Diese Tokens laufen nach ca. 1 Stunde ab oder sind API-spezifisch und ungültig, sobald erneuert.
+
+Lösung:
+- Implementiere den vollständigen OAuth2 Client Credentials Flow gemäß offizieller Dokumentation.
+  - POST zu: https://portail-api.meteofrance.fr/token
+    - Header: Authorization: Basic <APPLICATION_ID>
+    - Body: grant_type=client_credentials
+  - Antwort: JSON mit “access_token” und Ablaufzeit
+  - Token innerhalb unserer MeteoTokenProvider automatisch cachen und bei Bedarf erneuern
+
+- Benötigte Umgebungsvariablen:
+  METEOFRANCE_APPLICATION_ID=<dein_basic_auth_token>
+
+- Beispielcode (in TokenProvider integriert):
+  client = BackendApplicationClient(client_id=APPLICATION_ID)
+  oauth = OAuth2Session(client=client)
+  token = oauth.fetch_token(
+      token_url="https://portail-api.meteofrance.fr/token",
+      client_id=APPLICATION_ID,
+      client_secret=None  # falls nötig
+  )
+  # Automatisch gemanagt: Token mit Ablaufzeit und automatischer Erneuerung bei Fehlern
+
+- Integration in bestehende TokenProvider-Klasse:
+  - Wenn Ablauf erreicht oder HTTP 401 (invalid token): erneuter Token-Request
+  - Session mit retry/Backoff (requests-oauthlib oder Requests Session mit Adapter)
+
+Teststrategie:
+- Demo-Skript scripts/demo_live_oauth2_token_provider.py zeigt Flow ohne manuelles Token
+- Live-Tests in tests/test_live_oauth2_token_flow.py:
+  - Ohne APPLICATION_ID → Test überspringen
+  - Mit gültigem APPLICATION_ID → WMS/WCS-Call funktioniert mit HTTP 200
+
+Nächste Schritte:
+- .env-Datei mit APPLICATION_ID pflegen
+- Token-Provider in alle API-Clients integrieren
+- Deployment-Dokumentation aktualisieren (FAQ, Readme)

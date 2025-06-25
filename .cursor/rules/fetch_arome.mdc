@@ -1,0 +1,66 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Rule: fetch_arome – Abruf von Wetterdaten (AROME HD)
+
+## Ziel
+Implementiere die Funktion `fetch_arome(lat: float, lon: float) -> WeatherData` im Modul `src/wetter/fetch_arome.py`.
+
+---
+
+## Authentifizierung
+
+- Lade den OAuth2-Token aus `METEOFRANCE_AROME_TOKEN` (via `os.getenv`)
+- Übergib ihn im Header `Authorization: Bearer <token>`
+
+---
+
+## API-Abruf
+
+- Endpoint: `https://portail-api.meteofrance.fr/forecast/arome_hd`
+- Parameter: `lat`, `lon`
+- Zeitraum: 48 Stunden im 1-Stunden-Raster
+- Alle Zeitstempel in UTC
+- Response-Format: JSON
+
+---
+
+## Rückgabe
+
+- Liefere ein Objekt vom Typ `WeatherData` (aus `model/datatypes.py`)
+- Befülle `.points` mit Objekten vom Typ `WeatherPoint`
+- Felder je Punkt:
+  - `time: datetime`
+  - `latitude, longitude, elevation: float`
+  - `temperature, feels_like: float`
+  - `precipitation: float` (mm)
+  - `thunderstorm_probability: float` (falls direkt verfügbar)
+  - `wind_speed: float` (km/h), `wind_direction: float` (°)
+  - `cloud_cover: float` (%)
+  - `cape, shear: Optional[float]`
+
+---
+
+## Fehlerverhalten
+
+- Fehlender Token: `RuntimeError("Fehlender METEOFRANCE_AROME_TOKEN")`
+- HTTP-Fehler: Werfe `requests.HTTPError` mit Status und Inhalt
+- Leere Daten: Rückgabe eines leeren `WeatherData`-Objekts (kein Fehler)
+
+---
+
+## Einschränkungen
+
+- Kein File-Output
+- Kein Logging
+- Keine Benutzerinteraktion
+- Nur reine Funktionalität
+
+---
+
+## Testbarkeit
+
+- Für `tests/test_arome.py` vorbereiten
+- Datenstruktur muss mit bestehender `analyse_weather.py` kompatibel sein

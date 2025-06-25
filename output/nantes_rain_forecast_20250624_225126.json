@@ -1,0 +1,71 @@
+{
+  "location": "Nantes (44000)",
+  "coordinates": [
+    47.2184,
+    -1.5536
+  ],
+  "test_times": [
+    "2025-06-24T20:30:00Z",
+    "2025-06-24T20:35:00Z",
+    "2025-06-24T20:40:00Z"
+  ],
+  "data": [
+    {
+      "timestamp": "2025-06-24T20:30:00Z",
+      "apis": {
+        "AROME_HR": {
+          "precipitation_mmh": null,
+          "layer_name": null,
+          "time_diff_hours": null
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "layer_name": null,
+          "time_diff_hours": null
+        },
+        "OPENMETEO_GLOBAL": {
+          "precipitation_mmh": 0.0,
+          "time_diff_hours": 0.5
+        }
+      }
+    },
+    {
+      "timestamp": "2025-06-24T20:35:00Z",
+      "apis": {
+        "AROME_HR": {
+          "precipitation_mmh": null,
+          "layer_name": null,
+          "time_diff_hours": null
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "layer_name": null,
+          "time_diff_hours": null
+        },
+        "OPENMETEO_GLOBAL": {
+          "precipitation_mmh": 0.0,
+          "time_diff_hours": 0.4166666666666667
+        }
+      }
+    },
+    {
+      "timestamp": "2025-06-24T20:40:00Z",
+      "apis": {
+        "AROME_HR": {
+          "precipitation_mmh": null,
+          "layer_name": null,
+          "time_diff_hours": null
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "layer_name": null,
+          "time_diff_hours": null
+        },
+        "OPENMETEO_GLOBAL": {
+          "precipitation_mmh": 0.0,
+          "time_diff_hours": 0.3333333333333333
+        }
+      }
+    }
+  ]
+}

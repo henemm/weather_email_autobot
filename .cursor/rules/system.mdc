@@ -1,0 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# system.md
+
+# Systemverhalten von Cursor
+
+- Cursor darf im YOLO-Modus nur Code generieren oder ändern, wenn gleichzeitig passende Unit-Tests erstellt oder aktualisiert werden.
+- Bestehender Code darf nicht ohne vorherige Begründung und Kommentierung geändert werden.
+- Neue externe Bibliotheken dürfen nur nach ausdrücklicher Freigabe eingebunden werden.
+- Cursor darf keine Shell- oder Systembefehle ausführen, es sei denn, sie sind explizit erlaubt.
+- Refactorings sind nur gestattet, wenn sie durch ein separates `request.md` angefordert wurden oder wenn sie durch Tests abgesichert sind.

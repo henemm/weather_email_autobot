@@ -1,0 +1,71 @@
+docs/status_gr20_e2e.txt
+────────────────────────
+
+🧭 Ziel:
+Tägliche Wetterinformationen für GR20-Wanderung automatisiert aus verschiedenen Wetterquellen sammeln, analysieren, verdichten und via Satellit über SOTAmāt/Garmin an den Wanderer übermitteln.
+
+────────────────────────
+📂 Systemübersicht (Module)
+────────────────────────
+
+1. Positionserkennung
+✓ ShareMap-Integration (etappen.json)
+✓ Tägliche Etappenbestimmung: automatisiert, getestet
+
+2. Wetterdatenabruf
+✓ Météo-France APIs: AROME WCS, Immediate Forecast, PIAF
+✓ Open-Meteo als Backup integriert
+✓ Tokenverwaltung: robust, API-spezifisch
+✓ BoundingBox-Fallback: korrekt implementiert
+
+3. Wetteranalyse
+✓ Parameter: CAPE, SHEAR, Regen, Wind
+✓ Schwellenwerte: in config.yaml
+✓ Entscheidungslogik: vollständig implementiert
+
+4. Report-Generierung
+✓ Kürzung auf 160 Zeichen
+✓ Keine Links (SOTAmāt kompatibel)
+⚠️ Emoji werden technisch unterstützt – ggf. deaktivieren für Garmin-Kompatibilität
+✓ Reporttext an Kontext und Schwellenwert angepasst
+
+5. Versand
+✓ SMTP-Versand via Gmail mit GMAIL_APP_PW
+✓ Retry-Mechanismus vorhanden
+✓ Kein SMTP_PASSWORD genutzt (veraltet)
+
+6. Scheduling
+✓ Zeitpunkte: 4:30, 19:00 + dynamisch 3x/Tag
+✓ UTC-basiert
+✓ Täglicher Workflow orchestriert in scripts/run_gr20_weather_monitor.py
+
+────────────────────────
+🧪 Tests & Qualitätssicherung
+────────────────────────
+
+✓ Unit-Tests für alle Kernfunktionen
+✓ Integrationstests mit Live-Daten (sofern verfügbar)
+✓ End-to-End-Test-Flow vorhanden (test_complete_report_flow_scheduled)
+✓ Logging vollständig implementiert (logfile + stdout)
+
+────────────────────────
+⚠️ Einschränkungen / ToDos
+────────────────────────
+
+- Einige Météo-France-Layer liefern temporär HTTP 404 (Datenverfügbarkeit unklar)
+- Temperaturwerte in WCS-GML nicht immer extrahierbar (Datenstruktur abhängig)
+- Emoji ggf. nicht SOTAmāt-kompatibel → Konfiguration prüfen
+- Produktivbetrieb benötigt vollständige Tokens & Umgebungsvariablen
+
+────────────────────────
+📌 Nächste Schritte
+────────────────────────
+
+[ ] Live-Endpunkt mit gültigen Koordinaten/Layern verifizieren
+[ ] .env prüfen: alle Tokens korrekt gesetzt?
+[ ] Optional: Emoji-Output deaktivieren für maximale Kompatibilität
+[ ] Systemd/Cron-Scheduling für Produktivbetrieb
+
+────────────────────────
+
+Letzte Aktualisierung: 2025-06-21

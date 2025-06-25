@@ -1,0 +1,41 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Architekturentscheidungen – weather_email_autobot
+
+## Version: 2025-06-19
+
+---
+
+### 📌 Eingrenzungen
+- Kein klassischer Internetzugang für den Nutzer
+- Kommunikation ausschließlich über satellitengestützte E-Mail-Gateways (z. B. Garmin InReach Messenger)
+- System selbst kann Wetterdaten per HTTP abrufen (Open-Meteo, Meteo-France), aber keine Benutzerinteraktion empfangen
+- Bandbreitenlimitierung durch Satellitenkommunikation
+- Kein Benutzerkontakt nach Deployment (15+ Tage autonom)
+
+---
+
+### 🧱 Strukturprinzipien
+- `src/`-Modulstruktur
+- Testbar mit `pytest` auf Modulebene
+- Kein Overengineering: Keine Plugins, keine dynamischen Module
+
+---
+
+### 📤 Ausgabeformate
+- Definiert in SPEZIFIKATION.md
+- Validiert gegen Beispieloutputs
+
+---
+
+### 🔒 SMTP-Handling
+- Nur `smtplib`, keine Drittanbieter
+- Login-Daten aus `.env`, nie im Klartext
+
+---
+
+### 🔍 Offene Fragen / TODO
+- (nach Bedarf eintragen)

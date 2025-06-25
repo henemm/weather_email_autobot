@@ -1,0 +1,276 @@
+{
+  "location": "Tarbes, France (65000)",
+  "coordinates": [
+    43.2333,
+    0.0833
+  ],
+  "analysis_timestamp": "2025-06-24T19:32:34.204946",
+  "time_range": "Today evening to tomorrow noon",
+  "time_points": {
+    "time_point_1": {
+      "timestamp": "2025-06-24T16:00:00Z",
+      "target_time_cest": "2025-06-24 18:00 CEST",
+      "arome_hr": {
+        "CAPE": 8.29913915368,
+        "SHEAR": null,
+        "TEMPERATURE": 38.52368685900001,
+        "status": "available"
+      },
+      "arome_nowcast": {
+        "WIND_SPEED": null,
+        "WIND_DIRECTION": null,
+        "TEMPERATURE": 29.68543746900002,
+        "status": "available"
+      },
+      "piaf_nowcast": {
+        "PRECIPITATION": 0.0,
+        "status": "available"
+      },
+      "openmeteo": {
+        "TEMPERATURE": 33.2,
+        "WIND_SPEED": 11.4,
+        "WIND_DIRECTION": 77,
+        "PRECIPITATION": 0.0,
+        "HUMIDITY": 45,
+        "PRESSURE": 1014.5,
+        "CLOUD_COVER": 100,
+        "WEATHER_CODE": 3,
+        "PRECIPITATION_PROBABILITY": 3,
+        "status": "available"
+      },
+      "overall_risk": "low",
+      "risk_factors": {
+        "cape": 8.29913915368,
+        "shear": null,
+        "precipitation": 0.0,
+        "temperature": 33.2,
+        "humidity": 45,
+        "wind_speed": 11.4,
+        "weather_code": 3,
+        "precipitation_probability": 3
+      }
+    },
+    "time_point_2": {
+      "timestamp": "2025-06-24T18:00:00Z",
+      "target_time_cest": "2025-06-24 20:00 CEST",
+      "arome_hr": {
+        "CAPE": 8.29913915368,
+        "SHEAR": null,
+        "TEMPERATURE": 38.52368685900001,
+        "status": "available"
+      },
+      "arome_nowcast": {
+        "WIND_SPEED": null,
+        "WIND_DIRECTION": null,
+        "TEMPERATURE": 29.68543746900002,
+        "status": "available"
+      },
+      "piaf_nowcast": {
+        "PRECIPITATION": 0.0,
+        "status": "available"
+      },
+      "openmeteo": {
+        "TEMPERATURE": 30.9,
+        "WIND_SPEED": 5.4,
+        "WIND_DIRECTION": 110,
+        "PRECIPITATION": 0.0,
+        "HUMIDITY": 55,
+        "PRESSURE": 1013.8,
+        "CLOUD_COVER": 100,
+        "WEATHER_CODE": 3,
+        "PRECIPITATION_PROBABILITY": 3,
+        "status": "available"
+      },
+      "overall_risk": "low",
+      "risk_factors": {
+        "cape": 8.29913915368,
+        "shear": null,
+        "precipitation": 0.0,
+        "temperature": 30.9,
+        "humidity": 55,
+        "wind_speed": 5.4,
+        "weather_code": 3,
+        "precipitation_probability": 3
+      }
+    },
+    "time_point_3": {
+      "timestamp": "2025-06-24T20:00:00Z",
+      "target_time_cest": "2025-06-24 22:00 CEST",
+      "arome_hr": {
+        "CAPE": 8.29913915368,
+        "SHEAR": null,
+        "TEMPERATURE": 38.52368685900001,
+        "status": "available"
+      },
+      "arome_nowcast": {
+        "WIND_SPEED": null,
+        "WIND_DIRECTION": null,
+        "TEMPERATURE": 29.68543746900002,
+        "status": "available"
+      },
+      "piaf_nowcast": {
+        "PRECIPITATION": 0.0,
+        "status": "available"
+      },
+      "openmeteo": {
+        "TEMPERATURE": 28.3,
+        "WIND_SPEED": 3.9,
+        "WIND_DIRECTION": 112,
+        "PRECIPITATION": 0.0,
+        "HUMIDITY": 69,
+        "PRESSURE": 1013.4,
+        "CLOUD_COVER": 0,
+        "WEATHER_CODE": 0,
+        "PRECIPITATION_PROBABILITY": 0,
+        "status": "available"
+      },
+      "overall_risk": "low",
+      "risk_factors": {
+        "cape": 8.29913915368,
+        "shear": null,
+        "precipitation": 0.0,
+        "temperature": 28.3,
+        "humidity": 69,
+        "wind_speed": 3.9,
+        "weather_code": 0,
+        "precipitation_probability": 0
+      }
+    },
+    "time_point_4": {
+      "timestamp": "2025-06-25T04:00:00Z",
+      "target_time_cest": "2025-06-25 06:00 CEST",
+      "arome_hr": {
+        "CAPE": 8.29913915368,
+        "SHEAR": null,
+        "TEMPERATURE": 38.52368685900001,
+        "status": "available"
+      },
+      "arome_nowcast": {
+        "WIND_SPEED": null,
+        "WIND_DIRECTION": null,
+        "TEMPERATURE": 29.68543746900002,
+        "status": "available"
+      },
+      "piaf_nowcast": {
+        "PRECIPITATION": 0.0,
+        "status": "available"
+      },
+      "openmeteo": {
+        "TEMPERATURE": null,
+        "WIND_SPEED": null,
+        "WIND_DIRECTION": null,
+        "PRECIPITATION": null,
+        "HUMIDITY": null,
+        "PRESSURE": null,
+        "CLOUD_COVER": null,
+        "WEATHER_CODE": null,
+        "PRECIPITATION_PROBABILITY": null,
+        "status": "not_available",
+        "error": "Network error: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=30)"
+      },
+      "overall_risk": "low",
+      "risk_factors": {
+        "cape": 8.29913915368,
+        "shear": null,
+        "precipitation": 0.0,
+        "temperature": null,
+        "humidity": null,
+        "wind_speed": null,
+        "weather_code": null,
+        "precipitation_probability": null
+      }
+    },
+    "time_point_5": {
+      "timestamp": "2025-06-25T07:00:00Z",
+      "target_time_cest": "2025-06-25 09:00 CEST",
+      "arome_hr": {
+        "CAPE": 8.29913915368,
+        "SHEAR": null,
+        "TEMPERATURE": 38.52368685900001,
+        "status": "available"
+      },
+      "arome_nowcast": {
+        "WIND_SPEED": null,
+        "WIND_DIRECTION": null,
+        "TEMPERATURE": 29.68543746900002,
+        "status": "available"
+      },
+      "piaf_nowcast": {
+        "PRECIPITATION": 0.0,
+        "status": "available"
+      },
+      "openmeteo": {
+        "TEMPERATURE": 21.2,
+        "WIND_SPEED": 15.5,
+        "WIND_DIRECTION": 273,
+        "PRECIPITATION": 0.0,
+        "HUMIDITY": 88,
+        "PRESSURE": 1015.0,
+        "CLOUD_COVER": 90,
+        "WEATHER_CODE": 3,
+        "PRECIPITATION_PROBABILITY": 0,
+        "status": "available"
+      },
+      "overall_risk": "low",
+      "risk_factors": {
+        "cape": 8.29913915368,
+        "shear": null,
+        "precipitation": 0.0,
+        "temperature": 21.2,
+        "humidity": 88,
+        "wind_speed": 15.5,
+        "weather_code": 3,
+        "precipitation_probability": 0
+      }
+    },
+    "time_point_6": {
+      "timestamp": "2025-06-25T10:00:00Z",
+      "target_time_cest": "2025-06-25 12:00 CEST",
+      "arome_hr": {
+        "CAPE": 8.29913915368,
+        "SHEAR": null,
+        "TEMPERATURE": 38.52368685900001,
+        "status": "available"
+      },
+      "arome_nowcast": {
+        "WIND_SPEED": null,
+        "WIND_DIRECTION": null,
+        "TEMPERATURE": 29.68543746900002,
+        "status": "available"
+      },
+      "piaf_nowcast": {
+        "PRECIPITATION": 0.0,
+        "status": "available"
+      },
+      "openmeteo": {
+        "TEMPERATURE": 24.8,
+        "WIND_SPEED": 4.6,
+        "WIND_DIRECTION": 288,
+        "PRECIPITATION": 0.0,
+        "HUMIDITY": 70,
+        "PRESSURE": 1014.1,
+        "CLOUD_COVER": 100,
+        "WEATHER_CODE": 3,
+        "PRECIPITATION_PROBABILITY": 0,
+        "status": "available"
+      },
+      "overall_risk": "low",
+      "risk_factors": {
+        "cape": 8.29913915368,
+        "shear": null,
+        "precipitation": 0.0,
+        "temperature": 24.8,
+        "humidity": 70,
+        "wind_speed": 4.6,
+        "weather_code": 3,
+        "precipitation_probability": 0
+      }
+    }
+  },
+  "summary": {
+    "total_time_points": 6,
+    "high_risk_count": 0,
+    "medium_risk_count": 0,
+    "low_risk_count": 6
+  }
+}

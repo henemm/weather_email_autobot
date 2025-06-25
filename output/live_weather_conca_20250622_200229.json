@@ -1,0 +1,64 @@
+{
+  "openmeteo": {
+    "status": "success",
+    "data": {
+      "latitude": 41.6875,
+      "longitude": 9.3125,
+      "generationtime_ms": 0.07617473602294922,
+      "utc_offset_seconds": 7200,
+      "timezone": "Europe/Paris",
+      "timezone_abbreviation": "GMT+2",
+      "elevation": 304.0,
+      "current_units": {
+        "time": "iso8601",
+        "interval": "seconds",
+        "temperature_2m": "°C",
+        "relative_humidity_2m": "%",
+        "apparent_temperature": "°C",
+        "precipitation": "mm",
+        "weather_code": "wmo code",
+        "wind_speed_10m": "km/h",
+        "wind_direction_10m": "°"
+      },
+      "current": {
+        "time": "2025-06-22T20:00",
+        "interval": 900,
+        "temperature_2m": 24.0,
+        "relative_humidity_2m": 79,
+        "apparent_temperature": 27.5,
+        "precipitation": 0.0,
+        "weather_code": 2,
+        "wind_speed_10m": 3.4,
+        "wind_direction_10m": 148
+      }
+    },
+    "timestamp": "2025-06-22T20:02:27.556650"
+  },
+  "wcs": {
+    "status": "error",
+    "error": "wcs_error",
+    "message": "HTTP error 404: {\"code\":\"404\",\"type\":\"Status report\",\"message\":\"Runtime Error\",\"description\":\"No matching resource found for given API Request\"}"
+  },
+  "vigilance": {
+    "status": "success",
+    "warnings_count": 105,
+    "corsica_warnings_count": 2,
+    "corsica_warnings": [
+      {
+        "domain_id": "2A",
+        "domain_name": "Corse-du-Sud",
+        "bloc_title": "Bulletin de suivi départemental de la Vigilance : Corse-du-Sud (2A)",
+        "bloc_id": "BULLETIN_DEPARTEMENTAL",
+        "bloc_items": []
+      },
+      {
+        "domain_id": "2B",
+        "domain_name": "Haute-Corse",
+        "bloc_title": "Bulletin de suivi départemental de la Vigilance : Haute-Corse (2B)",
+        "bloc_id": "BULLETIN_DEPARTEMENTAL",
+        "bloc_items": []
+      }
+    ],
+    "timestamp": "2025-06-22T20:02:29.051526"
+  }
+}

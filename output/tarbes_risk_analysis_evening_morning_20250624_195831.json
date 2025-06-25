@@ -1,0 +1,217 @@
+{
+  "location": "Tarbes, France",
+  "coordinates": [
+    43.2333,
+    0.0833
+  ],
+  "test_timestamp": "2025-06-24T19:53:58.244171+02:00",
+  "time_points": [
+    {
+      "time": "2025-06-24T17:00:00+02:00",
+      "timestamp_utc": "2025-06-24T15:00:00Z",
+      "apis": {
+        "AROME_HR": {
+          "cape_j_kg": 462.740956664,
+          "temperature_c": 52.417031250000036,
+          "precipitation_mmh": null,
+          "shear_ms": null,
+          "status": "success"
+        },
+        "AROME_HR_NOWCAST": {
+          "cape_j_kg": 454.008579254,
+          "temperature_c": 51.8058125,
+          "status": "success"
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "status": "no_data"
+        },
+        "OPENMETEO_GLOBAL": {
+          "status": "error",
+          "error": "'NoneType' object has no attribute 'get'"
+        }
+      },
+      "thunderstorm_risk": {
+        "score": 15,
+        "level": "low",
+        "cape_j_kg": 462.740956664,
+        "shear_ms": null,
+        "precipitation_mmh": null,
+        "temperature_c": 52.417031250000036
+      }
+    },
+    {
+      "time": "2025-06-24T20:00:00+02:00",
+      "timestamp_utc": "2025-06-24T18:00:00Z",
+      "apis": {
+        "AROME_HR": {
+          "cape_j_kg": 634.770014329,
+          "temperature_c": 37.66005000000001,
+          "precipitation_mmh": null,
+          "shear_ms": null,
+          "status": "success"
+        },
+        "AROME_HR_NOWCAST": {
+          "cape_j_kg": 372.111230718,
+          "temperature_c": 36.798400000000015,
+          "status": "success"
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": 0.0,
+          "status": "success"
+        },
+        "OPENMETEO_GLOBAL": {
+          "status": "error",
+          "error": "'NoneType' object has no attribute 'get'"
+        }
+      },
+      "thunderstorm_risk": {
+        "score": 25,
+        "level": "medium",
+        "cape_j_kg": 634.770014329,
+        "shear_ms": null,
+        "precipitation_mmh": 0.0,
+        "temperature_c": 37.66005000000001
+      }
+    },
+    {
+      "time": "2025-06-25T08:00:00+02:00",
+      "timestamp_utc": "2025-06-25T06:00:00Z",
+      "apis": {
+        "AROME_HR": {
+          "cape_j_kg": null,
+          "temperature_c": null,
+          "precipitation_mmh": null,
+          "shear_ms": null,
+          "status": "no_data"
+        },
+        "AROME_HR_NOWCAST": {
+          "cape_j_kg": null,
+          "temperature_c": null,
+          "status": "no_data"
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "status": "no_data"
+        },
+        "OPENMETEO_GLOBAL": {
+          "status": "error",
+          "error": "'NoneType' object has no attribute 'get'"
+        }
+      },
+      "thunderstorm_risk": {
+        "score": 0,
+        "level": "low",
+        "cape_j_kg": null,
+        "shear_ms": null,
+        "precipitation_mmh": null,
+        "temperature_c": null
+      }
+    },
+    {
+      "time": "2025-06-25T11:00:00+02:00",
+      "timestamp_utc": "2025-06-25T09:00:00Z",
+      "apis": {
+        "AROME_HR": {
+          "cape_j_kg": null,
+          "temperature_c": null,
+          "precipitation_mmh": null,
+          "shear_ms": null,
+          "status": "no_data"
+        },
+        "AROME_HR_NOWCAST": {
+          "cape_j_kg": null,
+          "temperature_c": null,
+          "status": "no_data"
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "status": "no_data"
+        },
+        "OPENMETEO_GLOBAL": {
+          "status": "error",
+          "error": "'NoneType' object has no attribute 'get'"
+        }
+      },
+      "thunderstorm_risk": {
+        "score": 0,
+        "level": "low",
+        "cape_j_kg": null,
+        "shear_ms": null,
+        "precipitation_mmh": null,
+        "temperature_c": null
+      }
+    },
+    {
+      "time": "2025-06-25T14:00:00+02:00",
+      "timestamp_utc": "2025-06-25T12:00:00Z",
+      "apis": {
+        "AROME_HR": {
+          "cape_j_kg": null,
+          "temperature_c": null,
+          "precipitation_mmh": null,
+          "shear_ms": null,
+          "status": "no_data"
+        },
+        "AROME_HR_NOWCAST": {
+          "cape_j_kg": null,
+          "temperature_c": null,
+          "status": "no_data"
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "status": "no_data"
+        },
+        "OPENMETEO_GLOBAL": {
+          "status": "error",
+          "error": "'NoneType' object has no attribute 'get'"
+        }
+      },
+      "thunderstorm_risk": {
+        "score": 0,
+        "level": "low",
+        "cape_j_kg": null,
+        "shear_ms": null,
+        "precipitation_mmh": null,
+        "temperature_c": null
+      }
+    },
+    {
+      "time": "2025-06-25T17:00:00+02:00",
+      "timestamp_utc": "2025-06-25T15:00:00Z",
+      "apis": {
+        "AROME_HR": {
+          "cape_j_kg": null,
+          "temperature_c": null,
+          "precipitation_mmh": null,
+          "shear_ms": null,
+          "status": "no_data"
+        },
+        "AROME_HR_NOWCAST": {
+          "cape_j_kg": null,
+          "temperature_c": null,
+          "status": "no_data"
+        },
+        "PIAF_NOWCAST": {
+          "precipitation_mmh": null,
+          "status": "no_data"
+        },
+        "OPENMETEO_GLOBAL": {
+          "status": "error",
+          "error": "'NoneType' object has no attribute 'get'"
+        }
+      },
+      "thunderstorm_risk": {
+        "score": 0,
+        "level": "low",
+        "cape_j_kg": null,
+        "shear_ms": null,
+        "precipitation_mmh": null,
+        "temperature_c": null
+      }
+    }
+  ],
+  "vigilance_warnings": {
+    "error": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+  }
+}

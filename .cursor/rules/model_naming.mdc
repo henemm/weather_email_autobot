@@ -1,0 +1,60 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# .cursor/rules/model_naming.md
+
+## 🌤️ Einheitliche Modellnamen & API-Endpunkte
+
+| Klarname           | API-Endpunkt (Pfadteil)                   | Beschreibung                                         |
+|--------------------|-------------------------------------------|------------------------------------------------------|
+| AROME_HR           | /public/arome/1.0/wcs/MF-NWP-HIGHRES-AROME-001-FRANCE-WCS | Hauptmodell, hohe Auflösung, stündlich              |
+| AROME_HR_NOWCAST   | /public/aromepi/1.0/wcs/MF-NWP-HIGHRES-AROMEPI-001-FRANCE-WCS | Kurzfristprognose, 15-Minuten-Auflösung             |
+| AROME_HR_AGG       | /public/arome-agg/1.0/wcs/MF-NWP-HIGHRES-AROME-AGG-001-FRANCE-WCS | Aggregierte Felder (Summen, Mittelwerte)            |
+| PIAF_NOWCAST       | /pro/piaf/1.0/wcs/MF-NWP-HIGHRES-PIAF-001-FRANCE-WCS         | Niederschlags-Nowcasting, 5-Minuten-Schritte        |
+| VIGILANCE_API      | /public/vigilance/1.0/warning/            | Wetterwarnungen (Text- und Farbcodes) je Département|
+| OPENMETEO_GLOBAL   | (externe API, kein Pfad)                                 | Global, robust, für Notfälle und Vergleich          |
+
+## 🧠 Regel: Einheitliche Verwendung im Code
+
+- Nur obige Kürzel sind im Code, in Tests und in Dokumentation erlaubt.
+- Jeder Funktionsaufruf zum Wetterdatenabruf erhält ein `model: str`-Argument.
+- Die zentrale Mapping-Logik übersetzt `model` + `field` in konkreten API-Layer.
+- `VIGILANCE_API` wird separat behandelt – kein numerisches Rastermodell.
+
+---
+
+## 🕒 Empfohlene Modellverwendung je Berichtstyp
+
+| Berichtstyp       | Hauptmodell(e)        | Backup                  | Ausschlüsse              |
+|--------------------|------------------------|--------------------------|--------------------------|
+| Morgens (04:30)    | AROME_HR, VIGILANCE_API| OPENMETEO_GLOBAL         | PIAF_NOWCAST, NOWCAST    |
+| Abends (19:00)     | AROME_HR, VIGILANCE_API| AROME_HR_AGG, OPENMETEO  | PIAF_NOWCAST, NOWCAST    |
+| Dynamisch (Tagsüber)| AROME_HR_NOWCAST, PIAF_NOWCAST, VIGILANCE_API | AROME_HR             | -                        |
+
+---
+
+## ⚡ Parameter für Gewitterprognose (Base: AROME_HR)
+
+- `CAPE`: convective available potential energy → hohe Werte = Gewitterpotenzial
+- `SHEAR`: vertikale Windscherung → Dynamik für organisierte Gewitter
+- `Blitzdichte` (falls verfügbar): reale Blitzaktivität, meist Nowcast (optional)
+- `Niederschlag`: als direkter Indikator (z. B. über Schwellenwert)
+- `CAPE x SHEAR`: kombinierter Index (z. B. Produktformel für Schwelle)
+- `VIGILANCE_LEVEL`: Ampelfarbe für Gewitterwarnungen (gelb/orange/rot)
+
+→ Diese Werte werden primär aus `AROME_HR` und `VIGILANCE_API` bezogen.
+
+---
+
+## 🛠️ Fallback-Regeln bei Modellfehler
+
+1. Wenn `AROME_HR` ausfällt: nutze `OPENMETEO_GLOBAL`
+2. Wenn `PIAF_NOWCAST` oder `AROME_HR_NOWCAST` ausfallen: verwende `AROME_HR`
+3. Wenn `VIGILANCE_API` ausfällt: ignoriere Warnungen, gib Texthinweis aus
+4. Keine Verbindung: Berichte ohne Wetterdaten, aber mit Warnhinweis (z. B. „Keine Wetterdaten verfügbar“)
+
+---
+
+Letzte Aktualisierung: 2025-06-21

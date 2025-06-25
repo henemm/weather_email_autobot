@@ -1,0 +1,47 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Nutzung der Wettermodelle nach Berichtsart
+
+Diese Datei definiert verbindlich, welche Wettermodelle für welche Wetterberichte genutzt werden, welche Parameter je nach Modell zur Verfügung stehen, und welche Fallbacks bei Ausfällen greifen.
+
+## 1. Modellzuordnung nach Berichtszeitpunkt
+
+| Berichtsart       | Primäre Modelle        | Begründung                                               | Ausschlüsse                  |
+|-------------------|------------------------|-----------------------------------------------------------|------------------------------|
+| **Morgenbericht** | `AROME_HR`, `PIAF_NOWCAST` | Tagesvorhersage, inklusive kurzfristiger Frühindikatoren | `AROME_HR_NOWCAST` (zu kurzfristig) |
+| **Abendbericht**  | `AROME_HR`, `AROME_IFS`    | Vorbereitung auf Folgetag (1–42h, ggf. 78h)              | `AROME_HR_NOWCAST`, `PIAF_NOWCAST` |
+| **Dynamisch**     | `PIAF_NOWCAST`, `AROME_HR_NOWCAST` | Akute Wetterentwicklung in den nächsten Stunden      | `AROME_IFS`                  |
+
+## 2. Wetterparameter und Modellquellen
+
+| Parameter        | Primärmodell     | Alternativmodell     | Hinweis                           |
+|------------------|------------------|-----------------------|------------------------------------|
+| CAPE             | `AROME_HR`       | —                     | Konvektionsneigung                 |
+| SHEAR            | `AROME_HR`       | —                     | Vertikale Windscherung             |
+| Niederschlag     | `PIAF_NOWCAST`   | `AROME_HR`, `OPENMETEO_GLOBAL` | Sehr kurzfristige oder aggregierte Werte |
+| Windböen         | `AROME_HR_NOWCAST` | `AROME_HR`, `OPENMETEO_GLOBAL` | Für akute Sturmwarnungen          |
+| Temperatur       | `AROME_HR`       | `OPENMETEO_GLOBAL`    | Tageshöchst-/Tiefstwerte           |
+| Sichtweite       | `AROME_HR_NOWCAST` | —                     | Nur bei starkem Wetter relevant    |
+| Blitzdichte      | `AROME_HR_NOWCAST` | —                     | Kurzfristige Gewitterindikatoren   |
+| Wetterwarnungen  | `VIGILANCE_API`  | —                     | Separates System mit eigenen Schwellenwerten |
+
+## 3. Modell-Fallback-Strategie
+
+1. **Primär** wird stets ein Météo-France-Modell genutzt, sofern verfügbar.
+2. **Bei Ausfall** (z. B. 401, 404, Timeout):
+   - Temperatur, Wind, Regen: → `OPENMETEO_GLOBAL`
+   - CAPE/SHEAR: keine Fallback-Quelle (nicht abbildbar)
+   - Blitz/Sicht: keine Fallback-Quelle
+
+## 4. Hinweis zur Geoposition
+
+Die Auswahl der Koordinaten basiert auf dem aktuellen Etappenpunkt laut `etappen.json` und Startdatum aus `config.yaml`. Es werden drei Punkte abgefragt:
+- Start der Tagesetappe
+- Mitte der Tagesetappe
+- Ende der Tagesetappe
+
+Diese Werte werden durch das Modul `src/position/etappenlogik.py` bereitgestellt.
+

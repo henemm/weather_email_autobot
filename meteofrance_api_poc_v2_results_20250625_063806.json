@@ -1,0 +1,336 @@
+{
+  "test_info": {
+    "location": "Tarbes",
+    "department": "65",
+    "coordinates": {
+      "lat": 43.2333,
+      "lon": 0.0833
+    },
+    "test_time": "2025-06-25T06:38:05.762713"
+  },
+  "forecast_data": {
+    "location": "Tarbes",
+    "coordinates": {
+      "lat": 43.2333,
+      "lon": 0.0833
+    },
+    "forecast_periods": [
+      {
+        "datetime": "Unknown",
+        "temperature": 20,
+        "weather_description": {
+          "icon": "p1n",
+          "desc": "Ciel clair"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 21.7,
+        "weather_description": {
+          "icon": "p1n",
+          "desc": "Ciel clair"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 22.1,
+        "weather_description": {
+          "icon": "p1j",
+          "desc": "Ensoleillé"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 21.6,
+        "weather_description": {
+          "icon": "p1j",
+          "desc": "Ensoleillé"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 22.2,
+        "weather_description": {
+          "icon": "p1j",
+          "desc": "Ensoleillé"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 24.9,
+        "weather_description": {
+          "icon": "p1j",
+          "desc": "Ensoleillé"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 26.4,
+        "weather_description": {
+          "icon": "p1j",
+          "desc": "Ensoleillé"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 28.2,
+        "weather_description": {
+          "icon": "p1j",
+          "desc": "Ensoleillé"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 29.2,
+        "weather_description": {
+          "icon": "p2j",
+          "desc": "Eclaircies"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 30.6,
+        "weather_description": {
+          "icon": "p2j",
+          "desc": "Eclaircies"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 29,
+        "weather_description": {
+          "icon": "p2j",
+          "desc": "Eclaircies"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 29.4,
+        "weather_description": {
+          "icon": "p2j",
+          "desc": "Eclaircies"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 32.1,
+        "weather_description": {
+          "icon": "p3j",
+          "desc": "Très nuageux"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 30.1,
+        "weather_description": {
+          "icon": "p28j",
+          "desc": "Orages"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 22.9,
+        "weather_description": {
+          "icon": "p16bisj",
+          "desc": "Averses orageuses"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 22.1,
+        "weather_description": {
+          "icon": "p12bisj",
+          "desc": "Averses faibles"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 21.4,
+        "weather_description": {
+          "icon": "p16bisj",
+          "desc": "Averses orageuses"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 20.2,
+        "weather_description": {
+          "icon": "p12bisj",
+          "desc": "Averses faibles"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 19.4,
+        "weather_description": {
+          "icon": "p12bisn",
+          "desc": "Averses faibles"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 18.6,
+        "weather_description": {
+          "icon": "p2n",
+          "desc": "Eclaircies"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 18.2,
+        "weather_description": {
+          "icon": "p2n",
+          "desc": "Eclaircies"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 18.7,
+        "weather_description": {
+          "icon": "p2n",
+          "desc": "Eclaircies"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 18.1,
+        "weather_description": {
+          "icon": "p2n",
+          "desc": "Eclaircies"
+        },
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": 18.1,
+        "weather_description": {
+          "icon": "p2n",
+          "desc": "Eclaircies"
+        },
+        "precipitation_probability": "N/A"
+      }
+    ]
+  },
+  "warning_data": {
+    "department": "65",
+    "phenomenons": {
+      "Thunderstorms": "yellow",
+      "Wind": "green",
+      "Rain-Flood": "green",
+      "Heat": "green",
+      "Snow-Ice": "green",
+      "Flood": "green"
+    },
+    "raw_phenomenons": [
+      {
+        "phenomenon_id": "3",
+        "phenomenon_max_color_id": 2
+      },
+      {
+        "phenomenon_id": "1",
+        "phenomenon_max_color_id": 1
+      },
+      {
+        "phenomenon_id": "2",
+        "phenomenon_max_color_id": 1
+      },
+      {
+        "phenomenon_id": "6",
+        "phenomenon_max_color_id": 1
+      },
+      {
+        "phenomenon_id": "5",
+        "phenomenon_max_color_id": 1
+      },
+      {
+        "phenomenon_id": "4",
+        "phenomenon_max_color_id": 1
+      }
+    ],
+    "domain_id": "65",
+    "update_time": "2025-06-25T06:38:05.977826"
+  },
+  "rain_data": {
+    "location": "Tarbes",
+    "coordinates": {
+      "lat": 43.2333,
+      "lon": 0.0833
+    },
+    "rain_forecast": [
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      }
+    ]
+  },
+  "thunderstorm_analysis": {
+    "thunderstorm_periods_count": 0,
+    "high_precipitation_periods_count": 0,
+    "thunderstorm_periods": [],
+    "high_precipitation_periods": []
+  },
+  "comparison_results": {
+    "api_functional": true,
+    "data_quality": "unknown",
+    "thunderstorm_detection": false,
+    "warning_system_working": true,
+    "temperature_range_plausible": true,
+    "notes": [
+      "Thunderstorm warning active: yellow"
+    ]
+  }
+}

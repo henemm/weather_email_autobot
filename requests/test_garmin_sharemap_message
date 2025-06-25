@@ -1,0 +1,73 @@
+# Cursor-Aufgabe: Garmin MapShare Nachricht automatisiert senden
+
+## 🎯 Ziel
+Erstelle ein Python-Skript, das über das Webformular von **Garmin MapShare** automatisiert eine Nachricht an ein inReach-Gerät sendet.
+
+---
+
+## 📥 Eingabedaten
+
+Das Skript soll folgende Parameter entgegennehmen (z. B. aus JSON-Config oder Umgebungsvariablen):
+
+- `extId`: von Garmin bereitgestellter Parameter aus dem MapShare-Link  
+  Beispiel: `08ddb09d-0e47-974a-6045-bd7ce0170000`
+- `adr`: Zieladresse (i. d. R. E-Mail-Adresse des Besitzers)  
+  Beispiel: `henningemmrich@icloud.com`
+- `message_text`: Die zu versendende Nachricht  
+  Beispiel: `"⚡️ Gewitterwarnung ab 15 Uhr bei Etappe 5!"`
+
+---
+
+## 📤 Ausgabe / Verhalten
+
+- Versand der Nachricht per HTTP `POST` an:
+https://eur.explore.garmin.com/textmessage/txtmsg
+
+- Rückmeldung:
+- HTTP-Statuscode
+- Bestätigung, ob Versand technisch erfolgreich war
+- Optional: Ausgabe des HTML-Response-Bodys für Debugging
+
+---
+
+## ⚙️ Technische Anforderungen
+
+- Sprache: Python 3
+- HTTP-Client: `requests`
+- POST-Daten:
+```json
+{
+  "extId": "<EXT_ID>",
+  "adr": "<ADR>",
+  "txt": "<MESSAGE_TEXT>"
+}
+
+
+	•	Header:
+	•	Realistischen User-Agent setzen (z. B. Mozilla/5.0)
+	•	Content-Type: application/x-www-form-urlencoded
+	•	Fehlerbehandlung:
+	•	3 Retries bei Timeout
+	•	Fehler-Log bei HTTP 4xx/5xx
+
+## 🚫 Einschränkungen
+	•	Keine Captcha-Umgehung
+	•	Kein DOM-Scraping oder Parsing von HTML-Seiten
+	•	Keine offizielle Garmin API – Nutzung ist rein experimentell
+	•	Das Skript muss sauber scheitern, wenn Garmin den Versand blockiert
+
+mapshare_sender/
+├── send_mapshare_message.py     # Hauptskript für Nachrichtensendung
+├── config_example.json          # Beispielkonfiguration mit extId, adr, Text
+├── README.md                    # Anleitung zur Nutzung & rechtlicher Hinweis
+
+
+
+## ✅ Erfolgskriterien
+	•	Nachricht erscheint auf dem inReach-Gerät (manuell zu prüfen)
+	•	Skript ist robust, läuft stabil und ohne Crash
+	•	Kann in dieses Projekt hier (alternativ zum E-Mail Versand) integriert werden
+
+## 🧪 Hinweis
+
+Dieses Setup dient ausschließlich dem technischen Test und Proof-of-Concept. Keine produktive Nutzung oder Versand sensibler Daten vorgesehen.    

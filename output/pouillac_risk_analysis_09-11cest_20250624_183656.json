@@ -1,0 +1,121 @@
+{
+  "location": "Pouillac",
+  "coordinates": [
+    44.857,
+    -0.178
+  ],
+  "time_range": "09:00-11:00 CEST",
+  "target_date": "2025-06-25",
+  "analysis_timestamp": "2025-06-24T18:36:56.909109",
+  "time_points": {
+    "09:00 CEST": {
+      "timestamp": "2025-06-25T07:00:00Z",
+      "target_time_cest": "2025-06-25 09:00 CEST",
+      "risks": {
+        "AROME_HR": {
+          "CAPE": 171.337890625,
+          "CAPE_risk": "niedrig",
+          "SHEAR": null,
+          "SHEAR_risk": "niedrig",
+          "risk": "niedrig"
+        },
+        "PIAF_NOWCAST": {
+          "rainrate": 0.0,
+          "risk": "niedrig"
+        },
+        "OPENMETEO_GLOBAL": {
+          "temp": 32.6,
+          "wind_speed": 8.6,
+          "wind_direction": 105,
+          "rain": 0.0,
+          "humidity": 41,
+          "risk": "mittel"
+        }
+      },
+      "overall_risk": "niedrig",
+      "api_status": {
+        "AROME_HR": "available",
+        "AROME_HR_NOWCAST": "available",
+        "PIAF_NOWCAST": "available",
+        "OPENMETEO_GLOBAL": "available"
+      }
+    },
+    "10:00 CEST": {
+      "timestamp": "2025-06-25T08:00:00Z",
+      "target_time_cest": "2025-06-25 10:00 CEST",
+      "risks": {
+        "AROME_HR": {
+          "CAPE": 171.337890625,
+          "CAPE_risk": "niedrig",
+          "SHEAR": null,
+          "SHEAR_risk": "niedrig",
+          "risk": "niedrig"
+        },
+        "PIAF_NOWCAST": {
+          "rainrate": 0.0,
+          "risk": "niedrig"
+        },
+        "OPENMETEO_GLOBAL": {
+          "temp": 32.6,
+          "wind_speed": 8.6,
+          "wind_direction": 105,
+          "rain": 0.0,
+          "humidity": 41,
+          "risk": "mittel"
+        }
+      },
+      "overall_risk": "niedrig",
+      "api_status": {
+        "AROME_HR": "available",
+        "AROME_HR_NOWCAST": "available",
+        "PIAF_NOWCAST": "available",
+        "OPENMETEO_GLOBAL": "available"
+      }
+    },
+    "11:00 CEST": {
+      "timestamp": "2025-06-25T09:00:00Z",
+      "target_time_cest": "2025-06-25 11:00 CEST",
+      "risks": {
+        "AROME_HR": {
+          "CAPE": 171.337890625,
+          "CAPE_risk": "niedrig",
+          "SHEAR": null,
+          "SHEAR_risk": "niedrig",
+          "risk": "niedrig"
+        },
+        "PIAF_NOWCAST": {
+          "rainrate": 0.0,
+          "risk": "niedrig"
+        },
+        "OPENMETEO_GLOBAL": {
+          "temp": 32.6,
+          "wind_speed": 8.6,
+          "wind_direction": 105,
+          "rain": 0.0,
+          "humidity": 41,
+          "risk": "mittel"
+        }
+      },
+      "overall_risk": "niedrig",
+      "api_status": {
+        "AROME_HR": "available",
+        "AROME_HR_NOWCAST": "available",
+        "PIAF_NOWCAST": "available",
+        "OPENMETEO_GLOBAL": "available"
+      }
+    }
+  },
+  "risk_summary": {
+    "risk_counts": {
+      "niedrig": 3
+    },
+    "dominant_risk": "niedrig",
+    "risk_trend": "stable"
+  },
+  "api_availability": {
+    "total_time_points": 3,
+    "arome_hr_available": 3,
+    "piaf_available": 3,
+    "openmeteo_available": 3
+  }
+}

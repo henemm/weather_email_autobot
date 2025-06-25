@@ -1,0 +1,90 @@
+{
+  "timestamp": "2025-06-24T08:11:24.591311",
+  "test_plan_version": "tests/manual/live_api_tests.md",
+  "environment": {
+    "status": {
+      "METEOFRANCE_CLIENT_ID": true,
+      "METEOFRANCE_CLIENT_SECRET": true,
+      "GMAIL_APP_PW": true,
+      "METEOFRANCE_WCS_TOKEN": true,
+      "METEOFRANCE_BASIC_AUTH": false
+    },
+    "required_vars_set": true
+  },
+  "test_results": {
+    "individual_apis": {
+      "summary": {
+        "total": 6,
+        "passed": 5,
+        "failed": 1,
+        "skipped": 0,
+        "success_rate": "83.3%"
+      },
+      "details": {
+        "AROME_HR": {
+          "success": false,
+          "output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.2, pytest-8.4.1, pluggy-1.6.0 -- /opt/weather_email_autobot/.venv/bin/python\ncachedir: .pytest_cache\nrootdir: /opt/weather_email_autobot\nconfigfile: pytest.ini\nplugins: anyio-4.9.0\ncollecting ... collected 1 item\n\ntests/test_live_api_integration.py::TestIndividualAPIs::test_arome_hr_temperature_cape_shear \n🧪 Testing AROME_HR API for Conca (lat=41.75, lon=9.35)\n❌ AROME_HR Temperature: Failed - Temperature data should be returned\nassert None is not None\nFAILED\n\n=================================== FAILURES ===================================\n___________ TestIndividualAPIs.test_arome_hr_temperature_cape_shear ____________\ntests/test_live_api_integration.py:58: in test_arome_hr_temperature_cape_shear\n    assert temp_result is not None, \"Temperature data should be returned\"\nE   AssertionError: Temperature data should be returned\nE   assert None is not None\n\nDuring handling of the above exception, another exception occurred:\ntests/test_live_api_integration.py:65: in test_arome_hr_temperature_cape_shear\n    pytest.fail(f\"AROME_HR temperature test failed: {e}\")\nE   Failed: AROME_HR temperature test failed: Temperature data should be returned\nE   assert None is not None\n------------------------------ Captured log call -------------------------------\nERROR    src.wetter.fetch_arome_wcs:fetch_arome_wcs.py:163 GetCoverage failed with status 404\nERROR    src.wetter.fetch_arome_wcs:fetch_arome_wcs.py:164 Response headers: {'activityid': 'ba2e03d9-c732-4f7b-bef6-639b54b41ff0', 'Access-Control-Expose-Headers': '', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET', 'Content-Encoding': 'gzip', 'Access-Control-Allow-Headers': 'authorization,Access-Control-Allow-Origin,Content-Type,SOAPAction,apikey,testKey,Authorization', 'Content-Type': 'application/xml; charset=utf-8', 'Date': 'Tue, 24 Jun 2025 06:11:15 GMT', 'Set-Cookie': 'LSW_WEB=gateway02_http; path=/, TS01920678=0153019b65165307610fa668deb0f49fa86dd317df8f7e62efdcaf5b61e681ae4476c63efd04d88f227bf9f0a735a84bdf62754f5d; Path=/; ', 'Transfer-Encoding': 'chunked'}\nERROR    src.wetter.fetch_arome_wcs:fetch_arome_wcs.py:165 Response text: <?xml version=\"1.0\" encoding=\"UTF-8\"?><mw:fault xmlns:mw=\"http://metwork-framework.org/\"><mw:code>868404</mw:code><mw:message>Synopsis backend error</mw:message><mw:description><ns0:ExceptionReport xmlns:ns0=\"http://www.opengis.net/ows/1.1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" version=\"1.1.0\" xsi:schemaLocation=\"http://www.opengis.net/ows/1.1 http://schemas.opengis.net/ows/1.1.0/owsAll.xsd\">\n    <ns0:Exception exceptionCode=\"InvalidSubsetting\" locator=\"subset\"><ns0:ExceptionText\n=========================== short test summary info ============================\nFAILED tests/test_live_api_integration.py::TestIndividualAPIs::test_arome_hr_temperature_cape_shear\n============================== 1 failed in 1.49s ===============================\n",
+          "error": "",
+          "skipped": false
+        },
+        "AROME_HR_NOWCAST": {
+          "success": true,
+          "output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.2, pytest-8.4.1, pluggy-1.6.0 -- /opt/weather_email_autobot/.venv/bin/python\ncachedir: .pytest_cache\nrootdir: /opt/weather_email_autobot\nconfigfile: pytest.ini\nplugins: anyio-4.9.0\ncollecting ... collected 1 item\n\ntests/test_live_api_integration.py::TestIndividualAPIs::test_arome_hr_nowcast_precipitation_visibility \n🧪 Testing AROME_HR_NOWCAST API for Conca (lat=41.75, lon=9.35)\n⚠️ AROME_HR_NOWCAST Precipitation: No data available\n⚠️ AROME_HR_NOWCAST Visibility: No data available (may be normal)\nPASSED\n\n============================== 1 passed in 2.79s ===============================\n",
+          "error": "",
+          "skipped": false
+        },
+        "AROME_HR_AGG": {
+          "success": true,
+          "output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.2, pytest-8.4.1, pluggy-1.6.0 -- /opt/weather_email_autobot/.venv/bin/python\ncachedir: .pytest_cache\nrootdir: /opt/weather_email_autobot\nconfigfile: pytest.ini\nplugins: anyio-4.9.0\ncollecting ... collected 1 item\n\ntests/test_live_api_integration.py::TestIndividualAPIs::test_arome_hr_agg_6h_precipitation \n🧪 Testing AROME_HR_AGG API for Conca (lat=41.75, lon=9.35)\n⚠️ AROME_HR_AGG 6h Precipitation: No data available\nPASSED\n\n============================== 1 passed in 0.48s ===============================\n",
+          "error": "",
+          "skipped": false
+        },
+        "PIAF_NOWCAST": {
+          "success": true,
+          "output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.2, pytest-8.4.1, pluggy-1.6.0 -- /opt/weather_email_autobot/.venv/bin/python\ncachedir: .pytest_cache\nrootdir: /opt/weather_email_autobot\nconfigfile: pytest.ini\nplugins: anyio-4.9.0\ncollecting ... collected 1 item\n\ntests/test_live_api_integration.py::TestIndividualAPIs::test_piaf_nowcast_heavy_rain \n🧪 Testing PIAF_NOWCAST API for Conca (lat=41.75, lon=9.35)\n⚠️ PIAF_NOWCAST Heavy Rain: No data available\nPASSED\n\n============================== 1 passed in 1.69s ===============================\n",
+          "error": "",
+          "skipped": false
+        },
+        "VIGILANCE_API": {
+          "success": true,
+          "output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.2, pytest-8.4.1, pluggy-1.6.0 -- /opt/weather_email_autobot/.venv/bin/python\ncachedir: .pytest_cache\nrootdir: /opt/weather_email_autobot\nconfigfile: pytest.ini\nplugins: anyio-4.9.0\ncollecting ... collected 1 item\n\ntests/test_live_api_integration.py::TestIndividualAPIs::test_vigilance_api_corsica_warnings \n🧪 Testing VIGILANCE_API for Corsica (Département 2B)\n✅ VIGILANCE_API: Success - Found 2 Corsica warnings\n   Domain: 2A - Corse-du-Sud\n   Domain: 2B - Haute-Corse\nPASSED\n\n============================== 1 passed in 0.45s ===============================\n",
+          "error": "",
+          "skipped": false
+        },
+        "OPENMETEO_GLOBAL": {
+          "success": true,
+          "output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.2, pytest-8.4.1, pluggy-1.6.0 -- /opt/weather_email_autobot/.venv/bin/python\ncachedir: .pytest_cache\nrootdir: /opt/weather_email_autobot\nconfigfile: pytest.ini\nplugins: anyio-4.9.0\ncollecting ... collected 1 item\n\ntests/test_live_api_integration.py::TestIndividualAPIs::test_openmeteo_global_temperature_rain \n🧪 Testing OPENMETEO_GLOBAL API for Conca (lat=41.75, lon=9.35)\n✅ OPENMETEO_GLOBAL: Success\n   Temperature: 23.2°C\n   Precipitation: 0.0mm\n   Wind: 1.0 km/h\nPASSED\n\n============================== 1 passed in 0.23s ===============================\n",
+          "error": "",
+          "skipped": false
+        }
+      }
+    },
+    "aggregated_weather_report": {
+      "success": true,
+      "output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.2, pytest-8.4.1, pluggy-1.6.0 -- /opt/weather_email_autobot/.venv/bin/python\ncachedir: .pytest_cache\nrootdir: /opt/weather_email_autobot\nconfigfile: pytest.ini\nplugins: anyio-4.9.0\ncollecting ... collected 1 item\n\ntests/test_live_api_integration.py::TestAggregatedWeatherReport::test_analyse_weather_function \n🧪 Testing analyse_weather function for Conca (lat=41.75, lon=9.35)\n✅ Weather Analysis: Success\n   Summary: Thunderstorm: MODERATE (30.0) | Heavy rain: HIGH (5.0) | High wind: MODERATE (45.0) | Max. precipitation: 5.0mm | Max. wind: 45 km/h | Max. temperature: 25.0°C\n   Max Thunderstorm Probability: 30.0%\n   Max Precipitation: 5.0mm\n   Max Wind Speed: 45.0 km/h\n   Risks detected: 3\nPASSED\n\n============================== 1 passed in 0.09s ===============================\n",
+      "error": "",
+      "skipped": false
+    },
+    "end_to_end_gr20_report": {
+      "success": false,
+      "output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.2, pytest-8.4.1, pluggy-1.6.0 -- /opt/weather_email_autobot/.venv/bin/python\ncachedir: .pytest_cache\nrootdir: /opt/weather_email_autobot\nconfigfile: pytest.ini\nplugins: anyio-4.9.0\ncollecting ... collected 1 item\n\ntests/test_live_api_integration.py::TestEndToEndGR20WeatherReport::test_gr20_live_weather_report \n🧪 Testing GR20 Live Weather Report End-to-End\n❌ GR20 Live Weather Report: Failed - cannot import name 'fetch_openmeteo_weather_data' from 'src.wetter.fetch_openmeteo' (/opt/weather_email_autobot/src/wetter/fetch_openmeteo.py)\nFAILED\n\n=================================== FAILURES ===================================\n_________ TestEndToEndGR20WeatherReport.test_gr20_live_weather_report __________\ntests/test_live_api_integration.py:381: in test_gr20_live_weather_report\n    from scripts.run_gr20_weather_monitor import main as gr20_main\nscripts/run_gr20_weather_monitor.py:21: in <module>\n    from src.wetter.fetch_openmeteo import fetch_openmeteo_weather_data\nE   ImportError: cannot import name 'fetch_openmeteo_weather_data' from 'src.wetter.fetch_openmeteo' (/opt/weather_email_autobot/src/wetter/fetch_openmeteo.py)\n\nDuring handling of the above exception, another exception occurred:\ntests/test_live_api_integration.py:433: in test_gr20_live_weather_report\n    pytest.fail(f\"GR20 live weather report test failed: {e}\")\nE   Failed: GR20 live weather report test failed: cannot import name 'fetch_openmeteo_weather_data' from 'src.wetter.fetch_openmeteo' (/opt/weather_email_autobot/src/wetter/fetch_openmeteo.py)\n=========================== short test summary info ============================\nFAILED tests/test_live_api_integration.py::TestEndToEndGR20WeatherReport::test_gr20_live_weather_report\n============================== 1 failed in 0.14s ===============================\n",
+      "error": "",
+      "skipped": false
+    },
+    "api_connectivity_fallbacks": {
+      "fallback_behavior": {
+        "success": true,
+        "output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.2, pytest-8.4.1, pluggy-1.6.0 -- /opt/weather_email_autobot/.venv/bin/python\ncachedir: .pytest_cache\nrootdir: /opt/weather_email_autobot\nconfigfile: pytest.ini\nplugins: anyio-4.9.0\ncollecting ... collected 1 item\n\ntests/test_live_api_integration.py::TestAPIConnectivityAndFallbacks::test_api_fallback_behavior \n🧪 Testing API Fallback Behavior\n✅ OpenMeteo Fallback: Available\nPASSED\n\n============================== 1 passed in 0.22s ===============================\n",
+        "error": "",
+        "skipped": false
+      },
+      "error_handling": {
+        "success": true,
+        "output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.2, pytest-8.4.1, pluggy-1.6.0 -- /opt/weather_email_autobot/.venv/bin/python\ncachedir: .pytest_cache\nrootdir: /opt/weather_email_autobot\nconfigfile: pytest.ini\nplugins: anyio-4.9.0\ncollecting ... collected 1 item\n\ntests/test_live_api_integration.py::TestAPIConnectivityAndFallbacks::test_error_handling \n🧪 Testing Error Handling\n✅ Error Handling: Invalid coordinates properly rejected\nPASSED\n\n============================== 1 passed in 0.09s ===============================\n",
+        "error": "",
+        "skipped": false
+      }
+    }
+  },
+  "overall_status": "FAIL"
+}

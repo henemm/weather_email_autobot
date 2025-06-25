@@ -1,0 +1,254 @@
+{
+  "test_info": {
+    "location": "Tarbes",
+    "department": "65",
+    "coordinates": {
+      "lat": 43.2333,
+      "lon": 0.0833
+    },
+    "test_time": "2025-06-25T06:33:06.339376"
+  },
+  "forecast_data": {
+    "location": "Tarbes",
+    "coordinates": {
+      "lat": 43.2333,
+      "lon": 0.0833
+    },
+    "forecast_periods": [
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "temperature": "N/A",
+        "weather_description": "Unknown",
+        "precipitation_probability": "N/A"
+      }
+    ]
+  },
+  "warning_data": {
+    "department": "65",
+    "phenomenons": [
+      {
+        "phenomenon_id": "3",
+        "phenomenon_max_color_id": 2
+      },
+      {
+        "phenomenon_id": "1",
+        "phenomenon_max_color_id": 1
+      },
+      {
+        "phenomenon_id": "2",
+        "phenomenon_max_color_id": 1
+      },
+      {
+        "phenomenon_id": "6",
+        "phenomenon_max_color_id": 1
+      },
+      {
+        "phenomenon_id": "5",
+        "phenomenon_max_color_id": 1
+      },
+      {
+        "phenomenon_id": "4",
+        "phenomenon_max_color_id": 1
+      }
+    ],
+    "domain_id": "65",
+    "update_time": "2025-06-25T06:33:06.599500"
+  },
+  "rain_data": {
+    "location": "Tarbes",
+    "coordinates": {
+      "lat": 43.2333,
+      "lon": 0.0833
+    },
+    "rain_forecast": [
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      },
+      {
+        "datetime": "Unknown",
+        "intensity": "N/A"
+      }
+    ]
+  },
+  "thunderstorm_analysis": {
+    "thunderstorm_periods_count": 0,
+    "high_precipitation_periods_count": 0,
+    "thunderstorm_periods": [],
+    "high_precipitation_periods": []
+  },
+  "comparison_results": {
+    "api_functional": true,
+    "data_quality": "unknown",
+    "thunderstorm_detection": false,
+    "warning_system_working": true,
+    "temperature_range_plausible": false,
+    "notes": []
+  }
+}

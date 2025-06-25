@@ -1,14 +1,60 @@
-startdatum: "2025-06-15"
+# =============================================================================
+# WETTERBERICHT-AUTOMATISIERUNG - KONFIGURATION
+# =============================================================================
+# Vereinfachte Konfiguration mit nur den essentiellen Einstellungen
+
+# =============================================================================
+# GRUNDKONFIGURATION
+# =============================================================================
+
+# Startdatum der Tour (YYYY-MM-DD Format)
+startdatum: "2025-06-25"
+
+# =============================================================================
+# E-MAIL-KONFIGURATION
+# =============================================================================
 smtp:
   host: smtp.gmail.com
   port: 587
   user: henning.emmrich@gmail.com
   to: henningemmrich@icloud.com
   subject: Wetterwarnung GR20
-schwellen:
-  regen: 25
-  regenmenge: 2
-  gewitter: 20
-  delta_prozent: 20
-  hitze: 32
-  wind: 20
+
+# =============================================================================
+# RELEVANZ-SCHWELLENWERTE
+# =============================================================================
+# Ab wann soll ein Wert als "relevant" hervorgehoben werden
+
+thresholds:
+  rain_probability: 25.0      # Regenwahrscheinlichkeit in %
+  rain_amount: 2.0           # Regenmenge in mm
+  thunderstorm_probability: 20.0  # Gewitterwahrscheinlichkeit in %
+  wind_speed: 20.0           # Windgeschwindigkeit in km/h
+  temperature: 32.0          # Temperatur in °C
+  cloud_cover: 90.0          # Bewölkung in %
+
+# =============================================================================
+# ÄNDERUNGS-SCHWELLENWERTE
+# =============================================================================
+# Ab welcher Veränderung soll es eine untertägige Warnung geben
+
+delta_thresholds:
+  thunderstorm_probability: 20.0  # Delta für Gewitter in %
+  rain_probability: 30.0          # Delta für Regen in %
+  wind_speed: 10.0                # Delta für Wind in km/h
+  temperature: 2.0                # Delta für Temperatur in °C
+
+# =============================================================================
+# VERHALTENS-PARAMETER
+# =============================================================================
+
+min_interval_min: 30              # Minimaler Abstand zwischen Warnungen in Minuten
+max_daily_reports: 3              # Maximale Anzahl Berichte pro Tag
+
+# =============================================================================
+# DATEIPFADE
+# =============================================================================
+
+state_file: "data/warning_state.json"
+warning_output_file: "output/inreach_warnung.txt"
+sharemap_url: "https://share.garmin.com/PDFCF" 

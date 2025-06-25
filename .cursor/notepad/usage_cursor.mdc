@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 🧠 Cursor-Workflow (Tech Lead)
+
+## 🧾 .mdc-Dateien ausführen
+- Cursor kann `.mdc`-Dateien im Agenten-Fenster („New Chat“) ausführen
+- Dafür:
+  1. Rechtsklick auf `.mdc`
+  2. „Add to New Cursor Chat“
+  3. Im Chat-Feld: `Run this request`
+
+## 📁 Dateitypen
+- `.md` = klassische Dokumentation
+- `.mdc` = ausführbare Agenten-Requests
+- `rule.mdc` = Regeln für Agent (mit „Always“ aktivieren)
+
+## 🛑 Grenzen
+- Der GPT darf selbst **keinen Code ausführen oder einfügen**
+- Er liefert ausschließlich strukturierte Anforderungen & Playbooks

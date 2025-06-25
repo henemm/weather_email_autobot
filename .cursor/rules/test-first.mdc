@@ -1,0 +1,19 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Test-First Playbook für Cursor
+
+## Verhaltensvorgabe:
+1. Erstelle zu jeder neuen Funktion zuerst einen Unit-Test
+2. Verwende `pytest`-kompatible Syntax
+3. Implementiere nur so viel Code, bis der Test grün wird
+4. Wiederhole, bis alle Tests erfolgreich sind
+5. Verwende nur Standardbibliothek, keine Test-Frameworks außerhalb von `pytest`
+6. Keine spekulativen Mocks, nur reale Fälle abbilden
+
+## Ziel:
+- Reduziere Fehlertoleranz früh
+- Vermeide spekulative APIs
+- Erzwinge konkrete Verifikation vor Implementierung

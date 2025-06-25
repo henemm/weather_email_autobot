@@ -1,0 +1,39 @@
+Dateiname: docs/schedule_gr20_weather_report.txt
+
+Titel: Versandzeitplan GR20-Wetterberichte
+
+Zweck:
+Regelmäßiger und reaktiver Versand von Wetterberichten während der GR20-Wanderung.
+
+Zeitplan für Versand:
+
+1. Morgendlicher Bericht:
+   - Uhrzeit: 04:30 Uhr
+   - Inhalt: Zusammenfassung für den bevorstehenden Wandertag
+   - Datenquellen: AROME Model (Konvektion, Niederschlag, Wind)
+
+2. Abendlicher Bericht:
+   - Uhrzeit: 19:00 Uhr
+   - Inhalt: Analyse der Wetterentwicklung für den nächsten Tag
+   - Fokus: CAPE/SHEAR-Indikatoren, Gewitterneigung
+
+3. Dynamischer Tagesversand:
+   - Zeitraum: Zwischen 04:30 Uhr und 19:00 Uhr
+   - Bedingung: Nur bei signifikanter Änderung (siehe config.yaml – Entscheidungsschwellen)
+   - Maximal: 3 Benachrichtigungen pro Tag
+   - Beispielauslöser: Plötzlicher Starkregen, Gewitterzelle in Bewegung, Wetterwarnung hochgestuft
+
+Begrenzungen:
+- Jede Nachricht darf max. 160 Zeichen lang sein
+- Keine Emojis oder Links
+- Nur relevante Info zum nächsten Wegpunkt / Abschnitt
+
+Verarbeitung:
+- Die aktuelle Zielregion wird aus der Etappenbeschreibung (etappen.json) abgeleitet
+- Die Entscheidung über den Versand trifft das Modul report_scheduler.py
+- Der Versand erfolgt über email_client.py
+
+Abhängigkeiten:
+- config.yaml: definiert Schwellen und dynamische Auslöser
+- SMTP-Parameter über GMAIL_APP_PW
+- Aktiver Internetzugang auf dem Server notwendig

@@ -1,0 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Stil- und Qualitätsrichtlinien
+
+- Der Code soll wartbar, modular und klar strukturiert sein.
+- Funktionen sollen klein und eindeutig sein („Do one thing well“).
+- Nutze sprechende, englischsprachige Bezeichner (camelCase für JS, snake_case für Python).
+- Schreibe zu jeder neuen Funktion passende Unit-Tests (mindestens Positivfall, wenn möglich auch Randfälle).
+- Kommentare nur da, wo die Logik nicht selbsterklärend ist – ansonsten lieber gute Benennung.
+- Keine "magischen Zahlen" – alles was Bedeutung hat, soll benannt werden.

@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "location": "Conca, Corsica",
+    "latitude": 41.7577,
+    "longitude": 9.342,
+    "timestamp": "2025-06-22T18:38:12.214786",
+    "data_sources": []
+  },
+  "weather_data": null,
+  "warnings": [],
+  "analysis": null,
+  "errors": [
+    "Failed to fetch AROME WCS data: Failed to fetch weather data for position: HTTP error 404: {\"code\":\"404\",\"type\":\"Status report\",\"message\":\"Runtime Error\",\"description\":\"No matching resource found for given API Request\"}",
+    "Failed to fetch weather warnings: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+  ]
+}

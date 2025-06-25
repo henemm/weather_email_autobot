@@ -1,0 +1,52 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+FILE: .cursor/rules/vigilance_warnings.mdc
+
+⸻
+
+[FILE GROUP]
+request = “requests/vigilance_warnings.md”
+
+[TARGET MODULES]
+include = [
+“auth/token_provider.py”,
+“forecast/fetch_forecast_data.py”,
+“forecast/parse_forecast_result.py”,
+“forecast/interpret_forecast_thunderstorm_risk.py”,
+“vigilance/fetch_vigilance_data.py”
+]
+
+[ENVIRONMENT]
+required_vars = [
+“METEOFRANCE_CLIENT_ID”,
+“METEOFRANCE_CLIENT_SECRET”
+]
+
+[API CONTRACT]
+type = “HTTP”
+authentication = “OAuth2 Client Credentials”
+token_refresh = true
+token_endpoint = “https://portail-api.meteofrance.fr/token”
+forecast_endpoint = “https://public-api.meteofrance.fr/public/meteofrance/v1/meteofrance”
+vigilance_endpoint = “https://public-api.meteofrance.fr/public/vigilance/v1/bulletins”
+
+[VALIDATION STRATEGY]
+rules = [
+“Forecastdaten enthalten CAPE und SHEAR oder verwandte Konvektionsindikatoren.”,
+“Vigilance-Daten enthalten explizite Hinweise auf Gewitterwarnungen.”,
+“Modul interpret_forecast_thunderstorm_risk kombiniert numerische und offizielle Warnungen.”,
+“Alle API-Aufrufe erfolgen mit gültigem Access-Token aus dem Token Provider.”,
+“Fallback auf Vigilance möglich, falls keine numerischen Daten verfügbar.”
+]
+
+[NON-FUNCTIONAL]
+rate_limit = “Beachte API Rate Limits”
+timeout = “max 10s pro API-Aufruf”
+retry = “max 2 Versuche bei HTTP 5xx”
+
+[OUTPUT FORMAT]
+forecast_output = “Dictionary mit normalisierten Feldern wie {temp, wind_speed, cape, shear, thunderstorm_risk}”
+vigilance_output = “Map Departement -> AlertLevel + AlertType”

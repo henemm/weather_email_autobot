@@ -1,0 +1,49 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Einheitliches Management von Umgebungsvariablen (.env)
+
+## Problemstellung
+
+In den Testmodulen wurde die Datei `.env` nicht zuverlässig geladen. Das führte dazu, dass `os.getenv("METEOFRANCE_WCS_TOKEN")` falsche oder veraltete Token-Werte zurückgab – insbesondere dann, wenn die Variable bereits in der Shell-Umgebung gesetzt war (z. B. durch `.bashrc` oder `.profile`).
+
+## Root Cause
+
+Die Bibliothek `python-dotenv` überschreibt per Default keine existierenden Variablen im Environment. Sobald eine Umgebungsvariable bereits gesetzt ist (z. B. durch einen Shell-Export), bleibt der alte Wert erhalten.
+
+## Lösung
+
+Ein zentrales Utility wurde eingeführt:
+- `tests/utils/env_loader.py` mit der Funktion `get_env_var("VAR_NAME")`
+- Verwendung von `load_dotenv(override=True)` zur erzwungenen Priorisierung der `.env`-Werte
+- Alle Tests greifen jetzt über `get_env_var` auf Konfigurationswerte zu
+
+## Betroffene Testdateien
+
+- `tests/demo_check_wms_capabilities.py`
+- `tests/test_token_validity.py`
+- `tests/test_arome_wcs_live.py`
+- `tests/test_oauth2_authentication_strategy.py`
+- `tests/test_vigilance_live.py`
+
+## Empfehlungen für Produktionscode
+
+**Prüfung erforderlich:**  
+Es existieren in `src/` direkte `os.getenv()`-Zugriffe auf Token-Variablen. Diese sollten identifiziert und ggf. vereinheitlicht werden.
+
+grep -r “os.getenv.*METEOFRANCE” src/
+
+### Entscheidungsbedarf:
+
+- Soll auch im Produktionscode ein zentrales env_loader-Utility eingeführt werden?
+- Müssen bestehende Deployments `.env` zuverlässig laden können – oder wird ausschließlich mit Shell-Exports gearbeitet?
+- Soll ein Fallback-Verhalten definiert werden (z. B. Warnung, wenn Token nicht in .env gefunden wird)?
+
+## Aufgaben
+
+- [ ] Audit aller `os.getenv()`-Zugriffe
+- [ ] Entscheidung zur Vereinheitlichung (Utility auch in `src/`)
+- [ ] Anpassung von Deployment-Skripten falls `.env` genutzt wird
+- [ ] Dokumentation aktualisieren

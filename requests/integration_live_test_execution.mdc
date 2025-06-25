@@ -1,0 +1,50 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Integrationstest: Live-Datenanalyse mit AROME + Warnungen
+rule_type: Manual
+tags:
+  - integration
+  - live
+  - external-api
+  - meteo-france
+  - safety
+description: |
+  Führt einen vollständigen End-to-End-Test mit Live-Wetterdaten und Unwetterwarnungen für eine reale Region (Monte Cinto, Korsika) durch. Ziel ist es, das Zusammenspiel von Datenabruf, Analyse und Risikobericht unter Echtbedingungen zu prüfen.
+trigger:
+  manually: true
+
+
+## Ziel
+Erstelle ein Skript `tests/integration_live_test.py`, das reale Wetterdaten und Warnungen für die GR20-Region lädt und direkt analysiert.
+
+---
+
+## Anforderungen
+
+### Ort
+- Breite: `42.308`
+- Länge: `8.937`
+- Beschreibung: Gebiet südlich des Monte Cinto (Korsika)
+
+### Ablauf
+1. **Importiere**:
+   - `fetch_arome(lat, lon)` aus `wetter.fetch_arome`
+   - `fetch_warnings(lat, lon)` aus `wetter.fetch_vigilance`
+   - `analyze_weather_data(weather_data, config)` aus `logic.analyse_weather`
+2. **Rufe die AROME-Daten ab**
+3. **Rufe die Warnungsdaten ab**
+4. **Führe die Analyse durch**
+5. **Gib den Analysebericht auf der Konsole aus**:
+   - `WeatherReport.text`
+   - Optional: `analysis.risks` nach Kategorie auflisten
+
+---
+
+## Konformität
+
+- Kein `input()` oder Benutzerdialog
+- Nur Druckausgabe (`print()`)
+- Fehler bei API oder Token sollen klar per `Exception` erscheinen

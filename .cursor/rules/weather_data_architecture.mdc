@@ -1,0 +1,89 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# ☁️ Neue Wetterdatenarchitektur
+
+## Ziel
+
+Das System verwendet künftig ausschließlich die Python-Bibliothek `meteofrance-api` zur Wetterdatenerfassung. Alle bisherigen Direktzugriffe auf Météo-France-WCS/AROME/PIAF entfallen vollständig. `open-meteo` bleibt als Fallback erhalten.
+
+---
+
+## ✅ Vorgaben
+
+### 1. Datenquellen
+
+| Funktion                     | Primärquelle (meteofrance-api) | Fallback (open-meteo)         |
+|------------------------------|-------------------------------|-------------------------------|
+| Tagesprognose                | forecast_daily / hourly       | forecast                      |
+| Gewitterwarnung              | thunderstorm                  | – (optional: CAPE anzeigen)   |
+| Wetterwarnungen (Vigilance) | vigilance                     | –                             |
+| Temperatur, Regen, Wind      | forecast                      | forecast                      |
+
+---
+
+### 2. Entfernte Komponenten
+
+Folgende Module werden **vollständig entfernt**:
+
+- `src/wetter/fetch_arome_wcs.py`
+- `src/wetter/fetch_piaf.py`
+- `src/wetter/fetch_arome_nowcast.py`
+- `src/auth/api_token_provider.py`
+
+Zugehörige Tests, die ebenfalls entfernt werden:
+
+- `tests/test_fetch_arome_*.py`
+- `tests/test_piaf_*.py`
+- `tests/test_api_token_provider.py`
+
+---
+
+### 3. Neues Modul
+
+**Datei:** `src/wetter/fetch_meteofrance.py`
+
+Bereitgestellte Funktionen:
+
+- `get_forecast(lat: float, lon: float) -> ForecastResult`
+- `get_thunderstorm(lat: float, lon: float) -> str`
+- `get_alerts(lat: float, lon: float) -> List[Alert]`
+
+Alle Funktionen basieren ausschließlich auf der offiziellen Bibliothek `meteofrance-api`.
+
+---
+
+### 4. Fallback-Logik
+
+- Falls `meteofrance-api` nicht verfügbar ist, erfolgt ein automatischer Rückgriff auf `open-meteo`.
+- Der Fallback greift **nur für**:
+  - Temperatur
+  - Niederschlag
+  - Windgeschwindigkeit
+- Es gibt **keinen Fallback** für:
+  - `thunderstorm`
+  - `vigilance`
+
+---
+
+### 5. Konfiguration
+
+- Kein OAuth2 oder Token-Handling mehr nötig
+- `.env` enthält nur optional:
+  - `OPENMETEO_API_KEY`
+
+---
+
+### 6. Tests
+
+Alle bestehenden Tests zu AROME/PIAF werden ersetzt durch:
+
+- `tests/test_fetch_meteofrance.py`
+- `tests/test_fetch_meteofrance_fallback.py`
+
+Diese prüfen vollständige Live- und Mock-Verfügbarkeit für `meteofrance-api` und `open-meteo`.
+
+---
+

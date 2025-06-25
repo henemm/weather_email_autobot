@@ -1,0 +1,32 @@
+# Demo: AROME-Daten live abrufen und analysieren
+
+## Ziel
+
+Lade Wetterdaten aus der AROME HD API von Météo-France für eine konkrete Koordinate und führe eine Risikoanalyse mit dem Modul `analyse_weather` durch.
+
+---
+
+## Parameter
+
+- **Position**: Südlich des Monte Cinto, Korsika  
+  - `lat = 42.308`  
+  - `lon = 8.937`
+
+- **Konfiguration**: Verwende `default_thresholds` aus `model/risks.py`
+
+---
+
+## Ablauf
+
+1. Rufe mit `fetch_arome(lat, lon)` die AROME-Daten ab.
+2. Übergib diese an `analyze_weather_data(arome, config=default_thresholds)`.
+3. Gib alle erkannten `WeatherRisk`s aus.
+4. Gib die generierte `summary` aus.
+
+---
+
+## Anforderungen
+
+- Kein Logging oder File-Output
+- Ausgabe erfolgt direkt im Terminal
+- Funktioniert nur, wenn `METEOFRANCE_AROME_TOKEN` gesetzt ist

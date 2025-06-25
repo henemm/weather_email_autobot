@@ -1,0 +1,88 @@
+==================================================
+Météo-France API Architekturübersicht & Integration
+==================================================
+
+Ziel
+----
+Zentrale Dokumentation der API-Struktur, des Token-Managements und der Implementierungslogik für AROME/PIAF/WMS/WCS.
+
+1. Token-Handling
+------------------
+- Jede API (AROME, AROMEPI, PIAF, WMS/WCS) benötigt einen eigenen Token.
+- Tokens sind nicht austauschbar – sie gelten nur für die API, für die sie generiert wurden.
+- Token-Generierung invalidiert vorherige Token derselben API sofort.
+- Tokens haben begrenzte Gültigkeit (~1 Stunde).
+- Fehlerquelle: Ein 401 kann bedeuten: "Token abgelaufen" oder "falsche API für Token".
+- Tokens müssen aus .env geladen werden – NICHT aus Shell-Variablen (python-dotenv überschreibt diese nicht).
+- Genutzte Umgebungsvariablen:
+  - METEOFRANCE_WCS_TOKEN
+  - METEOFRANCE_IFC_TOKEN
+  - METEOFRANCE_PIA_TOKEN
+
+2. API-Endpunkte
+----------------
+| API Name                          | Typ   | URL enthält                  | Zeitauflösung     | Zweck                                  |
+|----------------------------------|-------|------------------------------|-------------------|----------------------------------------|
+| AROME Model                      | WMS/WCS | /public/arome/1.0/          | 1h Schritte, 48h   | Standardvorhersage + Indizes (CAPE)    |
+| AROME Immediate Forecast (AROMEPI) | WCS   | /public/aromepi/1.0/        | alle 15 Min, 6h   | Nowcasting                             |
+| PIAF (Aggregated Immediate FC)   | WCS   | /pro/piaf/1.0/              | alle 5 Min, 3h    | Hochauflösend, nur Niederschlag        |
+
+3. BoundingBox
+---------------
+- Einheitlich: [37.5, -12.0, 55.4, 16.0]
+- Wird manchmal NICHT im XML geliefert → Fallback notwendig
+- Fehlerquelle: Parsing ohne Fallback kann zu false-negatives führen („Conca nicht abgedeckt“)
+
+4. Code-Struktur
+----------------
+- src/auth/api_token_provider.py:
+  - Zentrale Klasse APITokenProvider (Singleton)
+  - Zugriff per get_api_token("piaf"), get_api_token("arome"), etc.
+  - Validiert Token-Format (JWT) beim Laden
+  - Fehlerausgaben differenziert: fehlend, falsches Format, nicht zugeordnet
+
+- Fallback BoundingBox:
+  - Wird automatisch verwendet, wenn XML leer
+  - Konfiguriert in jedem fetch_xx_capabilities.py
+
+- Logging & Fehlerbehandlung:
+  - HTTP 401 → „Token falsch oder abgelaufen“
+  - HTTP 404 → „Endpoint falsch oder Service nicht vorhanden“
+  - HTTP 403 → „Token korrekt, aber keine Berechtigung für Dienst“
+  - Timeout & ConnectionError separat behandelt
+
+5. Tests & Diagnose-Tools
+--------------------------
+- tests/test_api_token_provider.py:
+  - Prüft alle Tokens auf Existenz & Format
+  - Singleton-Verhalten
+  - Fehler für unbekannte Services
+
+- scripts/demo_api_layer_inspection.py:
+  - Ruft alle 4 GetCapabilities-URLs ab
+  - Analysiert enthaltene Layer
+  - Prüft Conca-Abdeckung
+
+6. Empfehlungen für Nutzung (z. B. GR20 Wanderer)
+--------------------------------------------------
+- Abends:
+  → AROME Model nutzen (CAPE, SHEAR, Regenvorhersage)
+- Morgens:
+  → AROMEPI/PIAF für kurzfristige Entwicklungen
+- Unterwegs:
+  → Alle 15 Minuten PIAF/AROMEPI für Nowcasting prüfen
+
+7. Fehlannahmen (früher)
+-------------------------
+- Globale Token für alle APIs → Falsch
+- BoundingBox immer im XML → Falsch
+- dotenv überschreibt Shell-Variablen → Falsch
+
+Fazit
+-----
+Die API-Architektur ist komplex, aber klar trennbar:
+- Token ≠ global
+- BoundingBox ≠ immer im XML
+- Fehler = differenziert behandeln
+
+Die aktuelle Implementierung spiegelt diese Erkenntnisse vollständig wider.
