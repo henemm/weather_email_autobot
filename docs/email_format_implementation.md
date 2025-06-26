@@ -2,57 +2,51 @@
 
 ## Übersicht
 
-Die Regel `.cursor/rules/email_format.mdc` wurde vollständig implementiert. Das System unterstützt jetzt drei spezifische E-Mail-Formate für GR20-Wetterberichte, die für die Übertragung über InReach-Satellitensystem optimiert sind.
+Die Regel `.cursor/rules/email_format.mdc` wurde vollständig implementiert. Das System unterstützt jetzt drei spezifische E-Mail-Formate für Wetterberichte, die für die Übertragung über InReach-Satellitensystem optimiert sind.
+
+## Nullwertregel & Kompaktformat
+
+- **Alle Wetterwerte, die 0 oder leer sind, werden als „-” ausgegeben.**
+- **Keine Zeitangaben, Maximalwerte oder Einheiten für 0-Werte.**
+- **Auch „Gewitter +1” und alle anderen Felder folgen dieser Logik.**
+- **Keine führenden Nullen bei Uhrzeiten.**
+- **Keine leeren Dezimalstellen (z.B. 4mm statt 4.0mm).**
+- **Bei Platzmangel werden Leerzeichen entfernt.**
 
 ## Implementierte Formate
 
 ### 1. Morgenbericht (04:30 Uhr)
 
-**Format:** `{EtappeHeute} | Gewitter {g1}%@{t1} {g2}%@{t2} | Gewitter +1 {g1_next}% | Regen {r1}%@{t3} {r2}%@{t4} {regen_mm}mm | Hitze {temp_max}°C | Wind {wind_max}km/h | {vigilance_warning}`
+**Format:** `{EtappeHeute} | Gewitter {g1}%@{t1}(max {g1_max}%@{t1_max}) | Gewitter +1 {g1_next}% | Regen {r1}%@{t3}(max {r1_max}%@{t3_max}) {regen_mm}mm@{t5}(max {regen_max}mm@{t5_max}) | Hitze {temp_max}°C | Wind {wind_max}km/h | {vigilance_warning}`
 
-**Beispiel:** `Conca | Gewitter 45%@14:00 30% | Regen 60%@15:30 50% 12.5mm | Hitze 28.5°C | Wind 35km/h | Gewitter +1 25% | ORANGE Gewitter`
-
-**Erläuterung:**
-- `{g1}@{t1}`: Höchste Gewitterwahrscheinlichkeit
-- `{g2}@{t2}`: Zeitpunkt, an dem Schwellenwert für Gewitter überschritten wird
-- `{g1_next}`: Gewitterwahrscheinlichkeit für morgen (nächster Tag)
-- `{r1}@{t3}`: Höchste Regenwahrscheinlichkeit  
-- `{r2}@{t4}`: Zeitpunkt, an dem Schwellenwert für Regen überschritten wird
-- `{regen_mm}`: Tagesmaximalsumme Regen
-- `{temp_max}`: Tageshöchsttemperatur
-- `{wind_max}`: Maximaler Wind
-- `{vigilance_warning}`: Höchste Vigilanzwarnung
+**Beispiel:**
+```
+Stieghorst | Gewitter - | Regen48%@9(max 100%@15) 2mm@15(max 2mm@15) | Hitze 24.6°C | Wind 30km/h | Gewitter +1 -
+```
 
 ### 2. Abendbericht (19:00 Uhr)
 
-**Format:** `{EtappeMorgen}→{EtappeÜbermorgen} | Nacht {min_temp}°C | Gewitter {g1}%@{t1} ({g2}%@{t2}) | Gewitter +1 {g1_next}% | Regen {r1}%@{t3} ({r2}%@{t4}) {regen_mm}mm | Hitze {temp_max}°C | Wind {wind_max}km/h | {vigilance_warning}`
+**Format:** `{EtappeMorgen}→{EtappeÜbermorgen} | Nacht {min_temp}°C | Gewitter {g1}%@{t1}(max {g1_max}%@{t1_max}) | Gewitter +1 {g1_next}% | Regen {r1}%@{t3}(max {r1_max}%@{t3_max}) {regen_mm}mm@{t5}(max {regen_max}mm@{t5_max}) | Hitze {temp_max}°C | Wind {wind_max}km/h | {vigilance_warning}`
 
-**Beispiel:** `Vizzavona→Corte | Nacht 15.2°C | Gewitter 35% (25%@16:00) | Regen 45% (40%@17:30) 8.5mm | Hitze 26.0°C | Wind 25km/h | Gewitter +1 40% | ROT Waldbrand`
-
-**Erläuterung:**
-- `{EtappeMorgen}`: Name der morgigen Etappe
-- `{min_temp}`: Nachttemperatur (Minimum aus Etappenstartpunkt morgen, Zeitraum 22–05 Uhr)
-- `{g1}@{t1}`: Gewitterwahrscheinlichkeit morgen
-- `({g2}@{t2})`: Zeitpunkt mit Schwellenwertüberschreitung (wenn vorhanden)
-- `{g1_next}`: Gewitterwahrscheinlichkeit für übermorgen (übernächster Tag)
-- `{r1}@{t3}`: Regenwahrscheinlichkeit morgen
-- `({r2}@{t4})`: Zeitpunkt mit Schwellenwertüberschreitung (wenn vorhanden)
-- `{regen_mm}`: Regenmenge morgen (Maximalsumme aller Geopunkte)
-- `{temp_max}`: Höchsttemperatur morgen
-- `{wind_max}`: Windspitze morgen
-- `{vigilance_warning}`: Höchste Vigilanzwarnung
+**Beispiel:**
+```
+Hiddesen | Nacht 18.3°C | Gewitter - | Regen - | Hitze 22.2°C | Wind 17km/h | Gewitter +1 -
+```
 
 ### 3. Dynamischer Zwischenbericht
 
 **Format:** `{EtappeHeute} | Update: Gewitter {g2}%@{t2} | Regen {r2}%@{t4} | Hitze {temp_max}°C | Wind {wind_max}km/h | {vigilance_warning}`
 
-**Beispiel:** `Conca | Update: Gewitter 35%@13:00 | Regen 55%@14:30 | Hitze 30.0°C | Wind 40km/h | ORANGE Hitze`
+**Beispiel:**
+```
+Stieghorst | Update: Gewitter 35%@15 | Regen 55%@16 | Hitze 29.1°C | Wind 31km/h
+```
 
-**Erläuterung:**
-- Wird nur bei signifikanter Änderung der Gefahrenlage ausgelöst
-- Gibt ausschließlich die stark geänderten Werte aus
-- Maximal 3 Zwischenberichte pro Tag
-- `{vigilance_warning}`: Vigilanzwarnung
+## Etappennamen-Logik
+
+- **Morgenbericht:** Name der heutigen Etappe
+- **Abendbericht:** Name der morgigen Etappe (aus etappen.json, basierend auf Datum)
+- **Dynamisch:** Name der aktuellen Etappe
 
 ## Technische Implementierung
 

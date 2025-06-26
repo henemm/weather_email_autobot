@@ -1,8 +1,14 @@
-# GR20 Wetterwarnsystem
+# Wetterbericht-Automat
 
-Dieses System analysiert die Wetterlage entlang des GR20 auf Korsika und verschickt automatisierte Kurzberichte an einen Garmin inReach Messenger via E-Mail-to-SMS-Weiterleitung.
+Dieses System analysiert die Wetterlage entlang beliebiger Routen (z.B. GR20, E1, Deutschlandtour) und verschickt automatisierte Kurzberichte an einen Garmin inReach Messenger via E-Mail-to-SMS-Weiterleitung.
 
 Ziel: Zuverlässige, minimalistische Übermittlung von Gewitter- und Wetterwarnungen für die jeweils bevorstehende Etappe – auch bei fehlender Internetverbindung.
+
+## Wichtige Regeln (ab v1.0.0)
+
+- **Nullwertregel:** Alle Wetterwerte, die 0 oder leer sind, werden als „-” ausgegeben. Keine Zeitangaben oder Einheiten für 0-Werte.
+- **Etappennamen-Logik:** Im Abendbericht steht immer die morgige Etappe im Betreff und im Text.
+- **Kompaktformat:** Keine führenden Nullen, keine leeren Dezimalstellen, bei Platzmangel werden Leerzeichen entfernt.
 
 ## Ablauf
 
@@ -31,14 +37,13 @@ Das Hauptskript `scripts/run_gr20_weather_monitor.py` führt aus:
 
 - `scripts/run_gr20_weather_monitor.py`: Hauptlogik
 - `config.yaml`: Schwellenwerte, Startdatum, Zeitpläne
-- `etappen.json`: Etappenpunkte (aktuell 6 Etappen, erweiterbar)
+- `etappen.json`: Etappenpunkte (beliebige Route)
 - `generate_etappen_json.py`: GPX zu JSON Konverter für Routendaten
 - `src/`
-  - `auth/api_token_provider.py`: Token-Management
-  - `wetter/`: API-Zugriffe (AROME, OpenMeteo, Vigilance)
+  - `wetter/`: API-Zugriffe (MeteoFrance, OpenMeteo, Vigilance)
   - `logic/`: Analyse (`analyse_weather.py`), Scheduler
   - `notification/email_client.py`: E-Mail-Versand
-  - `position/fetch_sharemap.py`: Positionsbestimmung (optional)
+  - `position/etappenlogik.py`: Etappen- und Positionslogik
   - `utils/env_loader.py`: Umgebungsvariablen-Management
 
 ## Tests
@@ -49,15 +54,13 @@ Das Hauptskript `scripts/run_gr20_weather_monitor.py` führt aus:
 
 ## Voraussetzungen
 
-Folgende Variablen in `.env` oder Umgebung:
+Siehe `.env` und `config.yaml` für alle nötigen Variablen.
 
-    GMAIL_APP_PW=dein_gmail_app_passwort
-    METEOFRANCE_WCS_TOKEN=dein_wcs_token
-    METEOFRANCE_CLIENT_ID=deine_client_id
-    METEOFRANCE_CLIENT_SECRET=dein_client_secret
-    EMAIL_TARGET=zieladresse@example.com
+## Dokumentation
 
-**Hinweis:** Das System unterstützt sowohl WCS-Token als auch OAuth2-Authentifizierung. Für OAuth2 werden `METEOFRANCE_CLIENT_ID` und `METEOFRANCE_CLIENT_SECRET` verwendet, für direkte API-Zugriffe `METEOFRANCE_WCS_TOKEN`.
+- **`generate_etappen_json.md`**: GPX zu JSON Konvertierung
+- **`email_format_implementation.md`**: E-Mail-Formatregeln, Nullwertregel, Etappennamen-Logik
+- **`wettermodi_uebersicht.md`**: Übersicht der Wettermodi und Berichtstypen
 
 ## Hinweise
 
