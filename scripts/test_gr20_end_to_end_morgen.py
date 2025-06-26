@@ -18,24 +18,38 @@ from pathlib import Path
 # Add src to path for imports
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
+sys.path.insert(0, str(project_root / "src"))
 
 from src.logic.analyse_weather import analyze_weather_data
-from src.wetter.fetch_arome import fetch_arome_weather_data
+from src.wetter.fetch_meteofrance import get_forecast
 from src.wetter.fetch_openmeteo import fetch_openmeteo_forecast
 from src.notification.email_client import EmailClient
 from src.utils.env_loader import get_env_var
 from src.model.datatypes import WeatherPoint, WeatherData
+from src.config.config_loader import load_config as load_config_with_env
 
 
 def load_config(config_path: str = "config.yaml") -> dict:
-    """Load configuration from YAML file."""
+    """Load configuration from YAML file with environment variable injection."""
     try:
-        with open(config_path, 'r', encoding='utf-8') as f:
-            return yaml.safe_load(f)
-    except FileNotFoundError:
-        raise FileNotFoundError(f"Configuration file not found: {config_path}")
-    except yaml.YAMLError as e:
-        raise yaml.YAMLError(f"Invalid YAML in configuration file: {e}")
+        return load_config_with_env(config_path)
+    except ImportError:
+        # Fallback to simple YAML loading if config_loader not available
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config = yaml.safe_load(f)
+            
+            # Manually inject GMAIL_APP_PW if not present
+            if "smtp" in config and "password" not in config["smtp"]:
+                gmail_pw = get_env_var("GMAIL_APP_PW")
+                if gmail_pw:
+                    config["smtp"]["password"] = gmail_pw
+            
+            return config
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Configuration file not found: {config_path}")
+        except yaml.YAMLError as e:
+            raise yaml.YAMLError(f"Invalid YAML in configuration file: {e}")
 
 
 def load_etappen(etappen_path: str = "etappen.json") -> list:
@@ -62,7 +76,7 @@ def get_stage_2_coordinates(etappen: list) -> list:
 
 
 def fetch_weather_data_for_stage(coordinates: list, config: dict) -> list:
-    """Fetch weather data for all points of a stage."""
+    """Fetch weather data for all points of a stage using meteofrance-api and open-meteo as fallback."""
     weather_data_list = []
     
     print(f"Fetching weather data for {len(coordinates)} stage points...")
@@ -73,22 +87,31 @@ def fetch_weather_data_for_stage(coordinates: list, config: dict) -> list:
         
         point_weather_data = []
         
-        # Fetch AROME data if token is available
+        # Try meteofrance-api first
         try:
-            meteo_token = get_env_var("METEOFRANCE_WCS_TOKEN")
-            if meteo_token:
-                print(f"  Fetching AROME data for point {i+1}...")
-                arome_data = fetch_arome_weather_data(
+            print(f"  Fetching MeteoFrance data for point {i+1}...")
+            forecast = get_forecast(lat, lon)
+            if forecast:
+                weather_point = WeatherPoint(
                     latitude=lat,
-                    longitude=lon
+                    longitude=lon,
+                    elevation=0.0,
+                    time=datetime.fromisoformat(forecast.timestamp) if forecast.timestamp else datetime.now(),
+                    temperature=forecast.temperature,
+                    feels_like=forecast.temperature,  # No separate feels_like in ForecastResult
+                    precipitation=0.0,  # Not available in ForecastResult
+                    thunderstorm_probability=forecast.precipitation_probability,
+                    wind_speed=0.0,  # Not available in ForecastResult
+                    wind_direction=0.0,  # Not available in ForecastResult
+                    cloud_cover=0.0  # Not available in ForecastResult
                 )
-                if arome_data:
-                    point_weather_data.append(arome_data)
-                    print(f"  AROME data fetched successfully for point {i+1}")
+                weather_data = WeatherData(points=[weather_point])
+                point_weather_data.append(weather_data)
+                print(f"  MeteoFrance data fetched successfully for point {i+1}")
         except Exception as e:
-            print(f"  Failed to fetch AROME data for point {i+1}: {e}")
+            print(f"  Failed to fetch MeteoFrance data for point {i+1}: {e}")
         
-        # Fetch OpenMeteo data as fallback
+        # Fallback: OpenMeteo
         try:
             print(f"  Fetching OpenMeteo data for point {i+1}...")
             openmeteo_data = fetch_openmeteo_forecast(

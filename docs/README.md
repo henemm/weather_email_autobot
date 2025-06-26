@@ -32,6 +32,7 @@ Das Hauptskript `scripts/run_gr20_weather_monitor.py` führt aus:
 - `scripts/run_gr20_weather_monitor.py`: Hauptlogik
 - `config.yaml`: Schwellenwerte, Startdatum, Zeitpläne
 - `etappen.json`: Etappenpunkte (aktuell 6 Etappen, erweiterbar)
+- `generate_etappen_json.py`: GPX zu JSON Konverter für Routendaten
 - `src/`
   - `auth/api_token_provider.py`: Token-Management
   - `wetter/`: API-Zugriffe (AROME, OpenMeteo, Vigilance)
@@ -64,3 +65,22 @@ Folgende Variablen in `.env` oder Umgebung:
 - Nachrichtenlänge: max. 160 Zeichen
 - SMTP-Retry bei Fehlern
 - Garmin-Zustellung wetterabhängig (Bewölkung!)
+
+## 📚 Dokumentation
+
+### Verfügbare Dokumentation
+
+- **`generate_etappen_json.md`**: Detaillierte Anleitung für GPX zu JSON Konvertierung
+- **`email_format_implementation.md`**: E-Mail-Formatregeln und Implementierung
+- **`wettermodi_uebersicht.md`**: Übersicht der Wettermodi und Berichtstypen
+- **`oauth2_wms_wcs_best_practices.md`**: OAuth2 Authentifizierung für Météo-France
+- **`meteo_token_provider.md`**: Token-Management und API-Zugriff
+- **`remove_arome_hr_agg.md`**: Architekturänderungen und Modell-Updates
+
+### Status-Dateien
+
+- **`status_gr20_e2e.txt`**: End-to-End Test Status
+- **`schedule_gr20_weather_report.txt`**: Zeitplan für Wetterberichte
+- **`messaging_architecture_gr20.txt`**: Nachrichtenarchitektur
+- **`meteo_api_architecture.txt`**: API-Architektur Übersicht
+- **`oauth2_strategy.txt`**: OAuth2 Strategie

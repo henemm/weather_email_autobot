@@ -76,7 +76,13 @@ LOG_LEVEL=INFO
    # Edit .env with your actual credentials
    ```
 
-4. **Start the weather monitor**
+4. **Prepare route data** (if needed)
+   ```bash
+   # Convert GPX files to etappen.json format
+   python generate_etappen_json.py --input-dir input_gpx/ --output etappen.json
+   ```
+
+5. **Start the weather monitor**
    ```bash
    python scripts/run_gr20_weather_monitor.py
    ```
@@ -162,8 +168,26 @@ weather_email_autobot/
 │   └── manual/           # Manual testing scripts
 ├── scripts/              # Executable scripts
 ├── docs/                 # Documentation
+├── input_gpx/            # GPX route files (input for conversion)
+├── generate_etappen_json.py  # GPX to JSON converter
+├── etappen.json          # Route data for weather system
 └── output/               # Generated reports and data
 ```
+
+## 🛠️ Data Preparation
+
+### Route Data Conversion
+The system uses `etappen.json` for route information. To convert GPX files:
+
+1. **Place GPX files** in `input_gpx/` directory
+2. **Name files** with stage numbers: `Etappe 1.gpx`, `Etappe 2.gpx`, etc.
+3. **Run conversion**:
+   ```bash
+   python generate_etappen_json.py --input-dir input_gpx/
+   ```
+4. **Verify output** in `etappen.json`
+
+For detailed conversion documentation, see `docs/generate_etappen_json.md`.
 
 ## 🤝 Contributing
 

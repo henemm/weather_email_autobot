@@ -58,8 +58,10 @@ class WeatherAnalysis:
     """Ergebnis der Wetteranalyse"""
     risks: List[WeatherRisk] = field(default_factory=list)
     max_thunderstorm_probability: Optional[float] = None
+    max_rain_probability: Optional[float] = None
     max_precipitation: float = 0.0
     max_wind_speed: float = 0.0
+    max_wind_gusts: Optional[float] = None  # Add maximum wind gusts
     max_cloud_cover: float = 0.0
     max_temperature: float = 0.0
     max_cape_shear: Optional[float] = None
@@ -203,16 +205,22 @@ def analyze_weather_data(
     all_risks = []
     max_values = {
         "precipitation": 0.0,
+        "rain_probability": 0.0,  # Add rain probability tracking
         "wind_speed": 0.0,
+        "wind_gusts": 0.0,  # Add wind gusts tracking
         "cloud_cover": 0.0,
         "temperature": 0.0,
-        "thunderstorm_probability": 0.0
+        "thunderstorm_probability": 0.0,
+        "cape_shear": 0.0  # Add cape_shear to fix KeyError
     }
     
     for point in weather_data.points:
         # Update max values
         max_values["precipitation"] = max(max_values["precipitation"], point.precipitation or 0.0)
+        max_values["rain_probability"] = max(max_values["rain_probability"], point.rain_probability or 0.0)  # Track rain probability
         max_values["wind_speed"] = max(max_values["wind_speed"], point.wind_speed or 0.0)
+        if point.wind_gusts:  # Track wind gusts if available
+            max_values["wind_gusts"] = max(max_values["wind_gusts"], point.wind_gusts)
         max_values["cloud_cover"] = max(max_values["cloud_cover"], point.cloud_cover or 0.0)
         max_values["temperature"] = max(max_values["temperature"], point.temperature or 0.0)
         if point.thunderstorm_probability:
@@ -235,10 +243,13 @@ def analyze_weather_data(
     return WeatherAnalysis(
         risks=all_risks,
         max_thunderstorm_probability=max_values["thunderstorm_probability"] if max_values["thunderstorm_probability"] > 0 else None,
+        max_rain_probability=max_values["rain_probability"] if max_values["rain_probability"] > 0 else None,  # Add rain probability
         max_precipitation=max_values["precipitation"],
         max_wind_speed=max_values["wind_speed"],
+        max_wind_gusts=max_values["wind_gusts"],
         max_cloud_cover=max_values["cloud_cover"],
         max_temperature=max_values["temperature"],
+        max_cape_shear=max_values["cape_shear"] if max_values["cape_shear"] > 0 else None,
         summary=summary,
         risk=risk_score
     )
@@ -259,10 +270,25 @@ def _analyze_weather_point(point: WeatherPoint, thresholds: Dict[str, float]) ->
     
     # Get threshold values (support both German and English keys)
     rain_threshold = thresholds.get("rain_amount", thresholds.get("rain_probability", thresholds.get("precipitation", 2.0)))
+    rain_probability_threshold = thresholds.get("rain_probability", 25.0)  # Add rain probability threshold
     wind_threshold = thresholds.get("wind", thresholds.get("wind_speed", 40.0))
     cloud_threshold = thresholds.get("cloud_cover", thresholds.get("bewoelkung", 90.0))
     heat_threshold = thresholds.get("temperature", thresholds.get("hitze", 30.0))
     storm_threshold = thresholds.get("thunderstorm_probability", thresholds.get("gewitter", thresholds.get("gewitter_wahrscheinlichkeit", 20.0)))
+    
+    # Regenwahrscheinlichkeit-Risiko / Rain Probability Risk
+    if point.rain_probability and point.rain_probability > rain_probability_threshold:
+        level = _determine_risk_level(point.rain_probability, rain_probability_threshold, [25, 50, 75])
+        risks.append(WeatherRisk(
+            risk_type=RiskType.REGEN,  # German for backward compatibility
+            level=level,  # Keep German level for backward compatibility
+            value=point.rain_probability,
+            threshold=rain_probability_threshold,
+            time=point.time,
+            start_time=point.time,
+            end_time=point.time,
+            description=f"Regenwahrscheinlichkeit {point.rain_probability:.0f}% über Schwellwert {rain_probability_threshold}%"
+        ))
     
     # Regen-Risiko / Heavy Rain Risk
     if point.precipitation > rain_threshold:
@@ -484,6 +510,7 @@ def analyze_weather_data_english(
         "thunderstorm_probability": 0.0,
         "precipitation": 0.0,
         "wind_speed": 0.0,
+        "wind_gusts": 0.0,  # Add wind gusts tracking
         "cloud_cover": 0.0,
         "temperature": 0.0,
         "cape_shear": 0.0
@@ -494,6 +521,8 @@ def analyze_weather_data_english(
         # Aktualisiere Maximalwerte
         max_values["precipitation"] = max(max_values["precipitation"], point.precipitation)
         max_values["wind_speed"] = max(max_values["wind_speed"], point.wind_speed)
+        if point.wind_gusts:  # Track wind gusts if available
+            max_values["wind_gusts"] = max(max_values["wind_gusts"], point.wind_gusts)
         max_values["cloud_cover"] = max(max_values["cloud_cover"], point.cloud_cover)
         max_values["temperature"] = max(max_values["temperature"], point.temperature)
         
@@ -539,6 +568,7 @@ def analyze_weather_data_english(
         max_thunderstorm_probability=max_values["thunderstorm_probability"] if max_values["thunderstorm_probability"] > 0 else None,
         max_precipitation=max_values["precipitation"],
         max_wind_speed=max_values["wind_speed"],
+        max_wind_gusts=max_values["wind_gusts"],
         max_cloud_cover=max_values["cloud_cover"],
         max_temperature=max_values["temperature"],
         max_cape_shear=max_values["cape_shear"] if max_values["cape_shear"] > 0 else None,

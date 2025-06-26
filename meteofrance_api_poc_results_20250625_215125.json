@@ -1,0 +1,25 @@
+{
+  "test_info": {
+    "location": "Tarbes",
+    "department": "65",
+    "coordinates": {
+      "lat": 43.2333,
+      "lon": 0.0833
+    },
+    "test_time": "2025-06-25T21:50:55.134913"
+  },
+  "forecast_data": null,
+  "warning_data": null,
+  "rain_data": null,
+  "thunderstorm_analysis": null,
+  "comparison_results": {
+    "api_functional": false,
+    "data_quality": "unknown",
+    "thunderstorm_detection": false,
+    "warning_system_working": false,
+    "temperature_range_plausible": false,
+    "notes": [
+      "Forecast API not responding"
+    ]
+  }
+}

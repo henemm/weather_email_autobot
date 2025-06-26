@@ -25,7 +25,25 @@ class WeatherAlert:
 
 @dataclass
 class WeatherPoint:
-    """Einzelner Wettermesspunkt (stündlich)"""
+    """Single weather measurement point (hourly).
+    Args:
+        latitude: Latitude of the point
+        longitude: Longitude of the point
+        elevation: Elevation in meters
+        time: Timestamp of the measurement
+        temperature: Air temperature in °C
+        feels_like: Apparent temperature in °C
+        precipitation: Precipitation in mm
+        wind_speed: Wind speed in km/h
+        cloud_cover: Cloud cover in %
+        rain_probability: Probability of precipitation in % (NEW)
+        thunderstorm_probability: Probability of thunderstorm in %
+        wind_direction: Wind direction in degrees
+        wind_gusts: Wind gusts in km/h
+        cape: Convective Available Potential Energy
+        shear: Wind shear
+        alerts: List of weather alerts
+    """
     latitude: float
     longitude: float
     elevation: float
@@ -33,10 +51,12 @@ class WeatherPoint:
     temperature: float
     feels_like: float
     precipitation: float
-    thunderstorm_probability: Optional[float]
     wind_speed: float
-    wind_direction: float
     cloud_cover: float
+    rain_probability: Optional[float] = None  # NEW: Probability of precipitation in %
+    thunderstorm_probability: Optional[float] = None
+    wind_direction: float = 0.0  # Add default value
+    wind_gusts: Optional[float] = None  # Wind gusts (Böen) from OpenMeteo
     cape: Optional[float] = None  # Convective Available Potential Energy
     shear: Optional[float] = None  # Wind shear
     alerts: List[WeatherAlert] = field(default_factory=list)  # NEU

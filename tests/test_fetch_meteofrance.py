@@ -37,15 +37,17 @@ class TestMeteoFranceForecast:
         mock_forecast.forecast = [
             {
                 'T': {'value': 25, 'unit': '°C'},
-                'weather': 'sunny',
+                'weather': {'desc': 'sunny', 'icon': 'p1j'},
                 'precipitation_probability': 10,
-                'datetime': '2025-06-24T20:00:00'
+                'datetime': '2025-06-24T20:00:00',
+                'wind': {'speed': 15, 'gust': 25, 'direction': 180}
             },
             {
                 'T': {'value': 18, 'unit': '°C'},
-                'weather': 'rain',
+                'weather': {'desc': 'rain', 'icon': 'p2r'},
                 'precipitation_probability': 60,
-                'datetime': '2025-06-25T08:00:00'
+                'datetime': '2025-06-25T08:00:00',
+                'wind': {'speed': 8, 'gust': 12, 'direction': 90}
             }
         ]
         mock_client.get_forecast.return_value = mock_forecast
@@ -58,6 +60,8 @@ class TestMeteoFranceForecast:
         assert result.weather_condition == 'sunny'
         assert result.precipitation_probability == 10
         assert result.timestamp == '2025-06-24T20:00:00'
+        assert result.wind_speed == 15
+        assert result.wind_gusts == 25
         
     @patch('src.wetter.fetch_meteofrance.MeteoFranceClient')
     def test_get_forecast_api_error(self, mock_client_class):
@@ -94,9 +98,10 @@ class TestMeteoFranceThunderstorm:
         mock_forecast.forecast = [
             {
                 'T': {'value': 28, 'unit': '°C'},
-                'weather': 'thunderstorm',
+                'weather': {'desc': 'thunderstorm', 'icon': 'p3t'},
                 'precipitation_probability': 85,
-                'datetime': '2025-06-24T20:00:00'
+                'datetime': '2025-06-24T20:00:00',
+                'wind': {'speed': 20, 'gust': 35, 'direction': 270}
             }
         ]
         mock_client.get_forecast.return_value = mock_forecast
@@ -114,9 +119,10 @@ class TestMeteoFranceThunderstorm:
         mock_forecast.forecast = [
             {
                 'T': {'value': 22, 'unit': '°C'},
-                'weather': 'sunny',
+                'weather': {'desc': 'sunny', 'icon': 'p1j'},
                 'precipitation_probability': 10,
-                'datetime': '2025-06-24T20:00:00'
+                'datetime': '2025-06-24T20:00:00',
+                'wind': {'speed': 5, 'gust': 8, 'direction': 45}
             }
         ]
         mock_client.get_forecast.return_value = mock_forecast
@@ -205,13 +211,17 @@ class TestForecastResult:
             temperature=25.5,
             weather_condition='sunny',
             precipitation_probability=10,
-            timestamp='2025-06-24T20:00:00'
+            timestamp='2025-06-24T20:00:00',
+            wind_speed=15.0,
+            wind_gusts=25.0
         )
         
         assert result.temperature == 25.5
         assert result.weather_condition == 'sunny'
         assert result.precipitation_probability == 10
         assert result.timestamp == '2025-06-24T20:00:00'
+        assert result.wind_speed == 15.0
+        assert result.wind_gusts == 25.0
 
 
 class TestAlert:

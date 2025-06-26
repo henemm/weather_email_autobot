@@ -8,7 +8,7 @@
 # =============================================================================
 
 # Startdatum der Tour (YYYY-MM-DD Format)
-startdatum: "2025-06-25"
+startdatum: "2025-06-26"
 
 # =============================================================================
 # E-MAIL-KONFIGURATION
@@ -18,7 +18,23 @@ smtp:
   port: 587
   user: henning.emmrich@gmail.com
   to: henningemmrich@icloud.com
-  subject: Wetterwarnung GR20
+  subject: Her
+
+# =============================================================================
+# SMS-KONFIGURATION
+# =============================================================================
+sms:
+  enabled: true  # Disable SMS functionality for testing "false"
+  provider: seven
+  # API-Schlüssel wird aus Umgebungsvariable SEVEN_API_KEY geladen
+  api_key: "${SEVEN_API_KEY}"
+  # Testnummer für Entwicklung und Tests
+  test_number: "+4915158450319"
+  # Produktionsnummer für echte Berichte
+  production_number: "+4917717816897"
+  # Aktuell verwendete Nummer (test oder production)
+  mode: "test"  # "test" oder "production"
+  sender: "4916092170813"
 
 # =============================================================================
 # RELEVANZ-SCHWELLENWERTE
@@ -29,9 +45,9 @@ thresholds:
   rain_probability: 25.0      # Regenwahrscheinlichkeit in %
   rain_amount: 2.0           # Regenmenge in mm
   thunderstorm_probability: 20.0  # Gewitterwahrscheinlichkeit in %
-  wind_speed: 20.0           # Windgeschwindigkeit in km/h
-  temperature: 32.0          # Temperatur in °C
-  cloud_cover: 90.0          # Bewölkung in %
+  wind_speed: 40.0           # Windgeschwindigkeit in km/h (nur für Risikobewertung)
+  temperature: 30.0          # Temperatur in °C (nur für Risikobewertung)
+  cloud_cover: 50.0          # Bewölkung in %
 
 # =============================================================================
 # ÄNDERUNGS-SCHWELLENWERTE
@@ -48,7 +64,7 @@ delta_thresholds:
 # VERHALTENS-PARAMETER
 # =============================================================================
 
-min_interval_min: 30              # Minimaler Abstand zwischen Warnungen in Minuten
+min_interval_min: 60              # Minimaler Abstand zwischen Warnungen in Minuten
 max_daily_reports: 3              # Maximale Anzahl Berichte pro Tag
 
 # =============================================================================

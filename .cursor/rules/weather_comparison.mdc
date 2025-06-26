@@ -1,0 +1,70 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Regel: Wettermodellvergleich für Conca (AROME vs. Open-Meteo)
+
+## Gültigkeit
+Diese Regel gilt für alle Features, Tests und Skripte, die meteorologische Modelle vergleichen, insbesondere für AROME (Météo-France) und Open-Meteo.
+
+## Zielsetzung
+Ziel ist es, meteorologische Parameter aus zwei verschiedenen Quellen (AROME WCS und Open-Meteo) strukturiert zu vergleichen, um eine belastbare Entscheidungshilfe für Gewitterprognosen am GR20 bereitzustellen.
+
+## Location
+- Standardort: Conca, Korsika
+- Koordinaten: lat=41.7481, lon=9.2972
+
+## AROME Anforderungen
+- Zugriff über den WCS-Endpoint mit gültigem API-spezifischen Token (get_api_token("arome"))
+- GetCapabilities analysieren
+- Nur Layer verwenden, die meteorologisch relevant für Gewitter sind, insbesondere:
+  - CAPE
+  - SHEAR
+  - Niederschlagsraten
+
+## Open-Meteo Anforderungen
+- Verwende Forecast-API (https://api.open-meteo.com/v1/forecast)
+- Hole Vorhersagen für:
+  - Temperatur
+  - Windgeschwindigkeit
+  - Niederschlagsmenge
+
+## Ergebnisformat
+Das Ergebnis des Vergleichs muss als strukturierte JSON-Datei ausgegeben werden:
+{
+  "timestamp": "...",
+  "location": {
+    "name": "Conca",
+    "lat": 41.7481,
+    "lon": 9.2972
+  },
+  "arome": {
+    "layers": [
+      {
+        "name": "...",
+        "unit": "...",
+        "value": ...
+      }
+    ]
+  },
+  "open_meteo": {
+    "temperature": ...,
+    "precipitation": ...,
+    "wind_speed": ...
+  }
+}
+
+## Fehlerbehandlung
+- Jede Fehlerquelle (z. B. ungültiger Token, Netzwerkfehler, leere API-Antwort) muss eindeutig geloggt werden.
+- Skripte dürfen nicht mit unklaren Fehlermeldungen abbrechen.
+
+## Testpflicht
+- Ein dedizierter Integrationstest für test_weather_comparison.py muss:
+  - JSON-Struktur prüfen
+  - API-Zugriffe simulieren oder auf Live-Endpunkte testen
+  - Fehlerquellen explizit abdecken (401, 404, Timeout, etc.)
+
+## Pfade & Output
+- JSON-Ergebnis wird unter data/conca_weather_comparison.json gespeichert.
+- Logs optional unter logs/conca_comparison.log speichern.

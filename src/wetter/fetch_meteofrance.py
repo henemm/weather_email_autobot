@@ -24,6 +24,8 @@ class ForecastResult:
     weather_condition: Optional[str]
     precipitation_probability: Optional[int]
     timestamp: str
+    wind_speed: Optional[float] = None  # Add wind speed
+    wind_gusts: Optional[float] = None  # Add wind gusts from MeteoFrance
     data_source: str = "meteofrance-api"
 
 
@@ -104,14 +106,21 @@ def get_forecast(lat: float, lon: float) -> ForecastResult:
         if not forecast.forecast or len(forecast.forecast) == 0:
             raise RuntimeError("No forecast data received")
         
-        # Get the first forecast entry (current/next hour)
+        # Extract data from the first forecast entry
         first_forecast = forecast.forecast[0]
+        
+        # Extract wind data from the nested structure
+        wind_data = first_forecast.get('wind', {})
+        wind_speed = wind_data.get('speed', 0.0)
+        wind_gusts = wind_data.get('gust', 0.0)
         
         return ForecastResult(
             temperature=first_forecast['T']['value'],
-            weather_condition=first_forecast.get('weather'),
+            weather_condition=first_forecast.get('weather', {}).get('desc'),
             precipitation_probability=first_forecast.get('precipitation_probability'),
             timestamp=first_forecast.get('datetime', ''),
+            wind_speed=wind_speed,
+            wind_gusts=wind_gusts,
             data_source="meteofrance-api"
         )
         
@@ -147,7 +156,11 @@ def get_thunderstorm(lat: float, lon: float) -> str:
         # Check for thunderstorm conditions in the next few hours
         thunderstorm_entries = []
         for entry in forecast.forecast[:6]:  # Check next 6 hours
-            if entry.get('weather') == 'thunderstorm':
+            weather_data = entry.get('weather', {})
+            if isinstance(weather_data, dict) and weather_data.get('desc') == 'thunderstorm':
+                thunderstorm_entries.append(entry)
+            elif isinstance(weather_data, str) and weather_data == 'thunderstorm':
+                # Fallback for old API format
                 thunderstorm_entries.append(entry)
         
         if thunderstorm_entries:
@@ -233,6 +246,8 @@ def get_forecast_with_fallback(lat: float, lon: float) -> ForecastResult:
                 weather_condition=_convert_weather_code_to_condition(current.get('weather_code')),
                 precipitation_probability=None,  # OpenMeteo doesn't provide this directly
                 timestamp=current.get('time', ''),
+                wind_speed=current.get('wind_speed'),
+                wind_gusts=None,  # OpenMeteo doesn't provide wind gusts
                 data_source="open-meteo"
             )
         except Exception as fallback_error:
@@ -354,4 +369,79 @@ def _convert_weather_code_to_condition(weather_code: Optional[int]) -> Optional[
         99: "thunderstorm"
     }
     
-    return weather_conditions.get(weather_code, "unknown") 
+    return weather_conditions.get(weather_code, "unknown")
+
+
+def get_tomorrow_forecast(lat: float, lon: float) -> List[ForecastResult]:
+    """
+    Get tomorrow's weather forecast from meteofrance-api (05:00-17:00).
+    
+    Args:
+        lat: Latitude in decimal degrees
+        lon: Longitude in decimal degrees
+        
+    Returns:
+        List of ForecastResult containing tomorrow's weather data
+        
+    Raises:
+        ValueError: If coordinates are invalid
+        RuntimeError: If API request fails
+    """
+    _validate_coordinates(lat, lon)
+    
+    try:
+        client = MeteoFranceClient()
+        forecast = client.get_forecast(lat, lon)
+        
+        if not forecast.forecast or len(forecast.forecast) == 0:
+            raise RuntimeError("No forecast data received")
+        
+        # Get tomorrow's date
+        from datetime import datetime, timedelta
+        tomorrow = datetime.now() + timedelta(days=1)
+        tomorrow_date = tomorrow.date()
+        
+        tomorrow_forecasts = []
+        
+        for entry in forecast.forecast:
+            # Parse the datetime from the forecast entry using 'dt' field (Unix timestamp)
+            dt_timestamp = entry.get('dt')
+            if not dt_timestamp:
+                logger.warning(f"Skipping entry with empty dt: {entry}")
+                continue
+                
+            try:
+                entry_datetime = datetime.fromtimestamp(dt_timestamp)
+                entry_date = entry_datetime.date()
+                entry_hour = entry_datetime.hour
+                
+                # Check if it's tomorrow and between 05:00-17:00
+                if entry_date == tomorrow_date and 5 <= entry_hour <= 17:
+                    # Extract wind data from the nested structure
+                    wind_data = entry.get('wind', {})
+                    wind_speed = wind_data.get('speed', 0.0)
+                    wind_gusts = wind_data.get('gust', 0.0)
+                    
+                    tomorrow_forecasts.append(ForecastResult(
+                        temperature=entry['T']['value'],
+                        weather_condition=entry.get('weather', {}).get('desc'),
+                        precipitation_probability=entry.get('precipitation_probability'),
+                        timestamp=str(entry_datetime),  # Convert to string for consistency
+                        wind_speed=wind_speed,
+                        wind_gusts=wind_gusts,
+                        data_source="meteofrance-api"
+                    ))
+            except (ValueError, TypeError) as e:
+                logger.warning(f"Skipping entry with invalid dt '{dt_timestamp}': {e}")
+                continue
+        
+        if not tomorrow_forecasts:
+            logger.warning(f"No tomorrow forecast data found for {lat}, {lon}")
+            return []
+        
+        logger.info(f"Found {len(tomorrow_forecasts)} tomorrow forecast entries for {lat}, {lon}")
+        return tomorrow_forecasts
+        
+    except Exception as e:
+        logger.error(f"Failed to fetch tomorrow's forecast from meteofrance-api: {e}")
+        raise RuntimeError(f"Failed to fetch tomorrow's forecast: {str(e)}") 

@@ -37,14 +37,27 @@ def setup_logging():
 
 
 def load_config(config_path: str = "config.yaml") -> dict:
-    """Load configuration from YAML file."""
+    """Load configuration from YAML file with environment variable injection."""
     try:
-        with open(config_path, 'r', encoding='utf-8') as f:
-            return yaml.safe_load(f)
-    except FileNotFoundError:
-        raise FileNotFoundError(f"Configuration file not found: {config_path}")
-    except yaml.YAMLError as e:
-        raise yaml.YAMLError(f"Invalid YAML in configuration file: {e}")
+        from config.config_loader import load_config as load_config_with_env
+        return load_config_with_env(config_path)
+    except ImportError:
+        # Fallback to simple YAML loading if config_loader not available
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config = yaml.safe_load(f)
+            
+            # Manually inject GMAIL_APP_PW if not present
+            if "smtp" in config and "password" not in config["smtp"]:
+                gmail_pw = get_env_var("GMAIL_APP_PW")
+                if gmail_pw:
+                    config["smtp"]["password"] = gmail_pw
+            
+            return config
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Configuration file not found: {config_path}")
+        except yaml.YAMLError as e:
+            raise yaml.YAMLError(f"Invalid YAML in configuration file: {e}")
 
 
 def load_etappen(etappen_path: str = "etappen.json") -> list:

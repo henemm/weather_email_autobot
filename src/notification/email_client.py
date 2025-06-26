@@ -98,6 +98,75 @@ class EmailClient:
             print(f"Failed to send email: {e}")
             return False
     
+    def _generate_dynamic_subject(self, report_data: Dict[str, Any]) -> str:
+        """
+        Generate dynamic email subject based on risk level, main risk type, stage, and mode.
+        
+        Format: [subject] [ETAPPE]: [LEVEL] - [HAUPTRISIKO] ([modus])
+        
+        Args:
+            report_data: Dictionary containing report information
+            
+        Returns:
+            Dynamic subject string
+        """
+        # Get base subject from config
+        base_subject = self.config.get("smtp", {}).get("subject", "GR20")
+        
+        # Get mode
+        mode = report_data.get("report_type", "unknown")
+        
+        # Get weather analysis for risk assessment
+        weather_analysis = report_data.get("weather_analysis")
+        
+        if not weather_analysis or not weather_analysis.risks:
+            # No risks detected
+            level = "LOW"
+            main_risk = "CLEAR"
+        else:
+            # Find the highest risk
+            highest_risk = max(weather_analysis.risks, key=lambda r: r.level.value)
+            
+            # Map risk level to subject format
+            level_mapping = {
+                "low": "LOW",
+                "niedrig": "LOW", 
+                "moderate": "MODERATE",
+                "mittel": "MODERATE",
+                "high": "HIGH", 
+                "hoch": "HIGH",
+                "very_high": "VERY_HIGH",
+                "sehr_hoch": "VERY_HIGH"
+            }
+            level = level_mapping.get(highest_risk.level.value, "MODERATE")
+            
+            # Map risk type to subject format
+            risk_mapping = {
+                "thunderstorm": "THUNDERSTORM",
+                "gewitter": "THUNDERSTORM",
+                "heavy_rain": "HEAVY_RAIN", 
+                "regen": "HEAVY_RAIN",
+                "high_wind": "HIGH_WIND",
+                "wind": "HIGH_WIND", 
+                "heat_wave": "HEAT_WAVE",
+                "hitze": "HEAT_WAVE",
+                "overcast": "OVERCAST",
+                "bewoelkung": "OVERCAST"
+            }
+            main_risk = risk_mapping.get(highest_risk.risk_type.value, "WEATHER")
+        
+        # Get stage name
+        if mode == "evening":
+            # Use tomorrow's stage for evening reports
+            stage = report_data.get("tomorrow_stage") or report_data.get("day_after_stage") or report_data.get("location", "Unknown")
+        else:
+            stage = report_data.get("location", "Unknown")
+        
+        # Format: [subject] [ETAPPE]: [LEVEL] - [HAUPTRISIKO] ([modus])
+        subject = f"{base_subject} {stage}: {level} - {main_risk} ({mode})"
+        
+        return subject
+
     def send_gr20_report(self, report_data: Dict[str, Any]) -> bool:
         """
         Send a GR20 weather report email.
@@ -109,6 +178,7 @@ class EmailClient:
                 - risk_description: Description of the risk
                 - report_time: Datetime of the report
                 - report_type: "scheduled" or "dynamic"
+                - weather_analysis: WeatherAnalysis object for risk assessment
                 
         Returns:
             True if email sent successfully, False otherwise
@@ -116,8 +186,11 @@ class EmailClient:
         # Generate report text
         message_text = generate_gr20_report_text(report_data, self.config)
         
+        # Generate dynamic subject
+        subject = self._generate_dynamic_subject(report_data)
+        
         # Send email
-        return self.send_email(message_text)
+        return self.send_email(message_text, subject)
 
 
 def generate_gr20_report_text(report_data: Dict[str, Any], config: Dict[str, Any]) -> str:
@@ -148,6 +221,13 @@ def generate_gr20_report_text(report_data: Dict[str, Any], config: Dict[str, Any
         return _generate_legacy_report(report_data, config)
 
 
+def _format_value_or_dash(value, *args):
+    """Return '-' if value is 0 or None, else format with args."""
+    if value is None or value == 0:
+        return "-"
+    return args[0].format(value) if args else str(value)
+
+
 def _generate_morning_report(report_data: Dict[str, Any], config: Dict[str, Any]) -> str:
     """
     Generate morning report format: {EtappeHeute} | Gewitter {g1}%@{t1} {g2}%@{t2} | Regen {r1}%@{t3} {r2}%@{t4} {regen_mm}mm | Hitze {temp_max}°C | Wind {wind_max}km/h | Gewitter +1 {g1_next}% | {vigilance_warning}
@@ -159,12 +239,15 @@ def _generate_morning_report(report_data: Dict[str, Any], config: Dict[str, Any]
     thunderstorm_max = weather_data.get("max_thunderstorm_probability", 0)
     thunderstorm_threshold_time = weather_data.get("thunderstorm_threshold_time", "")
     thunderstorm_threshold_pct = weather_data.get("thunderstorm_threshold_pct", 0)
+    thunderstorm_max_time = weather_data.get("thunderstorm_max_time", "")
     thunderstorm_next_day = weather_data.get("thunderstorm_next_day", 0)
     
-    rain_max = weather_data.get("max_precipitation_probability", 0)
+    rain_max = weather_data.get("max_rain_probability", 0)
     rain_threshold_time = weather_data.get("rain_threshold_time", "")
     rain_threshold_pct = weather_data.get("rain_threshold_pct", 0)
+    rain_max_time = weather_data.get("rain_max_time", "")
     rain_total = weather_data.get("max_precipitation", 0)
+    rain_total_time = weather_data.get("rain_max_time", "")
     
     temp_max = weather_data.get("max_temperature", 0)
     wind_max = weather_data.get("max_wind_speed", 0)
@@ -175,19 +258,35 @@ def _generate_morning_report(report_data: Dict[str, Any], config: Dict[str, Any]
     # Format components
     stage_part = location.replace(" ", "")
     
-    thunder_part = f"Gewitter {thunderstorm_max:.0f}%"
-    if thunderstorm_threshold_time and thunderstorm_threshold_pct > 0:
-        thunder_part += f"@{thunderstorm_threshold_time} {thunderstorm_threshold_pct:.0f}%"
+    # Thunderstorm part
+    if thunderstorm_max == 0 or thunderstorm_max is None:
+        thunder_part = "Gewitter -"
+    else:
+        thunder_part = f"Gewitter {thunderstorm_max:.0f}%"
+        if thunderstorm_threshold_time and thunderstorm_threshold_pct > 0:
+            thunder_part += f"@{thunderstorm_threshold_time} {thunderstorm_threshold_pct:.0f}%"
     
-    thunder_next_part = f"Gewitter +1 {thunderstorm_next_day:.0f}%"
+    thunder_next_part = f"Gewitter +1 -" if thunderstorm_next_day == 0 or thunderstorm_next_day is None else f"Gewitter +1 {thunderstorm_next_day:.0f}%"
     
-    rain_part = f"Regen {rain_max:.0f}%"
-    if rain_threshold_time and rain_threshold_pct > 0:
-        rain_part += f"@{rain_threshold_time} {rain_threshold_pct:.0f}%"
-    rain_part += f" {rain_total:.1f}mm"
+    # Rain part
+    if (rain_max == 0 or rain_max is None) and (rain_total == 0 or rain_total is None):
+        rain_part = "Regen -"
+    else:
+        rain_part = "Regen"
+        if rain_threshold_time and rain_threshold_pct > 0:
+            rain_part += f"{rain_threshold_pct:.0f}%@{rain_threshold_time}"
+        else:
+            rain_part += f"{rain_max:.0f}%"
+        if rain_max_time and rain_max > rain_threshold_pct:
+            rain_part += f"(max {rain_max:.0f}%@{rain_max_time})"
+        if rain_total > 0:
+            rain_part += f" {rain_total:.0f}mm"
+            if rain_total_time:
+                rain_part += f"@{rain_total_time}"
+            rain_part += f"(max {rain_total:.0f}mm@{rain_total_time})"
     
-    temp_part = f"Hitze {temp_max:.1f}°C"
-    wind_part = f"Wind {wind_max:.0f}km/h"
+    temp_part = f"Hitze -" if temp_max == 0 or temp_max is None else f"Hitze {temp_max:.1f}°C"
+    wind_part = f"Wind -" if wind_max == 0 or wind_max is None else f"Wind {wind_max:.0f}km/h"
     
     # Combine all parts
     parts = [stage_part, thunder_part, rain_part, temp_part, wind_part, thunder_next_part]
@@ -196,9 +295,13 @@ def _generate_morning_report(report_data: Dict[str, Any], config: Dict[str, Any]
     
     report_text = " | ".join(parts)
     
-    # Ensure character limit
+    # Ensure character limit - remove spaces if needed
     if len(report_text) > 160:
-        report_text = report_text[:157] + "..."
+        # Remove spaces around "max" to save characters
+        report_text = report_text.replace("(max ", "(max").replace(") ", ")")
+        # If still too long, truncate
+        if len(report_text) > 160:
+            report_text = report_text[:157] + "..."
     
     return report_text
 
@@ -215,19 +318,21 @@ def _generate_evening_report(report_data: Dict[str, Any], config: Dict[str, Any]
     day_after_stage = weather_data.get("day_after_stage", "")
     
     # Extract weather values
-    night_temp = weather_data.get("night_temperature", 0)
-    thunderstorm_max = weather_data.get("max_thunderstorm_probability", 0)
-    thunderstorm_threshold_time = weather_data.get("thunderstorm_threshold_time", "")
-    thunderstorm_threshold_pct = weather_data.get("thunderstorm_threshold_pct", 0)
+    night_temp = weather_data.get("min_temperature", 0)
+    thunderstorm_max = weather_data.get("tomorrow_thunderstorm_probability", weather_data.get("max_thunderstorm_probability", 0))  # Use tomorrow's thunderstorm for evening report
+    thunderstorm_threshold_time = weather_data.get("tomorrow_thunderstorm_threshold_time", weather_data.get("thunderstorm_threshold_time", ""))
+    thunderstorm_threshold_pct = weather_data.get("tomorrow_thunderstorm_threshold_pct", weather_data.get("thunderstorm_threshold_pct", 0))
     thunderstorm_day_after = weather_data.get("thunderstorm_day_after", 0)
     
-    rain_max = weather_data.get("max_precipitation_probability", 0)
-    rain_threshold_time = weather_data.get("rain_threshold_time", "")
-    rain_threshold_pct = weather_data.get("rain_threshold_pct", 0)
-    rain_total = weather_data.get("max_precipitation", 0)
+    rain_max = weather_data.get("tomorrow_rain_probability", weather_data.get("max_rain_probability", 0))  # Use tomorrow's rain probability for evening report
+    rain_threshold_time = weather_data.get("tomorrow_rain_threshold_time", weather_data.get("rain_threshold_time", ""))
+    rain_threshold_pct = weather_data.get("tomorrow_rain_threshold_pct", weather_data.get("rain_threshold_pct", 0))
+    rain_max_time = weather_data.get("tomorrow_rain_max_time", weather_data.get("rain_max_time", ""))
+    rain_total = weather_data.get("tomorrow_precipitation", weather_data.get("max_precipitation", 0))  # Use tomorrow's precipitation for evening report
+    rain_total_time = weather_data.get("tomorrow_rain_total_time", weather_data.get("rain_total_time", ""))
     
-    temp_max = weather_data.get("max_temperature", 0)
-    wind_max = weather_data.get("max_wind_speed", 0)
+    temp_max = weather_data.get("tomorrow_temperature", weather_data.get("max_temperature", 0))  # Use tomorrow's temperature for evening report
+    wind_max = weather_data.get("tomorrow_wind_speed", weather_data.get("max_wind_speed", 0))  # Use tomorrow's wind for evening report
     
     # Extract vigilance warning
     vigilance_warning = _format_vigilance_warning(weather_data.get("vigilance_alerts", []))
@@ -245,13 +350,28 @@ def _generate_evening_report(report_data: Dict[str, Any], config: Dict[str, Any]
     
     thunder_next_part = f"Gewitter +1 {thunderstorm_day_after:.0f}%"
     
-    rain_part = f"Regen {rain_max:.0f}%"
-    if rain_threshold_time and rain_threshold_pct > 0:
-        rain_part += f" ({rain_threshold_pct:.0f}%@{rain_threshold_time})"
-    rain_part += f" {rain_total:.1f}mm"
+    rain_part = "Regen"
     
-    temp_part = f"Hitze {temp_max:.1f}°C"
-    wind_part = f"Wind {wind_max:.0f}km/h"
+    # Rain probability threshold and maximum
+    if rain_threshold_time and rain_threshold_pct > 0:
+        rain_part += f"{rain_threshold_pct:.0f}%@{rain_threshold_time}"
+    else:
+        rain_part += f"{rain_max:.0f}%"
+    
+    # Add maximum rain probability if different from threshold
+    if rain_max_time and rain_max > rain_threshold_pct:
+        rain_part += f"(max {rain_max:.0f}%@{rain_max_time})"
+    
+    # Rain amount threshold and maximum
+    if rain_total > 0:
+        rain_part += f" {rain_total:.0f}mm"
+        if rain_total_time:
+            rain_part += f"@{rain_total_time}"
+        # Add maximum rain amount if different (usually same as total)
+        rain_part += f"(max {rain_total:.0f}mm@{rain_total_time})"
+    
+    temp_part = f"Hitze -" if temp_max == 0 or temp_max is None else f"Hitze {temp_max:.1f}°C"
+    wind_part = f"Wind -" if wind_max == 0 or wind_max is None else f"Wind {wind_max:.0f}km/h"
     
     # Combine all parts
     parts = [stage_part, night_part, thunder_part, rain_part, temp_part, wind_part, thunder_next_part]
@@ -260,9 +380,13 @@ def _generate_evening_report(report_data: Dict[str, Any], config: Dict[str, Any]
     
     report_text = " | ".join(parts)
     
-    # Ensure character limit
+    # Ensure character limit - remove spaces if needed
     if len(report_text) > 160:
-        report_text = report_text[:157] + "..."
+        # Remove spaces around "max" to save characters
+        report_text = report_text.replace("(max ", "(max").replace(") ", ")")
+        # If still too long, truncate
+        if len(report_text) > 160:
+            report_text = report_text[:157] + "..."
     
     return report_text
 
@@ -298,8 +422,8 @@ def _generate_dynamic_report(report_data: Dict[str, Any], config: Dict[str, Any]
     if rain_threshold_time and rain_threshold_pct > 0:
         rain_part = f"Regen {rain_threshold_pct:.0f}%@{rain_threshold_time}"
     
-    temp_part = f"Hitze {temp_max:.1f}°C"
-    wind_part = f"Wind {wind_max:.0f}km/h"
+    temp_part = f"Hitze -" if temp_max == 0 or temp_max is None else f"Hitze {temp_max:.1f}°C"
+    wind_part = f"Wind -" if wind_max == 0 or wind_max is None else f"Wind {wind_max:.0f}km/h"
     
     # Combine parts (only include non-empty parts)
     parts = [stage_part, "Update:"]
