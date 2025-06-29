@@ -1,118 +1,207 @@
-# .cursor/rules/email_format.md
+# 📬 Output Format Specification: Weather Reports (InReach, max. 160 characters)
 
-## 📬 Formatregel: Wetterberichte per E-Mail (für InReach, max. 160 Zeichen)
+This specification defines the exact structure of weather reports in three operation modes: **Morning Report (e.g., 04:30)**, **Evening Report (e.g., 19:00)**, and **Update Report (dynamic on risk changes)**.
 
-Diese Regel beschreibt den exakten Aufbau der Wetterberichte in den drei Betriebsmodi: **Morgenbericht (z.B. 04:30)**, **Abendbericht (z.B. 19:00)** und **Zwischenbericht (dynamisch bei Risikoänderung)**.
+## Technical Requirements
 
-### Technische Vorgaben
+- **Maximum length:** 160 characters
+- **Character set:** ASCII only (no emojis, links, special characters)
+- **Time format:** Local time (CEST), hours only (HH)
+- **Data source:** meteofrance-api, fallback: open-meteo
+- **Thresholds:** From `config.yaml`
+- **Stages:** Determined via `etappen.json` based on date
+- **Delivery:** Managed via crontab, not part of program code
+- **Unified generation:** Single codebase for all report types and output formats (E-Mail, SMS)
 
-- Maximallänge: 160 Zeichen
-- Zeichensatz: Nur ASCII (keine Emojis, Links, Sonderzeichen)
-- Zeitformat: Alle Uhrzeiten lokal (CEST)
-- Quelle: meteofrance-api, Fallback: open-meteo
-- Schwellenwerte: Aus `config.yaml`
-- Etappen: Bestimmung über `etappen.json` basierend auf Datum
-- der Versand wird über crontab geregelt und ist nicht Teil des Programmcodes. Es muss lediglich sichergestellt werden, dass es die drei unterschiedlichen Formate gibt und dass diese per "--befehl" gesteuert werden können
+### Email Subject Format
+```
+{subject} {etappe}: {risk_level} - {highest_risk} ({report_type})
+```
+
+**Components:**
+- `{subject}`: Base subject from `config.yaml`
+- `{etappe}`: Current stage name (e.g., "Vizzavona", "Conca")
+- `{risk_level}`: Vigilance warning level (e.g., "ORANGE", "ROT") - empty if no warnings
+- `{highest_risk}`: Vigilance warning phenomenon (e.g., "Gewitter", "Waldbrand") - empty if no warnings
+- `{report_type}`: Report type (e.g., "morning", "evening", "update")
+
+**Examples:**
+- `GR20 Wetter Vizzavona: ORANGE - Gewitter (morning)`
+- `GR20 Wetter Conca: ROT - Waldbrand (evening)`
+- `GR20 Wetter Corte:  (update)` (no vigilance warnings)
 
 ---
 
-## 🕓 Morgenbericht (z.B. 04:30 Uhr)
+## 🕓 Morning Report (e.g., 04:30)
 
-### Inhalt
-- Gilt für den aktuellen Tag
-- Zeitraum: 05:00–17:00 CEST
-- Geopunkte: alle Punkte der heutigen Etappe
-- Aggregierung: Maximalwerte über Zeit und Geopunkte
+### Content
+- **Valid for:** Current day
+- **Time period:** 05:00–17:00 CEST
+- **Geopoints:** All points of today's stage
+- **Aggregation:** Maximum values over time and geopoints
 
 ### Format
-{EtappeHeute} | Gew.{g1}%@{t1}(max.{g1_max}%@{t1_max}) | Regen{r1}%@{t3}(max.{r1_max}%@{t3_max}) | Regen{regen_mm}mm@{t5}(max.{regen_max}mm@{t5_max}) | Hitze{temp_max}°C | Wind{wind_max}km/h | Gew.+1{g1_next}%
+```
+{etappe_heute} | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind}km/h | Windböen{wind_max}km/h | Gew.+1{g1_next}%@{t_g1_next_threshold}
+```
 
-### Erläuterung
-- {g1}@{t1}: Höchste Gewitterwahrscheinlichkeit
-- {g2}@{t2}: Zeitpunkt, an dem Schwellenwert für Gewitter überschritten wird (z. B. 30%)
-- {g1_next}: Gewitterwahrscheinlichkeit für morgen (nächster Tag)
-- {r1}@{t3}: Höchste Regenwahrscheinlichkeit
-- {r2}@{t4}: Zeitpunkt, an dem Schwellenwert für Regen überschritten wird (z. B. 50%)
-- {regen_mm}: Tagesmaximalsumme Regen
-- {temp_max}: Tageshöchsttemperatur
-- {wind_max}: Maximaler Wind
-- {vigilance_warning}: Höchste Vigilance-Warnung (z.B. "ORANGE Gewitter", "ROT Waldbrand") oder leer
+### Example
+```
+Startdorf→Waldpass | Gew.30%@13(80%@15) | Regen55%@15(70%@16) | Regen2.0mm@15 | Hitze28.0°C | Wind15km/h | Windböen25km/h | Gew.+180%@14
+```
+
+### Placeholders
+- `{etappe_heute}`: Name of today's stage (max. 10 characters)
+- `{g_threshold}`: Thunderstorm probability at first threshold crossing
+- `{t_g_threshold}`: Time of first thunderstorm threshold crossing
+- `{g_pmax}`: Maximum thunderstorm probability of the day
+- `{t_g_pmax}`: Time of maximum thunderstorm probability
+- `{r_threshold}`: Rain probability at first threshold crossing
+- `{t_r_threshold}`: Time of first rain threshold crossing
+- `{r_pmax}`: Maximum rain probability of the day
+- `{t_r_pmax}`: Time of maximum rain probability
+- `{regen_mm}`: Daily maximum rain sum
+- `{t_regen_max}`: Time of maximum rain amount
+- `{temp_max}`: Daily maximum temperature
+- `{wind}`: Average wind speed
+- `{wind_max}`: Maximum wind gusts
+- `{g1_next}`: Thunderstorm probability for tomorrow
+- `{t_g1_next_threshold}`: Time of first threshold crossing tomorrow
 
 ---
 
-## 🌙 Abendbericht (19:00 Uhr)
+## 🌙 Evening Report (19:00)
 
-### Inhalt
-- Gilt für morgen und übermorgen
-- Zeitraum: jeweils 05:00–17:00 CEST
-- Geopunkte: alle Punkte der jeweiligen Etappe
-- Aggregierung: Maximalwerte über Zeit und Geopunkte
+### Content
+- **Valid for:** Tomorrow and day after tomorrow
+- **Time period:** 05:00–17:00 CEST (each day)
+- **Geopoints:** 
+  - `{min_temp}`: Last geopoint of today's stage, 22:00–05:00
+  - All other values: All points of tomorrow's stage, 05:00–17:00
+- **Aggregation:** Maximum values over time and geopoints
 
 ### Format
-{EtappeMorgen}→{EtappeÜbermorgen} | Nacht{min_temp}°C | Gew.{g1}%@{t1}(max.{g1_max}%@{t1_max}) | Gew.+1{g1_next}% | Regen{r1}%@{t3}(max.{r1_max}%@{t3_max}) | Regen{regen_mm}mm@{t5}(max.{regen_max}mm@{t5_max}) | Hitze{temp_max}°C | Wind{wind_max}km/h | {vigilance_warning}
+```
+{etappe_morgen}→{etappe_uebermorgen} | Nacht{min_temp}°C | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind}km/h | Windböen{wind_max}km/h | Gew.+1{g1_next}%@{t_g1_next_threshold}
+```
 
-### Erläuterung
-- {EtappeMorgen}: Name der morgigen Etappe
-- {min_temp}: Nachttemperatur (Minimum aus Etappenstartpunkt morgen, Zeitraum 22–05 Uhr)
-- {g1}@{t1}: Gewitterwahrscheinlichkeit morgen
-- ({g2}@{t2}): Zeitpunkt mit Schwellenwertüberschreitung (wenn vorhanden)
-- {g1_next}: Gewitterwahrscheinlichkeit für übermorgen (übernächster Tag)
-- {r1}@{t3}: Regenwahrscheinlichkeit morgen
-- ({r2}@{t4}): Zeitpunkt mit Schwellenwertüberschreitung (wenn vorhanden)
-- {regen_mm}: Regenmenge morgen (Maximalsumme aller Geopunkte)
-- {temp_max}: Höchsttemperatur morgen
-- {wind_max}: Windspitze morgen
-- {vigilance_warning}: Höchste Vigilance-Warnung (z.B. "ORANGE Gewitter", "ROT Waldbrand") oder leer
+### Example
+```
+Waldpass→Almhütte | Nacht15.5°C | Gew.40%@14(95%@17) | Regen50%@14(70%@17) | Regen2.0mm@14 | Hitze33.5°C | Wind18km/h | Windböen38km/h | Gew.+190%@15
+```
+
+### Additional Placeholders
+- `{etappe_morgen}`: Name of tomorrow's stage
+- `{etappe_uebermorgen}`: Name of day after tomorrow's stage
+- `{min_temp}`: Night temperature (minimum from tomorrow's stage start point, 22:00–05:00)
+
+**Note:** `{g1_next}` refers to the day after tomorrow's stage and day.
 
 ---
 
-## 🚨 Zwischenbericht
+## 🚨 Update Report
 
-### Anlass
-Wird nur ausgelöst durch signifikante Änderung der Gefahrenlage für den laufenden Tag (z. B. neuer Schwellenwert überschritten um in config.yaml angegebenen Prozentwert). Er gibt ausschließlich die stark geänderten Werte aus. Es werden maximal 3 Zwischenberichte pro Tag verschickt. 
+### Trigger
+Only triggered by significant changes in the risk situation for the current day (e.g., new threshold exceeded by percentage specified in config.yaml). Reports only the strongly changed values. Maximum 3 update reports per day.
 
 ### Format
-{EtappeHeute} | Update: | Gew.{g2}@{t2} | Regen{r2}@{t4} | Regen{regen_mm}mm@{t5} | Hitze{temp_max}°C | Wind{wind_max}km/h | {vigilance_warning}
+```
+{etappe_heute} | Update: | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind}km/h | Windböen{wind_max}km/h | Gew.+1{g1_next}%@{t_g1_next_threshold}
+```
+
+### Example
+```
+Almhütte→Gipfel | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2.0mm@15 | Hitze29.1°C | Wind12km/h | Windböen31km/h | Gew.+185%@14
+```
 
 ---
 
-## 📝 Abkürzungen und Formatierung
+## 📝 Formatting Rules
 
-### Abkürzungen
-- **Gewitter** → **Gew.**
-- **Regenmenge** → **Regen** (wird über "%" bzw. "mm" unterschieden)
-- **Etappennamen** → Abgekürzt auf max. 10 Zeichen (Format: "Startort→Zi" für "Startort→Zielort")
+### Null Values
+- **Thunderstorm:** `Gew. -` (without % and @)
+- **Rain:** `Regen -` (without % and @)
+- **Rain amount:** `Regen -mm` (without @)
 
-### Formatierung
-- Keine Leerzeichen zwischen Elementen (kompakte Darstellung)
-- Schwellenwert@Zeit (max. Maximum@Zeit) für alle Werte
-- Beispiel: "Gew.30%@13:00(max.80%@15:00)"
+### Abbreviations
+- **Thunderstorm** → **Gew.**
+- **Rain** → **Regen** (distinguished by "%" vs "mm")
+- **Stage names** → Abbreviated to max. 10 characters (format: "Start→End")
 
-### Schwellenwerte
-- Regenwahrscheinlichkeit: 25% (aus `config.yaml` → `thresholds.regen_probability`)
-- Gewitterwahrscheinlichkeit: 20% (aus `config.yaml` → `thresholds.thunderstorm_probability`)
-- Regenmenge: 2.0mm (aus `config.yaml` → `thresholds.regen_amount`)
-- Windgeschwindigkeit: 20 km/h (aus `config.yaml` → `thresholds.wind_speed`)
-- Temperatur: 32°C (aus `config.yaml` → `thresholds.temperature`)
+### Formatting
+- Spaces between all `|` separators
+- Time format: Hours only (HH), no minutes
+- Threshold@Time (max. Maximum@Time) for all values
+- Example: "Gew.30%@13(80%@15)"
+
+### Thresholds (from config.yaml)
+- Rain probability: 25% (`thresholds.regen_probability`)
+- Thunderstorm probability: 20% (`thresholds.thunderstorm_probability`)
+- Rain amount: 2.0mm (`thresholds.regen_amount`)
+- Wind speed: 20 km/h (`thresholds.wind_speed`)
+- Temperature: 32°C (`thresholds.temperature`)
+
+### Vigilance Warnings
+- Completely omitted if no warnings exist
+- **Use existing German translation table** from `src/notification/email_client.py`:
+  - `thunderstorm` → `Gewitter`
+  - `rain` → `Regen`
+  - `wind` → `Wind`
+  - `snow` → `Schnee`
+  - `flood` → `Hochwasser`
+  - `forest_fire` → `Waldbrand`
+  - `heat` → `Hitze`
+  - `cold` → `Kälte`
+  - `avalanche` → `Lawine`
+  - `unknown` → `Warnung`
+- Format: `{LEVEL} {GERMAN_PHENOMENON}` (e.g., "ORANGE Gewitter", "ROT Waldbrand")
+- Only include warnings with level yellow (2) or higher
+- Multiple alerts: Show highest level only
 
 ---
 
-## 📊 Beispielberichte
+## 🔧 Implementation Requirements
 
-### Morgenbericht
-```
-Startdorf→Wa|Gew.30%@13:00(max.80%@15:00)|Regen55%@15:00(max.55%@15:00)|Regen2.0mm@15:00(max.6.0mm@15:00)|Hitze28.0°C|Wind25km/h|Gew.+180%
-```
-Länge: 138 Zeichen
+### Unified Code Generation
+- **Single codebase** for all three report types
+- **Single codebase** for all output formats (E-Mail, SMS)
+- **Maximum code reuse** between report types
+- **Consistent null value handling** across all reports
+- **Unified time formatting** (HH only)
+- **Centralized threshold management** from config.yaml
 
-### Abendbericht
-```
-Waldpass→Al|Nacht15.5°C|Gew.40%@14:00(max.95%@17:00)|Gew.+190%|Regen50%@14:00(max.70%@17:00)|Regen2.0mm@14:00(max.8.0mm@17:00)|Hitze33.5°C|Wind38km/h
-```
-Länge: 149 Zeichen
+### Data Aggregation Strategy
+1. **Collect data** for all relevant geopoints and time periods
+2. **Apply thresholds** to determine crossing times
+3. **Find maxima** for each weather parameter
+4. **Format consistently** according to report type
+5. **Handle null values** uniformly
+6. **Validate character count** (max 160)
 
-### Zwischenbericht
+### Error Handling
+- **Graceful degradation** if data unavailable
+- **Consistent fallback** to open-meteo when meteofrance-api fails
+- **Clear indication** when thresholds cannot be determined
+- **Robust null value detection** and formatting
+
+---
+
+## 📊 Character Count Examples
+
+### Morning Report
 ```
-Almhütte→Gi|Update:|Gew.35%@15:00|Regen55%@16:00|Regen2.0mm@15:00|Hitze29.1°C|Wind31km/h
+Startdorf→Waldpass | Gew.30%@13(80%@15) | Regen55%@15(70%@16) | Regen2.0mm@15 | Hitze28.0°C | Wind15km/h | Windböen25km/h | Gew.+180%@14
 ```
-Länge: 88 Zeichen 
+**Length:** 130 characters
+
+### Evening Report
+```
+Waldpass→Almhütte | Nacht15.5°C | Gew.40%@14(95%@17) | Regen50%@14(70%@17) | Regen2.0mm@14 | Hitze33.5°C | Wind18km/h | Windböen38km/h | Gew.+190%@15
+```
+**Length:** 140 characters
+
+### Update Report
+```
+Almhütte→Gipfel | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2.0mm@15 | Hitze29.1°C | Wind12km/h | Windböen31km/h | Gew.+185%@14
+```
+**Length:** 135 characters 
