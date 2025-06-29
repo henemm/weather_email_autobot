@@ -9,7 +9,7 @@ import requests
 import logging
 from typing import Dict, Any, Optional
 from datetime import datetime
-from src.notification.email_client import generate_gr20_report_text
+from .email_client import generate_gr20_report_text
 
 logger = logging.getLogger(__name__)
 

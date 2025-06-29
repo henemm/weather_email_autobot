@@ -18,13 +18,13 @@ smtp:
   port: 587
   user: henning.emmrich@gmail.com
   to: henningemmrich@icloud.com
-  subject: Her
+  subject: GR20
 
 # =============================================================================
 # SMS-KONFIGURATION
 # =============================================================================
 sms:
-  enabled: true  # Disable SMS functionality for testing "false"
+  enabled: false  # Disable SMS functionality for testing "false"
   provider: seven
   # API-Schlüssel wird aus Umgebungsvariable SEVEN_API_KEY geladen
   api_key: "${SEVEN_API_KEY}"
