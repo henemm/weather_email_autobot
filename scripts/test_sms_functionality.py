@@ -12,7 +12,7 @@ from datetime import datetime
 # Add src to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from notification.sms_client import SMSClient
+from notification.modular_sms_client import ModularSmsClient
 
 
 def test_sms_client_initialization():
@@ -33,13 +33,13 @@ def test_sms_client_initialization():
     }
     
     try:
-        client = SMSClient(config)
+        client = ModularSmsClient(config)
         print("✅ SMS client initialized successfully")
         print(f"   Enabled: {client.enabled}")
-        print(f"   Provider: {client.provider}")
+        print(f"   Provider: {client.provider_name}")
         print(f"   Mode: {client.mode}")
         print(f"   Recipient: {client.recipient_number}")
-        print(f"   Sender: {client.sender_name}")
+        print(f"   Sender: {config['sms'].get('sender', 'unknown')}")
         return client
     except Exception as e:
         print(f"❌ SMS client initialization failed: {e}")
@@ -63,7 +63,7 @@ def test_sms_client_production_mode():
     }
     
     try:
-        client = SMSClient(config)
+        client = ModularSmsClient(config)
         print("✅ SMS client initialized (production mode)")
         print(f"   Mode: {client.mode}")
         print(f"   Recipient: {client.recipient_number} (should be production number)")
@@ -91,7 +91,7 @@ def test_sms_client_disabled():
     }
     
     try:
-        client = SMSClient(config)
+        client = ModularSmsClient(config)
         print("✅ SMS client initialized (disabled)")
         print(f"   Enabled: {client.enabled}")
         
@@ -122,7 +122,7 @@ def test_sms_report_generation():
     }
     
     try:
-        client = SMSClient(config)
+        client = ModularSmsClient(config)
         
         # Test morning report
         morning_report_data = {
@@ -229,7 +229,7 @@ def test_character_limit_handling():
     }
     
     try:
-        client = SMSClient(config)
+        client = ModularSmsClient(config)
         
         # Test with message that's exactly 160 characters
         exact_message = "A" * 160
@@ -328,7 +328,7 @@ def test_command_line_parameter_simulation():
         print(f"   SMS mode overridden: {original_mode} -> production")
         
         # Test SMS client with overridden mode
-        client = SMSClient(config)
+        client = ModularSmsClient(config)
         print(f"   SMS mode: {client.mode}")
         print(f"   SMS recipient: {client.recipient_number}")
         print(f"   Expected recipient: {config['sms']['production_number']}")

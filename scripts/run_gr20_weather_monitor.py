@@ -19,7 +19,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from logic.report_scheduler import ReportScheduler, get_nearest_stage_location, should_send_dynamic_report
 from notification.email_client import EmailClient
-from notification.sms_client import SMSClient
+from notification.modular_sms_client import ModularSmsClient
 from logic.analyse_weather import analyze_weather_data, compute_risk
 from wetter.fetch_meteofrance import get_forecast, get_thunderstorm, get_alerts, ForecastResult, get_tomorrow_forecast
 from wetter.fetch_openmeteo import fetch_openmeteo_forecast, fetch_tomorrow_openmeteo_forecast
@@ -431,7 +431,7 @@ def main():
         # Initialize SMS client (will be None if SMS is disabled)
         sms_client = None
         try:
-            sms_client = SMSClient(config)
+            sms_client = ModularSmsClient(config)
             print("SMS client initialized successfully")
             print(f"SMS mode: {config['sms'].get('mode', 'unknown')}")
             print(f"SMS recipient: {sms_client.recipient_number}")
