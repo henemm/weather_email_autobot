@@ -1,0 +1,198 @@
+{
+  "timestamp": "2025-07-05T14:03:03.880187",
+  "coordinates": {
+    "lat": 42.426238,
+    "lon": 8.900291
+  },
+  "total_entries": 79,
+  "today_entries": [
+    {
+      "index": 3,
+      "datetime": "2025-07-05T14:00:00",
+      "all_fields": {
+        "dt": 1751716800,
+        "T": {
+          "value": 15.9,
+          "windchill": 19.5
+        },
+        "humidity": 60,
+        "sea_level": 1020.9,
+        "wind": {
+          "speed": 2,
+          "gust": 0,
+          "direction": 240,
+          "icon": "OSO"
+        },
+        "rain": {
+          "1h": 2.6
+        },
+        "snow": {
+          "1h": 0
+        },
+        "iso0": 4400,
+        "rain snow limit": 3750,
+        "clouds": 10,
+        "weather": {
+          "icon": "p16bisj",
+          "desc": "Averses orageuses"
+        }
+      },
+      "weather_description": "Averses orageuses",
+      "precipitation_probability": null,
+      "rain_data": {
+        "1h": 2.6
+      },
+      "temperature": {
+        "value": 15.9,
+        "windchill": 19.5
+      },
+      "wind": {
+        "speed": 2,
+        "gust": 0,
+        "direction": 240,
+        "icon": "OSO"
+      }
+    },
+    {
+      "index": 4,
+      "datetime": "2025-07-05T15:00:00",
+      "all_fields": {
+        "dt": 1751720400,
+        "T": {
+          "value": 14.3,
+          "windchill": 16.4
+        },
+        "humidity": 85,
+        "sea_level": 1020.6,
+        "wind": {
+          "speed": 2,
+          "gust": 0,
+          "direction": 255,
+          "icon": "OSO"
+        },
+        "rain": {
+          "1h": 2.5
+        },
+        "snow": {
+          "1h": 0
+        },
+        "iso0": 4400,
+        "rain snow limit": 4400,
+        "clouds": 40,
+        "weather": {
+          "icon": "p28j",
+          "desc": "Orages"
+        }
+      },
+      "weather_description": "Orages",
+      "precipitation_probability": null,
+      "rain_data": {
+        "1h": 2.5
+      },
+      "temperature": {
+        "value": 14.3,
+        "windchill": 16.4
+      },
+      "wind": {
+        "speed": 2,
+        "gust": 0,
+        "direction": 255,
+        "icon": "OSO"
+      }
+    },
+    {
+      "index": 5,
+      "datetime": "2025-07-05T16:00:00",
+      "all_fields": {
+        "dt": 1751724000,
+        "T": {
+          "value": 15.2,
+          "windchill": 20.7
+        },
+        "humidity": 95,
+        "sea_level": 1020.4,
+        "wind": {
+          "speed": 2,
+          "gust": 0,
+          "direction": 250,
+          "icon": "OSO"
+        },
+        "rain": {
+          "1h": 1.5
+        },
+        "snow": {
+          "1h": 0
+        },
+        "iso0": 4400,
+        "rain snow limit": 4250,
+        "clouds": 40,
+        "weather": {
+          "icon": "p28j",
+          "desc": "Orages"
+        }
+      },
+      "weather_description": "Orages",
+      "precipitation_probability": null,
+      "rain_data": {
+        "1h": 1.5
+      },
+      "temperature": {
+        "value": 15.2,
+        "windchill": 20.7
+      },
+      "wind": {
+        "speed": 2,
+        "gust": 0,
+        "direction": 250,
+        "icon": "OSO"
+      }
+    },
+    {
+      "index": 6,
+      "datetime": "2025-07-05T17:00:00",
+      "all_fields": {
+        "dt": 1751727600,
+        "T": {
+          "value": 15.1,
+          "windchill": 20.4
+        },
+        "humidity": 75,
+        "sea_level": 1020.1,
+        "wind": {
+          "speed": 2,
+          "gust": 0,
+          "direction": 250,
+          "icon": "OSO"
+        },
+        "rain": {
+          "1h": 1.5
+        },
+        "snow": {
+          "1h": 0
+        },
+        "iso0": 4400,
+        "rain snow limit": 3700,
+        "clouds": 10,
+        "weather": {
+          "icon": "p28j",
+          "desc": "Orages"
+        }
+      },
+      "weather_description": "Orages",
+      "precipitation_probability": null,
+      "rain_data": {
+        "1h": 1.5
+      },
+      "temperature": {
+        "value": 15.1,
+        "windchill": 20.4
+      },
+      "wind": {
+        "speed": 2,
+        "gust": 0,
+        "direction": 250,
+        "icon": "OSO"
+      }
+    }
+  ]
+}

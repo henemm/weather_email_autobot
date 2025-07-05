@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-07-05T07:40:26.217762",
+  "location": "Calenzana",
+  "data_source": "meteofrance-api",
+  "comparisons": {
+    "thunderstorm_probability": {
+      "raw_value": null,
+      "report_value": null,
+      "match": true
+    },
+    "precipitation_probability": {
+      "raw_value": null,
+      "report_value": null,
+      "match": true
+    },
+    "precipitation_amount": {
+      "raw_value": null,
+      "report_value": null,
+      "match": true
+    },
+    "temperature": {
+      "raw_value": 33.6,
+      "report_value": 20.6,
+      "match": false
+    },
+    "wind_speed": {
+      "raw_value": 3,
+      "report_value": 2,
+      "match": false
+    }
+  },
+  "threshold_checks": {
+    "temperature": {
+      "threshold": 30.0,
+      "value": 33.6,
+      "exceeded": true
+    },
+    "wind_speed": {
+      "threshold": 40.0,
+      "value": 3,
+      "exceeded": false
+    }
+  },
+  "issues": []
+}

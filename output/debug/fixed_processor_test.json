@@ -1,0 +1,18 @@
+{
+  "max_temperature": 15.9,
+  "max_precipitation": 2.6,
+  "max_rain_probability": 0.0,
+  "max_thunderstorm_probability": 80.0,
+  "max_wind_speed": 2,
+  "wind_speed": 2,
+  "thunderstorm_threshold_pct": 60.0,
+  "thunderstorm_threshold_time": "14",
+  "thunderstorm_max_time": "15",
+  "rain_threshold_pct": 0,
+  "rain_threshold_time": "",
+  "rain_max_time": "",
+  "rain_total_time": "14",
+  "location": "Asco",
+  "data_source": "meteofrance-api",
+  "processed_at": "2025-07-05T13:56:25.261111"
+}

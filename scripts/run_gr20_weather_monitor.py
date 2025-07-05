@@ -23,6 +23,7 @@ from notification.modular_sms_client import ModularSmsClient
 from logic.analyse_weather import analyze_weather_data, compute_risk
 from wetter.fetch_meteofrance import get_forecast, get_thunderstorm, get_alerts, ForecastResult, get_tomorrow_forecast
 from wetter.fetch_openmeteo import fetch_openmeteo_forecast, fetch_tomorrow_openmeteo_forecast
+from wetter.weather_data_processor import process_weather_data_for_report
 from position.etappenlogik import get_stage_info, get_stage_coordinates, get_next_stage, get_day_after_tomorrow_stage
 from utils.env_loader import get_env_var
 from config.config_loader import load_config as load_config_with_env
@@ -128,9 +129,9 @@ def forecast_result_to_weather_data(forecast: ForecastResult, lat: float, lon: f
         time=datetime.fromisoformat(forecast.timestamp) if forecast.timestamp else datetime.now(),
         temperature=forecast.temperature,
         feels_like=forecast.temperature,  # No separate feels_like in ForecastResult
-        precipitation=0.0,  # Not available in ForecastResult
-        rain_probability=forecast.precipitation_probability,  # NEW: map to rain_probability
-        thunderstorm_probability=None,  # MeteoFrance does not provide explicit thunderstorm probability here
+        precipitation=forecast.precipitation or 0.0,  # Use precipitation from ForecastResult
+        rain_probability=forecast.precipitation_probability,  # Use precipitation probability from ForecastResult
+        thunderstorm_probability=forecast.thunderstorm_probability,  # Use thunderstorm probability from ForecastResult
         wind_speed=forecast.wind_speed or 0.0,  # Use wind speed from ForecastResult
         wind_gusts=forecast.wind_gusts,  # Use wind gusts from ForecastResult
         cloud_cover=0.0  # Not available in ForecastResult
@@ -564,10 +565,60 @@ def main():
             # Generate risk description
             risk_description = generate_risk_description(weather_analysis)
             
-            # Prepare report data
+            # Prepare report data using the new weather data processor
             if report_type == "evening":
                 tomorrow_stage = get_next_stage(config)
                 location_name = tomorrow_stage["name"] if tomorrow_stage else location_name
+            
+            # Use the new weather data processor to get correct report data
+            processed_weather_data = process_weather_data_for_report(latitude, longitude, location_name, config)
+
+            # --- NEU: Gewitter +1 (nächster Tag) für Morgenbericht ---
+            if report_type == "morning":
+                try:
+                    # Hole nächste Etappe (morgen)
+                    next_stage = get_next_stage(config)
+                    if next_stage:
+                        coords = get_stage_coordinates(next_stage)
+                        next_lat, next_lon = coords[0]
+                        # Verwende die gleiche Funktion wie für heute
+                        tomorrow_processed_data = process_weather_data_for_report(next_lat, next_lon, next_stage["name"], config)
+                        # Übernehme die Gewitterdaten für morgen
+                        processed_weather_data["thunderstorm_next_day"] = tomorrow_processed_data.get("max_thunderstorm_probability", 0)
+                        processed_weather_data["thunderstorm_next_day_threshold_time"] = tomorrow_processed_data.get("thunderstorm_threshold_time", "")
+                    else:
+                        processed_weather_data["thunderstorm_next_day"] = 0
+                        processed_weather_data["thunderstorm_next_day_threshold_time"] = ""
+                except Exception as e:
+                    print(f"Fehler beim Berechnen von Gewitter +1: {e}")
+                    processed_weather_data["thunderstorm_next_day"] = 0
+                    processed_weather_data["thunderstorm_next_day_threshold_time"] = ""
+            # --- ENDE NEU ---
+            
+            # Add vigilance alerts to the processed weather data
+            try:
+                print("Fetching vigilance alerts...")
+                vigilance_alerts = get_alerts(latitude, longitude)
+                if vigilance_alerts:
+                    # Convert Alert objects to dictionaries for JSON serialization
+                    alert_dicts = []
+                    for alert in vigilance_alerts:
+                        alert_dict = {
+                            "phenomenon": alert.phenomenon,
+                            "level": alert.level,
+                            "description": alert.description
+                        }
+                        alert_dicts.append(alert_dict)
+                    
+                    processed_weather_data["vigilance_alerts"] = alert_dicts
+                    print(f"Added {len(alert_dicts)} vigilance alerts to report data")
+                else:
+                    processed_weather_data["vigilance_alerts"] = []
+                    print("No vigilance alerts found")
+            except Exception as e:
+                print(f"Failed to fetch vigilance alerts: {e}")
+                processed_weather_data["vigilance_alerts"] = []
+            
             report_data = {
                 "location": location_name,
                 "risk_percentage": int(current_risk * 100),
@@ -575,69 +626,11 @@ def main():
                 "report_time": current_time,
                 "report_type": report_type,
                 "weather_analysis": weather_analysis,  # Add weather analysis for dynamic subject
-                "weather_data": {
-                    "max_thunderstorm_probability": weather_analysis.max_thunderstorm_probability or 0,
-                    "max_rain_probability": weather_analysis.max_rain_probability or 0,  # Add rain probability
-                    "max_precipitation": weather_analysis.max_precipitation or 0,
-                    "max_temperature": weather_analysis.max_temperature or 0,
-                    "max_wind_speed": weather_analysis.max_wind_speed or 0,
-                    "max_wind_gusts": weather_analysis.max_wind_gusts,  # Add wind gusts data
-                    "max_cape_shear": weather_analysis.max_cape_shear or 0
-                }
+                "weather_data": processed_weather_data
             }
             
-            # Add threshold time tracking for thunderstorm and rain
-            thresholds = config.get("thresholds", {})
-            thunderstorm_threshold = thresholds.get("thunderstorm_probability", 20.0)
-            rain_threshold = thresholds.get("rain_amount", 2.0)
-            
-            # Find threshold times and maximum times for current weather data
-            thunderstorm_threshold_time = ""
-            thunderstorm_max_time = ""
-            rain_threshold_time = ""
-            rain_max_time = ""
-            
-            for weather_data in weather_data_list:
-                for point in weather_data.points:
-                    # Thunderstorm threshold time (first time threshold is exceeded)
-                    if (point.thunderstorm_probability and 
-                        point.thunderstorm_probability > thunderstorm_threshold and 
-                        not thunderstorm_threshold_time):
-                        thunderstorm_threshold_time = point.time.strftime("%H")
-                    
-                    # Thunderstorm maximum time
-                    if (point.thunderstorm_probability and 
-                        point.thunderstorm_probability == weather_analysis.max_thunderstorm_probability and 
-                        not thunderstorm_max_time):
-                        thunderstorm_max_time = point.time.strftime("%H")
-                    
-                    # Rain probability threshold time (first time threshold is exceeded)
-                    rain_probability_threshold = thresholds.get("rain_probability", 25.0)
-                    if (point.rain_probability and 
-                        point.rain_probability > rain_probability_threshold and 
-                        not rain_threshold_time):
-                        rain_threshold_time = point.time.strftime("%H")
-                    
-                    # Rain amount threshold time (first time threshold is exceeded)
-                    if (point.precipitation > rain_threshold and 
-                        not rain_threshold_time):
-                        rain_threshold_time = point.time.strftime("%H")
-                    
-                    # Rain maximum time
-                    if (point.precipitation == weather_analysis.max_precipitation and 
-                        not rain_max_time):
-                        rain_max_time = point.time.strftime("%H")
-            
-            # Add threshold times to report data
-            report_data["weather_data"].update({
-                "thunderstorm_threshold_time": thunderstorm_threshold_time,
-                "thunderstorm_threshold_pct": weather_analysis.max_thunderstorm_probability or 0,  # Add threshold percentage
-                "thunderstorm_max_time": thunderstorm_max_time,
-                "rain_threshold_time": rain_threshold_time,
-                "rain_threshold_pct": weather_analysis.max_rain_probability or 0,  # Add rain probability threshold percentage
-                "rain_max_time": rain_max_time,  # Add rain probability maximum time
-                "rain_total_time": rain_max_time,  # Add rain amount maximum time (same as rain_max_time for now)
-            })
+            # Weather data processor already handles all threshold calculations
+            # No additional processing needed here
             
             # Add min_temperature for evening reports
             if report_type == "evening":

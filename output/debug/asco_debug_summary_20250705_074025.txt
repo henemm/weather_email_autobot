@@ -1,0 +1,140 @@
+============================================================
+DEBUG SUMMARY
+============================================================
+Location: Asco
+Timestamp: 2025-07-05 07:40:25
+Coordinates: 42.23, 9.15
+Raw data points: 24
+Analysis completed: Yes
+Max rain probability: None%
+Max thunderstorm probability: None%
+Comparison: No issues found
+Debug files generated: 1
+  - thresholds_asco.json
+============================================================
+
+RAW WEATHER DATA:
+----------------------------------------
+[Asco] Raw Weather Data
+Data Source: meteofrance-api
+Generated: 2025-07-05 07:40:25
+
+@05:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 17.6°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+@06:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 16.9°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+@07:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 19.5°C, Wind 1km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@08:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 22.6°C, Wind 0km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@09:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 26.7°C, Wind 1km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@10:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 29.7°C, Wind 1km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@11:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 32.1°C, Wind 2km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@12:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 33.1°C, Wind 3km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@13:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 33.9°C, Wind 4km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@14:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 31.1°C, Wind 4km/h (Böen: 11km/h), Wetter Risque d'orages
+
+@15:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 30.1°C, Wind 4km/h (Böen: 11km/h), Wetter Risque d'orages
+
+@16:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 30.9°C, Wind 4km/h (Böen: 11km/h), Wetter Risque d'orages
+
+@17:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 27.6°C, Wind 3km/h (Böen: 0km/h), Wetter Risque d'orages
+
+@18:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 28.6°C, Wind 3km/h (Böen: 0km/h), Wetter Risque d'orages
+
+@19:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 27.6°C, Wind 3km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@20:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 25.9°C, Wind 2km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@21:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 24.6°C, Wind 1km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@22:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 22.7°C, Wind 0km/h (Böen: 0km/h), Wetter Ciel clair
+
+@23:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 21.2°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+@00:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 20.6°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+@01:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 19.6°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+@02:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 19.5°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+@03:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 19.2°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+@04:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 18.7°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+COMPARISON RESULTS:
+----------------------------------------
+{
+  "timestamp": "2025-07-05T07:40:25.676878",
+  "location": "Asco",
+  "data_source": "meteofrance-api",
+  "comparisons": {
+    "thunderstorm_probability": {
+      "raw_value": null,
+      "report_value": null,
+      "match": true
+    },
+    "precipitation_probability": {
+      "raw_value": null,
+      "report_value": null,
+      "match": true
+    },
+    "precipitation_amount": {
+      "raw_value": null,
+      "report_value": null,
+      "match": true
+    },
+    "temperature": {
+      "raw_value": 33.9,
+      "report_value": 17.6,
+      "match": false
+    },
+    "wind_speed": {
+      "raw_value": 4,
+      "report_value": 1,
+      "match": false
+    }
+  },
+  "threshold_checks": {
+    "temperature": {
+      "threshold": 30.0,
+      "value": 33.9,
+      "exceeded": true
+    },
+    "wind_speed": {
+      "threshold": 40.0,
+      "value": 4,
+      "exceeded": false
+    }
+  },
+  "issues": []
+}

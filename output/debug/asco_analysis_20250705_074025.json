@@ -1,0 +1,12 @@
+{
+  "max_temperature": 17.6,
+  "max_precipitation": 0.0,
+  "max_rain_probability": null,
+  "max_thunderstorm_probability": null,
+  "max_wind_speed": 1,
+  "max_wind_gusts": 0.0,
+  "max_cloud_cover": 0.0,
+  "risk": 0.0,
+  "summary": "Keine kritischen Wetterbedingungen erkannt.",
+  "risks_count": 0
+}

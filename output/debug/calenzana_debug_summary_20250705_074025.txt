@@ -1,0 +1,140 @@
+============================================================
+DEBUG SUMMARY
+============================================================
+Location: Calenzana
+Timestamp: 2025-07-05 07:40:25
+Coordinates: 42.45, 9.03
+Raw data points: 24
+Analysis completed: Yes
+Max rain probability: None%
+Max thunderstorm probability: None%
+Comparison: No issues found
+Debug files generated: 1
+  - thresholds_calenzana.json
+============================================================
+
+RAW WEATHER DATA:
+----------------------------------------
+[Calenzana] Raw Weather Data
+Data Source: meteofrance-api
+Generated: 2025-07-05 07:40:26
+
+@05:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 20.6°C, Wind 2km/h (Böen: 0km/h), Wetter Ciel clair
+
+@06:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 20.2°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+@07:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 20.5°C, Wind 1km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@08:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 23.6°C, Wind 0km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@09:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 27.6°C, Wind 0km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@10:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 30.6°C, Wind 1km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@11:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 32.1°C, Wind 2km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@12:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 33.5°C, Wind 2km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@13:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 33.6°C, Wind 3km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@14:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 31.2°C, Wind 3km/h (Böen: 0km/h), Wetter Risque d'orages
+
+@15:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 28.4°C, Wind 3km/h (Böen: 0km/h), Wetter Risque d'orages
+
+@16:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 25.7°C, Wind 3km/h (Böen: 0km/h), Wetter Risque d'orages
+
+@17:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 28.7°C, Wind 2km/h (Böen: 0km/h), Wetter Averses orageuses
+
+@18:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 26.4°C, Wind 2km/h (Böen: 0km/h), Wetter Risque d'orages
+
+@19:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 26.1°C, Wind 1km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@20:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 25.2°C, Wind 1km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@21:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 23.5°C, Wind 0km/h (Böen: 0km/h), Wetter Ensoleillé
+
+@22:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 22.4°C, Wind 0km/h (Böen: 0km/h), Wetter Ciel clair
+
+@23:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 21.5°C, Wind 0km/h (Böen: 0km/h), Wetter Eclaircies
+
+@00:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 20.6°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+@01:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 20.7°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+@02:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 20.4°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+@03:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 20°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+@04:00
+ - Geo 1: Blitz N/A, RegenW N/A, RegenM N/A, Temp 19.5°C, Wind 1km/h (Böen: 0km/h), Wetter Ciel clair
+
+COMPARISON RESULTS:
+----------------------------------------
+{
+  "timestamp": "2025-07-05T07:40:26.217762",
+  "location": "Calenzana",
+  "data_source": "meteofrance-api",
+  "comparisons": {
+    "thunderstorm_probability": {
+      "raw_value": null,
+      "report_value": null,
+      "match": true
+    },
+    "precipitation_probability": {
+      "raw_value": null,
+      "report_value": null,
+      "match": true
+    },
+    "precipitation_amount": {
+      "raw_value": null,
+      "report_value": null,
+      "match": true
+    },
+    "temperature": {
+      "raw_value": 33.6,
+      "report_value": 20.6,
+      "match": false
+    },
+    "wind_speed": {
+      "raw_value": 3,
+      "report_value": 2,
+      "match": false
+    }
+  },
+  "threshold_checks": {
+    "temperature": {
+      "threshold": 30.0,
+      "value": 33.6,
+      "exceeded": true
+    },
+    "wind_speed": {
+      "threshold": 40.0,
+      "value": 3,
+      "exceeded": false
+    }
+  },
+  "issues": []
+}

@@ -1,0 +1,12 @@
+{
+  "max_temperature": "<Mock name='analyze_weather_data().max_temperature' id='139809725121488'>",
+  "max_precipitation": 5.0,
+  "max_rain_probability": 30.0,
+  "max_thunderstorm_probability": 25.0,
+  "max_wind_speed": 35.0,
+  "max_wind_gusts": 45.0,
+  "max_cloud_cover": 70.0,
+  "risk": 0.6,
+  "summary": "Test summary",
+  "risks_count": 0
+}

@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
 # 📬 Output Format Specification: Weather Reports (InReach, max. 160 characters)
 
 This specification defines the exact structure of weather reports in three operation modes: **Morning Report (e.g., 04:30)**, **Evening Report (e.g., 19:00)**, and **Update Report (dynamic on risk changes)**.

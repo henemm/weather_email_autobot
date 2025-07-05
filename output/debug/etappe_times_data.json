@@ -1,0 +1,578 @@
+[
+  {
+    "index": 3,
+    "datetime": "2025-07-05T14:00:00",
+    "entry": {
+      "dt": 1751716800,
+      "T": {
+        "value": 31.6,
+        "windchill": 40.4
+      },
+      "humidity": 55,
+      "sea_level": 1015.8,
+      "wind": {
+        "speed": 6,
+        "gust": 11,
+        "direction": 230,
+        "icon": "SO"
+      },
+      "rain": {
+        "1h": 0
+      },
+      "snow": {
+        "1h": 0
+      },
+      "iso0": 4400,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 4,
+    "datetime": "2025-07-05T15:00:00",
+    "entry": {
+      "dt": 1751720400,
+      "T": {
+        "value": 31.9,
+        "windchill": 40.6
+      },
+      "humidity": 55,
+      "sea_level": 1015.5,
+      "wind": {
+        "speed": 6,
+        "gust": 11,
+        "direction": 230,
+        "icon": "SO"
+      },
+      "rain": {
+        "1h": 0
+      },
+      "snow": {
+        "1h": 0
+      },
+      "iso0": 4400,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 5,
+    "datetime": "2025-07-05T16:00:00",
+    "entry": {
+      "dt": 1751724000,
+      "T": {
+        "value": 32.1,
+        "windchill": 41.4
+      },
+      "humidity": 55,
+      "sea_level": 1015.3,
+      "wind": {
+        "speed": 6,
+        "gust": 0,
+        "direction": 230,
+        "icon": "SO"
+      },
+      "rain": {
+        "1h": 0
+      },
+      "snow": {
+        "1h": 0
+      },
+      "iso0": 4400,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 6,
+    "datetime": "2025-07-05T17:00:00",
+    "entry": {
+      "dt": 1751727600,
+      "T": {
+        "value": 32.4,
+        "windchill": 43.9
+      },
+      "humidity": 60,
+      "sea_level": 1014.9,
+      "wind": {
+        "speed": 5,
+        "gust": 0,
+        "direction": 235,
+        "icon": "SO"
+      },
+      "rain": {
+        "1h": 0
+      },
+      "snow": {
+        "1h": 0
+      },
+      "iso0": 4350,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 27,
+    "datetime": "2025-07-06T14:00:00",
+    "entry": {
+      "dt": 1751803200,
+      "T": {
+        "value": 33.1,
+        "windchill": 40.5
+      },
+      "humidity": 45,
+      "sea_level": 1011.2,
+      "wind": {
+        "speed": 8,
+        "gust": 14,
+        "direction": 215,
+        "icon": "SO"
+      },
+      "rain": {
+        "1h": 0
+      },
+      "snow": {
+        "1h": 0
+      },
+      "iso0": 4050,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 28,
+    "datetime": "2025-07-06T15:00:00",
+    "entry": {
+      "dt": 1751806800,
+      "T": {
+        "value": 33.4,
+        "windchill": 41
+      },
+      "humidity": 45,
+      "sea_level": 1011,
+      "wind": {
+        "speed": 8,
+        "gust": 14,
+        "direction": 215,
+        "icon": "SO"
+      },
+      "rain": {
+        "1h": 0
+      },
+      "snow": {
+        "1h": 0
+      },
+      "iso0": 4050,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 29,
+    "datetime": "2025-07-06T16:00:00",
+    "entry": {
+      "dt": 1751810400,
+      "T": {
+        "value": 32.2,
+        "windchill": 38.6
+      },
+      "humidity": 45,
+      "sea_level": 1010.8,
+      "wind": {
+        "speed": 7,
+        "gust": 13,
+        "direction": 215,
+        "icon": "SO"
+      },
+      "rain": {
+        "1h": 0
+      },
+      "snow": {
+        "1h": 0
+      },
+      "iso0": 4050,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 30,
+    "datetime": "2025-07-06T17:00:00",
+    "entry": {
+      "dt": 1751814000,
+      "T": {
+        "value": 32.9,
+        "windchill": 39.6
+      },
+      "humidity": 45,
+      "sea_level": 1010.6,
+      "wind": {
+        "speed": 7,
+        "gust": 13,
+        "direction": 215,
+        "icon": "SO"
+      },
+      "rain": {
+        "1h": 0
+      },
+      "snow": {
+        "1h": 0
+      },
+      "iso0": 4050,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 43,
+    "datetime": "2025-07-07T14:00:00",
+    "entry": {
+      "dt": 1751889600,
+      "T": {
+        "value": 27.9,
+        "windchill": 32.7
+      },
+      "humidity": 50,
+      "sea_level": 1009.4,
+      "wind": {
+        "speed": 8,
+        "gust": 21,
+        "direction": 220,
+        "icon": "SO"
+      },
+      "rain": {
+        "3h": 0
+      },
+      "snow": {
+        "3h": 0
+      },
+      "iso0": 4450,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 44,
+    "datetime": "2025-07-07T17:00:00",
+    "entry": {
+      "dt": 1751900400,
+      "T": {
+        "value": 27.1,
+        "windchill": 32.4
+      },
+      "humidity": 55,
+      "sea_level": 1008.5,
+      "wind": {
+        "speed": 9,
+        "gust": 22,
+        "direction": 220,
+        "icon": "SO"
+      },
+      "rain": {
+        "3h": 0
+      },
+      "snow": {
+        "3h": 0
+      },
+      "iso0": 4450,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 51,
+    "datetime": "2025-07-08T14:00:00",
+    "entry": {
+      "dt": 1751976000,
+      "T": {
+        "value": 27,
+        "windchill": 30.4
+      },
+      "humidity": 45,
+      "sea_level": 1008.6,
+      "wind": {
+        "speed": 7,
+        "gust": 19,
+        "direction": 240,
+        "icon": "OSO"
+      },
+      "rain": {
+        "3h": 0
+      },
+      "snow": {
+        "3h": 0
+      },
+      "iso0": 4350,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 52,
+    "datetime": "2025-07-08T17:00:00",
+    "entry": {
+      "dt": 1751986800,
+      "T": {
+        "value": 26.9,
+        "windchill": 29.9
+      },
+      "humidity": 45,
+      "sea_level": 1007.9,
+      "wind": {
+        "speed": 7,
+        "gust": 20,
+        "direction": 225,
+        "icon": "SO"
+      },
+      "rain": {
+        "3h": 0
+      },
+      "snow": {
+        "3h": 0
+      },
+      "iso0": 4400,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 56,
+    "datetime": "2025-07-09T14:00:00",
+    "entry": {
+      "dt": 1752062400,
+      "T": {
+        "value": 28,
+        "windchill": 33.03
+      },
+      "humidity": 50,
+      "sea_level": 1014.5,
+      "wind": {
+        "speed": 4,
+        "gust": 12,
+        "direction": 20,
+        "icon": "NNE"
+      },
+      "rain": {
+        "6h": 0
+      },
+      "snow": {
+        "6h": 0
+      },
+      "iso0": 4500,
+      "rain snow limit": "Non pertinent",
+      "clouds": 10,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 60,
+    "datetime": "2025-07-10T14:00:00",
+    "entry": {
+      "dt": 1752148800,
+      "T": {
+        "value": 28.9,
+        "windchill": 34.5
+      },
+      "humidity": 50,
+      "sea_level": 1016.8,
+      "wind": {
+        "speed": 3,
+        "gust": 0,
+        "direction": 355,
+        "icon": "N"
+      },
+      "rain": {
+        "6h": 0
+      },
+      "snow": {
+        "6h": 0
+      },
+      "iso0": 4400,
+      "rain snow limit": "Non pertinent",
+      "clouds": 0,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 64,
+    "datetime": "2025-07-11T14:00:00",
+    "entry": {
+      "dt": 1752235200,
+      "T": {
+        "value": 28.6,
+        "windchill": 34.01
+      },
+      "humidity": 50,
+      "sea_level": 1016.3,
+      "wind": {
+        "speed": 0,
+        "gust": 0,
+        "direction": -1,
+        "icon": "Variable"
+      },
+      "rain": {
+        "6h": 0
+      },
+      "snow": {
+        "6h": 0
+      },
+      "iso0": 4300,
+      "rain snow limit": "Non pertinent",
+      "clouds": 0,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 68,
+    "datetime": "2025-07-12T14:00:00",
+    "entry": {
+      "dt": 1752321600,
+      "T": {
+        "value": 29.6,
+        "windchill": 35.67
+      },
+      "humidity": 50,
+      "sea_level": 1018.3,
+      "wind": {
+        "speed": 3,
+        "gust": 0,
+        "direction": 360,
+        "icon": "N"
+      },
+      "rain": {
+        "6h": 0
+      },
+      "snow": {
+        "6h": 0
+      },
+      "iso0": 4300,
+      "rain snow limit": "Non pertinent",
+      "clouds": 0,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 72,
+    "datetime": "2025-07-13T14:00:00",
+    "entry": {
+      "dt": 1752408000,
+      "T": {
+        "value": 30.7,
+        "windchill": 37.54
+      },
+      "humidity": 50,
+      "sea_level": 1020.1,
+      "wind": {
+        "speed": 3,
+        "gust": 0,
+        "direction": 360,
+        "icon": "N"
+      },
+      "rain": {
+        "6h": 0
+      },
+      "snow": {
+        "6h": 0
+      },
+      "iso0": 4400,
+      "rain snow limit": "Non pertinent",
+      "clouds": 0,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  },
+  {
+    "index": 76,
+    "datetime": "2025-07-14T14:00:00",
+    "entry": {
+      "dt": 1752494400,
+      "T": {
+        "value": 31.9,
+        "windchill": 38.29
+      },
+      "humidity": 45,
+      "sea_level": 1018.8,
+      "wind": {
+        "speed": 3,
+        "gust": 0,
+        "direction": 350,
+        "icon": "N"
+      },
+      "rain": {
+        "6h": 0
+      },
+      "snow": {
+        "6h": 0
+      },
+      "iso0": 4700,
+      "rain snow limit": "Non pertinent",
+      "clouds": 0,
+      "weather": {
+        "icon": "p1j",
+        "desc": "Ensoleill\u00e9"
+      }
+    }
+  }
+]

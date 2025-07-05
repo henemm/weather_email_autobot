@@ -98,7 +98,7 @@ def load_config(path: str = "config.yaml") -> dict:
     if "sms" in config and config["sms"].get("enabled", False):
         # Validate SMS configuration
         sms_config = config["sms"]
-        required_sms_fields = ["api_key", "test_number", "production_number", "mode", "sender"]
+        required_sms_fields = ["provider", "test_number", "production_number", "mode"]
         
         for field in required_sms_fields:
             if field not in sms_config:
@@ -108,14 +108,39 @@ def load_config(path: str = "config.yaml") -> dict:
         if sms_config["mode"] not in ["test", "production"]:
             raise ValueError("SMS mode must be 'test' or 'production'")
         
+        # Validate provider
+        provider = sms_config["provider"]
+        if provider not in ["seven", "twilio"]:
+            raise ValueError(f"Unsupported SMS provider: {provider}")
+        
+        # Validate provider-specific configuration
+        if provider == "seven":
+            if "seven" not in sms_config:
+                raise KeyError("Seven.io provider configuration missing")
+            seven_config = sms_config["seven"]
+            if "api_key" not in seven_config:
+                raise KeyError("Seven.io API key missing")
+            if seven_config["api_key"] == "${SEVEN_API_KEY}":
+                raise ValueError("SEVEN_API_KEY environment variable not set")
+        elif provider == "twilio":
+            if "twilio" not in sms_config:
+                raise KeyError("Twilio provider configuration missing")
+            twilio_config = sms_config["twilio"]
+            required_twilio_fields = ["account_sid", "auth_token", "from"]
+            for field in required_twilio_fields:
+                if field not in twilio_config:
+                    raise KeyError(f"Twilio configuration missing required field: {field}")
+            if twilio_config["account_sid"] == "${TWILIO_ACCOUNT_SID}":
+                raise ValueError("TWILIO_ACCOUNT_SID environment variable not set")
+            if twilio_config["auth_token"] == "${TWILIO_AUTH_TOKEN}":
+                raise ValueError("TWILIO_AUTH_TOKEN environment variable not set")
+            if twilio_config["from"] == "${TWILIO_PHONE_NUMBER}":
+                raise ValueError("TWILIO_PHONE_NUMBER environment variable not set")
+        
         # Set the appropriate phone number based on mode
         if sms_config["mode"] == "test":
             sms_config["to"] = sms_config["test_number"]
         else:
             sms_config["to"] = sms_config["production_number"]
-        
-        # Validate API key is not placeholder
-        if sms_config["api_key"] == "${SEVEN_API_KEY}":
-            raise ValueError("SEVEN_API_KEY environment variable not set")
 
     return config

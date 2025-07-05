@@ -26,6 +26,8 @@ class ForecastResult:
     timestamp: str
     wind_speed: Optional[float] = None  # Add wind speed
     wind_gusts: Optional[float] = None  # Add wind gusts from MeteoFrance
+    precipitation: Optional[float] = None  # Add precipitation amount
+    thunderstorm_probability: Optional[float] = None  # Add thunderstorm probability
     data_source: str = "meteofrance-api"
 
 
@@ -37,14 +39,40 @@ class Alert:
     description: Optional[str] = None
 
 
+PHENOMENON_ID_MAP = {
+    # Official Météo-France vigilance mapping (see doc)
+    # 1: Wind, 2: Rain, 3: Thunderstorm, 4: Snow/Ice, 5: Flood, 6: Forest fire, 7: Heat, 8: Cold, 9: Avalanche
+    '1': 'wind',
+    '2': 'rain',
+    '3': 'thunderstorm',
+    '4': 'snow',
+    '5': 'flood',
+    '6': 'forest_fire',
+    '7': 'heat',
+    '8': 'cold',
+    '9': 'avalanche',
+}
+
+# Add level mapping after PHENOMENON_ID_MAP
+LEVEL_ID_MAP = {
+    # Official Météo-France vigilance level mapping
+    # 1: green, 2: yellow, 3: orange, 4: red
+    # Using shorter risk-based terms to save characters
+    1: 'green',
+    2: 'risk',    # 4 chars (was 'yellow' - 6 chars)
+    3: 'high',    # 4 chars (was 'orange' - 6 chars)
+    4: 'max',     # 3 chars (was 'red' - 3 chars)
+}
+
+
 def _validate_coordinates(lat: float, lon: float) -> None:
     """
     Validate latitude and longitude coordinates.
-    
+
     Args:
         lat: Latitude in decimal degrees
         lon: Longitude in decimal degrees
-        
+
     Raises:
         ValueError: If coordinates are invalid
     """
@@ -57,26 +85,26 @@ def _validate_coordinates(lat: float, lon: float) -> None:
 def _get_department_from_coordinates(lat: float, lon: float) -> str:
     """
     Get department code from coordinates.
-    
+
     Args:
         lat: Latitude in decimal degrees
         lon: Longitude in decimal degrees
-        
+
     Returns:
         Department code as string (e.g., "65" for Tarbes)
-        
+
     Note:
         This is a simplified implementation. In production, you might want
         to use a more sophisticated geocoding service.
     """
     # Simplified mapping for common French regions
-    # In production, consider using a proper geocoding service
+    # In production, consider using a more sophisticated geocoding service
     if 42.5 <= lat <= 44.0 and -1.0 <= lon <= 1.0:
         return "65"  # Hautes-Pyrénées (Tarbes)
     elif 43.0 <= lat <= 44.0 and 4.0 <= lon <= 6.0:
         return "06"  # Alpes-Maritimes
-    elif 42.0 <= lat <= 43.0 and 8.0 <= lon <= 10.0:
-        return "2A"  # Corse-du-Sud
+    elif 41.0 <= lat <= 43.0 and 8.0 <= lon <= 10.0:
+        return "2A"  # Corse-du-Sud (including Conca: lat=41.79418, lon=9.259567)
     else:
         # Default fallback - in production, implement proper geocoding
         return "75"  # Paris as default
@@ -85,45 +113,63 @@ def _get_department_from_coordinates(lat: float, lon: float) -> str:
 def get_forecast(lat: float, lon: float) -> ForecastResult:
     """
     Get weather forecast from meteofrance-api.
-    
+
     Args:
         lat: Latitude in decimal degrees
         lon: Longitude in decimal degrees
-        
+
     Returns:
         ForecastResult containing weather data
-        
+
     Raises:
         ValueError: If coordinates are invalid
         RuntimeError: If API request fails
     """
     _validate_coordinates(lat, lon)
-    
+
     try:
         client = MeteoFranceClient()
         forecast = client.get_forecast(lat, lon)
-        
+
         if not forecast.forecast or len(forecast.forecast) == 0:
             raise RuntimeError("No forecast data received")
-        
+
         # Extract data from the first forecast entry
         first_forecast = forecast.forecast[0]
-        
+
         # Extract wind data from the nested structure
         wind_data = first_forecast.get('wind', {})
         wind_speed = wind_data.get('speed', 0.0)
         wind_gusts = wind_data.get('gust', 0.0)
-        
+
+        # Extract precipitation data
+        precipitation = None
+        if 'rain' in first_forecast:
+            rain_data = first_forecast['rain']
+            if isinstance(rain_data, dict) and '1h' in rain_data:
+                precipitation = rain_data['1h']
+            elif isinstance(rain_data, (int, float)):
+                precipitation = float(rain_data)
+
+        # Extract thunderstorm probability from weather condition
+        thunderstorm_probability = None
+        weather_desc = first_forecast.get('weather', {}).get('desc', '')
+        if weather_desc in ['thunderstorm', 'Orages', 'Risque d\'orages']:
+            # If thunderstorm condition is detected, use precipitation probability as thunderstorm probability
+            thunderstorm_probability = first_forecast.get('precipitation_probability', 0)
+
         return ForecastResult(
             temperature=first_forecast['T']['value'],
             weather_condition=first_forecast.get('weather', {}).get('desc'),
             precipitation_probability=first_forecast.get('precipitation_probability'),
+            precipitation=precipitation,
+            thunderstorm_probability=thunderstorm_probability,
             timestamp=first_forecast.get('datetime', ''),
             wind_speed=wind_speed,
             wind_gusts=wind_gusts,
             data_source="meteofrance-api"
         )
-        
+
     except Exception as e:
         logger.error(f"Failed to fetch forecast from meteofrance-api: {e}")
         raise RuntimeError(f"Failed to fetch forecast: {str(e)}")
@@ -132,27 +178,27 @@ def get_forecast(lat: float, lon: float) -> ForecastResult:
 def get_thunderstorm(lat: float, lon: float) -> str:
     """
     Get thunderstorm information from meteofrance-api.
-    
+
     Args:
         lat: Latitude in decimal degrees
         lon: Longitude in decimal degrees
-        
+
     Returns:
         String describing thunderstorm conditions
-        
+
     Raises:
         ValueError: If coordinates are invalid
         RuntimeError: If API request fails
     """
     _validate_coordinates(lat, lon)
-    
+
     try:
         client = MeteoFranceClient()
         forecast = client.get_forecast(lat, lon)
-        
+
         if not forecast.forecast or len(forecast.forecast) == 0:
             return "No thunderstorm data available"
-        
+
         # Check for thunderstorm conditions in the next few hours
         thunderstorm_entries = []
         for entry in forecast.forecast[:6]:  # Check next 6 hours
@@ -162,7 +208,7 @@ def get_thunderstorm(lat: float, lon: float) -> str:
             elif isinstance(weather_data, str) and weather_data == 'thunderstorm':
                 # Fallback for old API format
                 thunderstorm_entries.append(entry)
-        
+
         if thunderstorm_entries:
             # Get the first thunderstorm entry
             first_thunderstorm = thunderstorm_entries[0]
@@ -170,7 +216,7 @@ def get_thunderstorm(lat: float, lon: float) -> str:
             return f"Thunderstorm detected with {probability}% precipitation probability"
         else:
             return "No thunderstorm conditions detected"
-            
+
     except Exception as e:
         logger.error(f"Failed to fetch thunderstorm data: {e}")
         raise RuntimeError(f"Failed to fetch thunderstorm data: {str(e)}")
@@ -179,35 +225,82 @@ def get_thunderstorm(lat: float, lon: float) -> str:
 def get_alerts(lat: float, lon: float) -> List[Alert]:
     """
     Get weather alerts from meteofrance-api.
-    
+
     Args:
         lat: Latitude in decimal degrees
         lon: Longitude in decimal degrees
-        
+
     Returns:
         List of Alert objects
-        
+
     Raises:
         ValueError: If coordinates are invalid
         RuntimeError: If API request fails
     """
     _validate_coordinates(lat, lon)
-    
+
     try:
         client = MeteoFranceClient()
         department = _get_department_from_coordinates(lat, lon)
         warnings = client.get_warning_current_phenomenons(department)
-        
         alerts = []
-        for phenomenon, level in warnings.phenomenons_max_colors.items():
-            alerts.append(Alert(
-                phenomenon=phenomenon,
-                level=level,
-                description=f"{phenomenon} warning: {level} level"
-            ))
-        
+        max_colors = getattr(warnings, 'phenomenons_max_colors', None)
+        if isinstance(max_colors, dict):
+            for phenomenon, level in max_colors.items():
+                alerts.append(Alert(
+                    phenomenon=phenomenon,
+                    level=level,
+                    description=f"{phenomenon} warning: {level} level"
+                ))
+        elif isinstance(max_colors, list):
+            for entry in max_colors:
+                # Debug logging
+                logger.debug(f"Processing entry: {entry}")
+                
+                # Try to extract phenomenon and level from dict/list entry
+                if isinstance(entry, dict):
+                    # Map phenomenon id to name if needed
+                    phenomenon_id = entry.get('phenomenon_id')
+                    phenomenon = (
+                        entry.get('phenomenon')
+                        or PHENOMENON_ID_MAP.get(str(phenomenon_id), None)
+                        or PHENOMENON_ID_MAP.get(str(entry.get('phenomenon')), None)
+                        or entry.get('phenomenon_name')
+                        or 'unknown'
+                    )
+                    
+                    # Map level id to string
+                    level_id = entry.get('phenomenon_max_color_id')
+                    level = (
+                        LEVEL_ID_MAP.get(level_id, None)
+                        or entry.get('level')
+                        or entry.get('color')
+                        or 'unknown'
+                    )
+                    
+                    # Debug logging
+                    logger.debug(f"  phenomenon_id: {phenomenon_id}, level_id: {level_id}")
+                    logger.debug(f"  mapped to: phenomenon={phenomenon}, level={level}")
+                    
+                    alerts.append(Alert(
+                        phenomenon=phenomenon,
+                        level=level,
+                        description=f"{phenomenon} warning: {level} level"
+                    ))
+                elif isinstance(entry, (list, tuple)) and len(entry) >= 2:
+                    # If first entry is numeric, map to name
+                    phenomenon = entry[0]
+                    if isinstance(phenomenon, int) or (isinstance(phenomenon, str) and phenomenon.isdigit()):
+                        phenomenon = PHENOMENON_ID_MAP.get(str(phenomenon), phenomenon)
+                    level = entry[1]
+                    alerts.append(Alert(
+                        phenomenon=phenomenon,
+                        level=level,
+                        description=f"{phenomenon} warning: {level} level"
+                    ))
+        else:
+            logger.warning(f"phenomenons_max_colors is neither dict nor list: {type(max_colors)}")
         return alerts
-        
     except Exception as e:
         logger.error(f"Failed to fetch alerts: {e}")
         raise RuntimeError(f"Failed to fetch alerts: {str(e)}")
@@ -216,31 +309,31 @@ def get_alerts(lat: float, lon: float) -> List[Alert]:
 def get_forecast_with_fallback(lat: float, lon: float) -> ForecastResult:
     """
     Get weather forecast with fallback to open-meteo.
-    
+
     Args:
         lat: Latitude in decimal degrees
         lon: Longitude in decimal degrees
-        
+
     Returns:
         ForecastResult containing weather data
-        
+
     Raises:
         ValueError: If coordinates are invalid
         RuntimeError: If both APIs fail
     """
     _validate_coordinates(lat, lon)
-    
+
     # Try meteofrance-api first
     try:
         return get_forecast(lat, lon)
     except Exception as e:
         logger.warning(f"MeteoFrance API failed, trying open-meteo: {e}")
-        
+
         # Fallback to open-meteo
         try:
             openmeteo_data = fetch_openmeteo_forecast(lat, lon)
             current = openmeteo_data.get('current', {})
-            
+
             return ForecastResult(
                 temperature=current.get('temperature_2m'),
                 weather_condition=_convert_weather_code_to_condition(current.get('weather_code')),
@@ -258,32 +351,32 @@ def get_forecast_with_fallback(lat: float, lon: float) -> ForecastResult:
 def get_thunderstorm_with_fallback(lat: float, lon: float) -> str:
     """
     Get thunderstorm information with fallback to open-meteo.
-    
+
     Args:
         lat: Latitude in decimal degrees
         lon: Longitude in decimal degrees
-        
+
     Returns:
         String describing thunderstorm conditions
-        
+
     Raises:
         ValueError: If coordinates are invalid
         RuntimeError: If both APIs fail
     """
     _validate_coordinates(lat, lon)
-    
+
     # Try meteofrance-api first
     try:
         result = get_thunderstorm(lat, lon)
         return f"{result} (meteofrance-api)"
     except Exception as e:
         logger.warning(f"MeteoFrance API failed for thunderstorm, trying open-meteo: {e}")
-        
+
         # Fallback to open-meteo (limited thunderstorm data)
         try:
             openmeteo_data = fetch_openmeteo_forecast(lat, lon)
             current = openmeteo_data.get('current', {})
-            
+
             # OpenMeteo doesn't provide specific thunderstorm data
             # We can only infer from weather codes
             weather_code = current.get('weather_code')
@@ -291,7 +384,7 @@ def get_thunderstorm_with_fallback(lat: float, lon: float) -> str:
                 return f"Thunderstorm conditions detected (open-meteo)"
             else:
                 return f"No thunderstorm data available (open-meteo)"
-                
+
         except Exception as fallback_error:
             logger.error(f"Both APIs failed for thunderstorm data: {fallback_error}")
             return f"No thunderstorm data available (both APIs failed)"
@@ -300,19 +393,19 @@ def get_thunderstorm_with_fallback(lat: float, lon: float) -> str:
 def get_alerts_with_fallback(lat: float, lon: float) -> List[Alert]:
     """
     Get weather alerts with fallback handling.
-    
+
     Args:
         lat: Latitude in decimal degrees
         lon: Longitude in decimal degrees
-        
+
     Returns:
         List of Alert objects (empty list if no fallback available)
-        
+
     Raises:
         ValueError: If coordinates are invalid
     """
     _validate_coordinates(lat, lon)
-    
+
     # Try meteofrance-api first
     try:
         return get_alerts(lat, lon)
@@ -325,16 +418,16 @@ def get_alerts_with_fallback(lat: float, lon: float) -> List[Alert]:
 def _convert_weather_code_to_condition(weather_code: Optional[int]) -> Optional[str]:
     """
     Convert OpenMeteo weather code to condition string.
-    
+
     Args:
         weather_code: OpenMeteo weather code
-        
+
     Returns:
         Weather condition string or None
     """
     if weather_code is None:
         return None
-        
+
     # OpenMeteo weather codes mapping
     weather_conditions = {
         0: "clear",
@@ -368,60 +461,60 @@ def _convert_weather_code_to_condition(weather_code: Optional[int]) -> Optional[
         98: "thunderstorm",
         99: "thunderstorm"
     }
-    
+
     return weather_conditions.get(weather_code, "unknown")
 
 
 def get_tomorrow_forecast(lat: float, lon: float) -> List[ForecastResult]:
     """
     Get tomorrow's weather forecast from meteofrance-api (05:00-17:00).
-    
+
     Args:
         lat: Latitude in decimal degrees
         lon: Longitude in decimal degrees
-        
+
     Returns:
         List of ForecastResult containing tomorrow's weather data
-        
+
     Raises:
         ValueError: If coordinates are invalid
         RuntimeError: If API request fails
     """
     _validate_coordinates(lat, lon)
-    
+
     try:
         client = MeteoFranceClient()
         forecast = client.get_forecast(lat, lon)
-        
+
         if not forecast.forecast or len(forecast.forecast) == 0:
             raise RuntimeError("No forecast data received")
-        
+
         # Get tomorrow's date
         from datetime import datetime, timedelta
         tomorrow = datetime.now() + timedelta(days=1)
         tomorrow_date = tomorrow.date()
-        
+
         tomorrow_forecasts = []
-        
+
         for entry in forecast.forecast:
             # Parse the datetime from the forecast entry using 'dt' field (Unix timestamp)
             dt_timestamp = entry.get('dt')
             if not dt_timestamp:
                 logger.warning(f"Skipping entry with empty dt: {entry}")
                 continue
-                
+
             try:
                 entry_datetime = datetime.fromtimestamp(dt_timestamp)
                 entry_date = entry_datetime.date()
                 entry_hour = entry_datetime.hour
-                
+
                 # Check if it's tomorrow and between 05:00-17:00
                 if entry_date == tomorrow_date and 5 <= entry_hour <= 17:
                     # Extract wind data from the nested structure
                     wind_data = entry.get('wind', {})
                     wind_speed = wind_data.get('speed', 0.0)
                     wind_gusts = wind_data.get('gust', 0.0)
-                    
+
                     tomorrow_forecasts.append(ForecastResult(
                         temperature=entry['T']['value'],
                         weather_condition=entry.get('weather', {}).get('desc'),
@@ -434,14 +527,14 @@ def get_tomorrow_forecast(lat: float, lon: float) -> List[ForecastResult]:
             except (ValueError, TypeError) as e:
                 logger.warning(f"Skipping entry with invalid dt '{dt_timestamp}': {e}")
                 continue
-        
+
         if not tomorrow_forecasts:
             logger.warning(f"No tomorrow forecast data found for {lat}, {lon}")
             return []
-        
+
         logger.info(f"Found {len(tomorrow_forecasts)} tomorrow forecast entries for {lat}, {lon}")
         return tomorrow_forecasts
-        
+
     except Exception as e:
         logger.error(f"Failed to fetch tomorrow's forecast from meteofrance-api: {e}")
         raise RuntimeError(f"Failed to fetch tomorrow's forecast: {str(e)}") 

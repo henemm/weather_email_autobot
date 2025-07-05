@@ -132,18 +132,18 @@ class EmailClient:
             highest_risk = ""
         else:
             # Find the highest level alert
-            level_priority = {"green": 1, "yellow": 2, "orange": 3, "red": 4}
+            level_priority = {"green": 1, "risk": 2, "high": 3, "max": 4}
             highest_alert = max(vigilance_alerts, key=lambda a: level_priority.get(a.get("level", "green"), 1))
             
             level = highest_alert.get("level", "green")
             phenomenon = highest_alert.get("phenomenon", "unknown")
             
-            # Only include if level is yellow or higher
+            # Only include if level is risk or higher (equivalent to yellow or higher)
             if level_priority.get(level, 1) < 2:
                 risk_level = ""
                 highest_risk = ""
             else:
-                # Translate phenomenon to German
+                # Translate phenomenon to German (excluding heat as requested)
                 phenomenon_translation = {
                     "thunderstorm": "Gewitter",
                     "rain": "Regen",
@@ -151,7 +151,7 @@ class EmailClient:
                     "snow": "Schnee",
                     "flood": "Hochwasser",
                     "forest_fire": "Waldbrand",
-                    "heat": "Hitze",
+                    # "heat": "Hitze",  # Excluded as requested
                     "cold": "Kälte",
                     "avalanche": "Lawine",
                     "unknown": "Warnung"
@@ -233,87 +233,90 @@ def _format_value_or_dash(value, *args):
 def _generate_morning_report(report_data: Dict[str, Any], config: Dict[str, Any]) -> str:
     """
     Generate morning report format according to email_format specification.
-    
-    Format: {etappe_heute} | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind}km/h | Windböen{wind_max}km/h | Gew.+1{g1_next}%@{t_g1_next_threshold}
     """
     location = report_data.get("location", "Unknown")
     weather_data = report_data.get("weather_data", {})
-    
+
     # Extract weather values with defaults
     g_threshold = weather_data.get("thunderstorm_threshold_pct", 0)
     t_g_threshold = weather_data.get("thunderstorm_threshold_time", "")
     g_pmax = weather_data.get("max_thunderstorm_probability", 0)
     t_g_pmax = weather_data.get("thunderstorm_max_time", "")
-    
+
     r_threshold = weather_data.get("rain_threshold_pct", 0)
     t_r_threshold = weather_data.get("rain_threshold_time", "")
     r_pmax = weather_data.get("max_rain_probability", 0)
     t_r_pmax = weather_data.get("rain_max_time", "")
-    
+
     regen_mm = weather_data.get("max_precipitation", 0)
     t_regen_max = weather_data.get("rain_total_time", "")
-    
+
     temp_max = weather_data.get("max_temperature", 0)
     wind = weather_data.get("wind_speed", 0)  # Average wind speed
     wind_max = weather_data.get("max_wind_speed", 0)  # Wind gusts
-    
+
     g1_next = weather_data.get("thunderstorm_next_day", 0)
     t_g1_next_threshold = weather_data.get("thunderstorm_next_day_threshold_time", "")
-    
+
     # Extract vigilance warning
     vigilance_warning = _format_vigilance_warning(weather_data.get("vigilance_alerts", []))
-    
+
     # Format components
     stage_part = location.replace(" ", "")
-    
+
     # Thunderstorm part
-    if g_threshold == 0 or g_threshold is None:
+    if (g_threshold == 0 or g_threshold is None) and g_pmax > 0:
+        # Use max value if threshold not crossed but value present
+        thunder_part = f"Gew.{g_pmax:.0f}%@{t_g_pmax}"
+    elif g_threshold == 0 or g_threshold is None:
         thunder_part = "Gew. -"
     else:
         thunder_part = f"Gew.{g_threshold:.0f}%@{t_g_threshold}"
         if g_pmax > g_threshold:
             thunder_part += f"({g_pmax:.0f}%@{t_g_pmax})"
-    
+
     # Rain part
-    if r_threshold == 0 or r_threshold is None:
+    if (r_threshold == 0 or r_threshold is None) and r_pmax > 0:
+        rain_part = f"Regen{r_pmax:.0f}%@{t_r_pmax}"
+    elif r_threshold == 0 or r_threshold is None:
         rain_part = "Regen -"
     else:
         rain_part = f"Regen{r_threshold:.0f}%@{t_r_threshold}"
         if r_pmax > r_threshold:
             rain_part += f"({r_pmax:.0f}%@{t_r_pmax})"
-    
+
     # Rain amount part
     if regen_mm == 0 or regen_mm is None:
         rain_amount_part = "Regen -mm"
     else:
         rain_amount_part = f"Regen{regen_mm:.1f}mm@{t_regen_max}"
-    
+
     # Temperature part
     temp_part = f"Hitze{temp_max:.1f}°C" if temp_max > 0 else "Hitze -"
-    
+
     # Wind parts
     wind_part = f"Wind{wind:.0f}km/h" if wind > 0 else "Wind -"
     wind_gust_part = f"Windböen{wind_max:.0f}km/h" if wind_max > 0 else "Windböen -"
-    
+
     # Thunderstorm next day part
     if g1_next == 0 or g1_next is None:
         thunder_next_part = "Gew.+1 -"
     else:
-        thunder_next_part = f"Gew.+1{g1_next:.0f}%"
+        thunder_next_part = f"Gew.+1 {g1_next:.0f}%"
         if t_g1_next_threshold:
             thunder_next_part += f"@{t_g1_next_threshold}"
-    
+
     # Combine all parts
     parts = [stage_part, thunder_part, rain_part, rain_amount_part, temp_part, wind_part, wind_gust_part, thunder_next_part]
     if vigilance_warning:
         parts.append(vigilance_warning)
-    
+
     report_text = " | ".join(parts)
-    
+
     # Ensure character limit
     if len(report_text) > 160:
         report_text = report_text[:157] + "..."
-    
+
     return report_text
 
 
@@ -572,17 +575,17 @@ def _format_vigilance_warning(alerts: List[Dict[str, Any]]) -> str:
         return ""
     
     # Find the highest level alert
-    level_priority = {"green": 1, "yellow": 2, "orange": 3, "red": 4}
+    level_priority = {"green": 1, "risk": 2, "high": 3, "max": 4}
     highest_alert = max(alerts, key=lambda a: level_priority.get(a.get("level", "green"), 1))
     
     level = highest_alert.get("level", "green")
     phenomenon = highest_alert.get("phenomenon", "unknown")
     
-    # Only include if level is yellow or higher
+    # Only include if level is risk or higher (equivalent to yellow or higher)
     if level_priority.get(level, 1) < 2:
         return ""
     
-    # Translate phenomenon to German
+    # Translate phenomenon to German (excluding heat as requested)
     phenomenon_translation = {
         "thunderstorm": "Gewitter",
         "rain": "Regen",
@@ -590,7 +593,7 @@ def _format_vigilance_warning(alerts: List[Dict[str, Any]]) -> str:
         "snow": "Schnee",
         "flood": "Hochwasser",
         "forest_fire": "Waldbrand",
-        "heat": "Hitze",
+        # "heat": "Hitze",  # Excluded as requested
         "cold": "Kälte",
         "avalanche": "Lawine",
         "unknown": "Warnung"

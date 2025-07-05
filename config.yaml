@@ -8,7 +8,8 @@
 # =============================================================================
 
 # Startdatum der Tour (YYYY-MM-DD Format)
-startdatum: "2025-06-26"
+# Set to 14 days ago so today is the last stage (Conca)
+startdatum: "2025-06-22"
 
 # =============================================================================
 # E-MAIL-KONFIGURATION
@@ -24,17 +25,25 @@ smtp:
 # SMS-KONFIGURATION
 # =============================================================================
 sms:
-  enabled: false  # Disable SMS functionality for testing "false"
-  provider: seven
-  # API-Schlüssel wird aus Umgebungsvariable SEVEN_API_KEY geladen
-  api_key: "${SEVEN_API_KEY}"
+  enabled: false  # Enable SMS functionality
+  provider: twilio  # "seven" oder "twilio"
+  mode: "test"  # "test" oder "production"
+  
   # Testnummer für Entwicklung und Tests
   test_number: "+4915158450319"
   # Produktionsnummer für echte Berichte
   production_number: "+4917717816897"
-  # Aktuell verwendete Nummer (test oder production)
-  mode: "test"  # "test" oder "production"
-  sender: "4916092170813"
+  
+  # Seven.io Provider Konfiguration
+  seven:
+    api_key: "${SEVEN_API_KEY}"
+    sender: "4916092170813"
+  
+  # Twilio Provider Konfiguration
+  twilio:
+    account_sid: "${TWILIO_ACCOUNT_SID}"
+    auth_token: "${TWILIO_AUTH_TOKEN}"
+    from: "${TWILIO_PHONE_NUMBER}"
 
 # =============================================================================
 # RELEVANZ-SCHWELLENWERTE
@@ -66,6 +75,19 @@ delta_thresholds:
 
 min_interval_min: 60              # Minimaler Abstand zwischen Warnungen in Minuten
 max_daily_reports: 3              # Maximale Anzahl Berichte pro Tag
+
+# =============================================================================
+# DEBUG-KONFIGURATION
+# =============================================================================
+# Debug-Ausgaben für Konsistenzprüfung und Fehleranalyse
+
+debug:
+  enabled: true                   # Debug-Ausgaben aktivieren
+  raw_data_output: true           # Rohdaten-Ausgabe für jeden Layer
+  threshold_validation: true      # Schwellenwert-Validierung
+  comparison_with_report: true    # Vergleich Rohdaten vs. Bericht
+  save_debug_files: true          # Debug-Dateien speichern
+  output_directory: "output/debug" # Verzeichnis für Debug-Dateien
 
 # =============================================================================
 # DATEIPFADE

@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-07-05T14:03:58.126442",
+  "location": "Asco",
+  "coordinates": {
+    "lat": 42.426238,
+    "lon": 8.900291
+  },
+  "weather_data": {
+    "max_temperature": 15.9,
+    "max_precipitation": 2.6,
+    "max_rain_probability": 80.0,
+    "max_thunderstorm_probability": 80.0,
+    "max_wind_speed": 2,
+    "wind_speed": 2,
+    "thunderstorm_threshold_pct": 60.0,
+    "thunderstorm_threshold_time": "14",
+    "thunderstorm_max_time": "15",
+    "rain_threshold_pct": 80.0,
+    "rain_threshold_time": "14",
+    "rain_max_time": "14",
+    "rain_total_time": "14",
+    "location": "Asco",
+    "data_source": "meteofrance-api",
+    "processed_at": "2025-07-05T14:03:58.125287",
+    "vigilance_alerts": [],
+    "min_temperature": 0.0,
+    "thunderstorm_next_day": 0.0
+  },
+  "report_text": "Asco | Gew.60%@14(80%@15) | Regen80%@14 | Regen2.6mm@14 | Hitze15.9\u00b0C | Wind2km/h | Windb\u00f6en2km/h | Gew.+1 -",
+  "report_length": 108
+}

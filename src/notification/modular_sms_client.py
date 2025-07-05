@@ -85,15 +85,17 @@ class ModularSmsClient:
         provider_name = sms_config["provider"]
         
         if provider_name == "seven":
+            seven_config = sms_config.get("seven", {})
             return {
-                "api_key": sms_config.get("api_key"),
-                "from": sms_config.get("sender")
+                "api_key": seven_config.get("api_key"),
+                "from": seven_config.get("sender")
             }
         elif provider_name == "twilio":
+            twilio_config = sms_config.get("twilio", {})
             return {
-                "account_sid": sms_config.get("account_sid"),
-                "auth_token": sms_config.get("auth_token"),
-                "from": sms_config.get("from")
+                "account_sid": twilio_config.get("account_sid"),
+                "auth_token": twilio_config.get("auth_token"),
+                "from": twilio_config.get("from")
             }
         else:
             raise ValueError(f"Unsupported provider: {provider_name}")

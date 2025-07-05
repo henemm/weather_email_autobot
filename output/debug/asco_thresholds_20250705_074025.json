@@ -1,0 +1,14 @@
+{
+  "location": "Asco",
+  "timestamp": "2025-07-05T07:40:25.677420",
+  "thresholds": {
+    "rain_probability": 25.0,
+    "rain_amount": 2.0,
+    "thunderstorm_probability": 20.0,
+    "wind_speed": 40.0,
+    "temperature": 30.0,
+    "cloud_cover": 50.0
+  },
+  "crossings": [],
+  "issues": []
+}

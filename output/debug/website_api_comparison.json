@@ -1,0 +1,168 @@
+{
+  "timestamp": "2025-07-05T13:54:43.986749",
+  "coordinates": {
+    "lat": 42.426238,
+    "lon": 8.900291
+  },
+  "website_data": {
+    "extraction_time": "2025-07-05T13:54:43.792955",
+    "source": "meteofrance.com",
+    "region": "Haute-Corse (2B)",
+    "weather_conditions": [
+      {
+        "keyword": "orage",
+        "context": "\" id=\"notifications\" v-cloak v-if=\"notificationsStorage\" >     <transition name=\"fade\">         <button aria-label=\"Ouvrir les notifications\" title=\"O"
+      },
+      {
+        "keyword": "orages",
+        "context": "menu-item\">         <a href=\"/comprendre-la-meteo/orages\" data-drupal-link-system-path=\"node/87208\">Les orages</a>               </li>"
+      },
+      {
+        "keyword": "averse",
+        "context": "geux concerne essentiellement les Pyr\u00c3\u00a9n\u00c3\u00a9es. Les averses orageuses deviennent plus fr\u00c3\u00a9quentes et virulentes sur l'ensemble de la cha\u00c3\u00aene jusqu'au re"
+      },
+      {
+        "keyword": "averses",
+        "context": "geux concerne essentiellement les Pyr\u00c3\u00a9n\u00c3\u00a9es. Les averses orageuses deviennent plus fr\u00c3\u00a9quentes et virulentes sur l'ensemble de la cha\u00c3\u00aene jusqu'au re"
+      },
+      {
+        "keyword": "pluie",
+        "context": "ons m\u00e9t\u00e9os locales par heure et les pr\u00e9visions de pluie.\" /> <meta name=\"MobileOptimized\" content=\"width\" /> <meta name=\"HandheldFriendly\" content=\"tr"
+      },
+      {
+        "keyword": "pluies",
+        "context": "littoral de la Mer du Nord. La nuit suivante, des pluies plus r\u00c3\u00a9guli\u00c3\u00a8res envahissent la Bretagne, la Normandie et les Hauts-de-France. Sur le Sud-Ou"
+      },
+      {
+        "keyword": "rain",
+        "context": "e-Aquitaine jusqu'aux Hauts de France et \u00c3\u00a0 la Lorraine et la Bourgogne. Elles se m\u00c3\u00aalent d'orages du Centre aux fronti\u00c3\u00a8res du Nord. A l'arri\u00c3\u00a8re, un"
+      },
+      {
+        "keyword": "ensoleill\u00e9",
+        "context": "juillet</p><p>Devenant  nuageux au Nord. Restant ensoleill\u00e9 et chaud au Sud, avec une \u00e9volution orageuse plus marqu\u00e9e sur les Pyr\u00e9n\u00e9es.  Seules les r"
+      },
+      {
+        "keyword": "nuageux",
+        "context": ">Cet apr\u00e8s-midi samedi 05 juillet</p><p>Devenant  nuageux au Nord. Restant ensoleill\u00e9 et chaud au Sud, avec une \u00e9volution orageuse plus marqu\u00e9e sur le"
+      }
+    ],
+    "alerts": [
+      {
+        "keyword": "vigilance",
+        "context": "v>    </div> <div id=\"block-mfvigilanceheader\" class=\"block block-mf-vigilance-header\">               <style> [v-cloak] {     disp"
+      },
+      {
+        "keyword": "alerte",
+        "context": "<i aria-label=\"Alerte\" class=\"alert\"></i>                 <p v-if=\"vigilance_level && vigilance_level < 2\">Pas de v"
+      },
+      {
+        "keyword": "warning",
+        "context": "<i v-if=\"favori.warningColor == 2\" alt=\"VIGILANCE JAUNE\" title=\"VIGILANCE JAUNE\" aria-label=\"vigilance jaune\" class="
+      },
+      {
+        "keyword": "orange",
+        "context": "4,                 'vigilance-orange': vigilance_level && vigilance_level == 3,                 'vigilance-jaune': vigilance_level"
+      },
+      {
+        "keyword": "rouge",
+        "context": "\"{                 'vigilance-rouge': vigilance_level && vigilance_level == 4,                 'vigilance-orange': vigilance_level"
+      },
+      {
+        "keyword": "jaune",
+        "context": "ock_vigilance_alert.vigilance-jaune p.label:before {     font-size: 30px!important; } </style>  <div v-cloak class=\"block_vigilanc"
+      }
+    ],
+    "forecast_summary": "Tendance pour les jours suivants</h2>  \t\t  \t       \t      \t\t  \t\t\t<div class=\"b_tendance\"></div> \t\t  \t       \t    </div>  \t  \t<div class=\"close_wrap\"> \t\t        <a class=\"closeModal\">Fermer</a> \t\t    </div> \t  </div> \t</div> \t<div class=\"modal_overlay\"></div> </div>   </div>     </div> <div id=\"block-mfadsv2-9\" class=\"block block-mf-ads-v2\">               <div  \tclass=\"ad \"  \tid=\"custom-ad-block-mf-ads-v2wlam3old1y\"  \tdata-format=\"button\"  \tdata-unit-position=\"/bouton\" \tdata-targeting=\"bouton\" \td"
+  },
+  "api_entries": [
+    {
+      "index": 3,
+      "datetime": "2025-07-05T14:00:00",
+      "weather": {
+        "icon": "p16bisj",
+        "desc": "Averses orageuses"
+      },
+      "temperature": {
+        "value": 15.9,
+        "windchill": 19.5
+      },
+      "rain": {
+        "1h": 2.6
+      },
+      "wind": {
+        "speed": 2,
+        "gust": 0,
+        "direction": 240,
+        "icon": "OSO"
+      }
+    },
+    {
+      "index": 4,
+      "datetime": "2025-07-05T15:00:00",
+      "weather": {
+        "icon": "p28j",
+        "desc": "Orages"
+      },
+      "temperature": {
+        "value": 14.3,
+        "windchill": 16.4
+      },
+      "rain": {
+        "1h": 1.5
+      },
+      "wind": {
+        "speed": 2,
+        "gust": 0,
+        "direction": 255,
+        "icon": "OSO"
+      }
+    },
+    {
+      "index": 5,
+      "datetime": "2025-07-05T16:00:00",
+      "weather": {
+        "icon": "p28j",
+        "desc": "Orages"
+      },
+      "temperature": {
+        "value": 15.2,
+        "windchill": 20.7
+      },
+      "rain": {
+        "1h": 1.5
+      },
+      "wind": {
+        "speed": 2,
+        "gust": 0,
+        "direction": 250,
+        "icon": "OSO"
+      }
+    },
+    {
+      "index": 6,
+      "datetime": "2025-07-05T17:00:00",
+      "weather": {
+        "icon": "p28j",
+        "desc": "Orages"
+      },
+      "temperature": {
+        "value": 15.1,
+        "windchill": 20.4
+      },
+      "rain": {
+        "1h": 1.5
+      },
+      "wind": {
+        "speed": 2,
+        "gust": 0,
+        "direction": 250,
+        "icon": "OSO"
+      }
+    }
+  ],
+  "discrepancies": {
+    "website_has_thunderstorm": true,
+    "api_has_thunderstorm": true,
+    "consistent": true
+  }
+}
