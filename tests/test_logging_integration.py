@@ -71,11 +71,14 @@ class TestLoggingIntegration:
                     "morning_time": "04:30",
                     "evening_time": "19:00"
                 },
-                "dynamic_reports": {
-                    "risk_threshold": 0.3,
-                    "min_interval_minutes": 60,
-                    "max_daily": 5
-                }
+                "delta_thresholds": {
+                    "thunderstorm_probability": 20.0,
+                    "rain_probability": 30.0,
+                    "wind_speed": 10.0,
+                    "temperature": 2.0
+                },
+                "min_interval_min": 60,
+                "max_daily_reports": 3
             }
             
             state_file = os.path.join(temp_dir, "state.json")

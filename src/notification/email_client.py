@@ -7,11 +7,20 @@ with proper formatting and character limits for mobile devices.
 
 import smtplib
 import os
+import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 from typing import Dict, Any, Optional, List
+import logging
 
+from weather.core.formatter import WeatherFormatter
+from weather.core.models import ReportType, ReportConfig, convert_dict_to_aggregated_weather_data
+
+logger = logging.getLogger(__name__)
+
+# Remove all the old formatting functions (_format_thunderstorm_field, etc.)
+# as they are now handled by the central WeatherFormatter
 
 class EmailClient:
     """
@@ -123,10 +132,20 @@ class EmailClient:
         else:
             stage = report_data.get("location", "Unknown")
         
-        # Get vigilance warnings
-        vigilance_alerts = report_data.get("weather_data", {}).get("vigilance_alerts", [])
+        # Get vigilance warnings (zone-based fire risk warnings are included in fire_risk_warning)
+        weather_data = report_data.get("weather_data", {})
+        fire_risk_warning = weather_data.get("fire_risk_warning", "")
+        vigilance_alerts = weather_data.get("vigilance_alerts", [])
         
-        if not vigilance_alerts:
+        # If fire_risk_warning is present, use it for subject
+        if fire_risk_warning:
+            # fire_risk_warning is like 'HIGH Waldbrand' or ''
+            parts = fire_risk_warning.split()
+            if len(parts) == 2:
+                risk_level, highest_risk = parts
+            else:
+                risk_level, highest_risk = fire_risk_warning, "Waldbrand"
+        elif not vigilance_alerts:
             # No vigilance warnings
             risk_level = ""
             highest_risk = ""
@@ -143,11 +162,11 @@ class EmailClient:
                 risk_level = ""
                 highest_risk = ""
             else:
-                # Translate phenomenon to German (excluding heat as requested)
+                # Translate phenomenon to German (excluding heat, wind, and rain as requested)
                 phenomenon_translation = {
                     "thunderstorm": "Gewitter",
-                    "rain": "Regen",
-                    "wind": "Wind",
+                    # "rain": "Regen",  # Excluded as requested
+                    # "wind": "Wind",  # Excluded as requested
                     "snow": "Schnee",
                     "flood": "Hochwasser",
                     "forest_fire": "Waldbrand",
@@ -156,17 +175,14 @@ class EmailClient:
                     "avalanche": "Lawine",
                     "unknown": "Warnung"
                 }
-                
                 german_phenomenon = phenomenon_translation.get(phenomenon.lower(), phenomenon)
                 risk_level = level.upper()
                 highest_risk = german_phenomenon
-        
         # Format: {subject} {etappe}: {risk_level} - {highest_risk} ({report_type})
         if risk_level and highest_risk:
             subject = f"{base_subject} {stage}: {risk_level} - {highest_risk} ({report_type})"
         else:
             subject = f"{base_subject} {stage}:  ({report_type})"
-        
         return subject
 
     def send_gr20_report(self, report_data: Dict[str, Any]) -> bool:
@@ -191,8 +207,27 @@ class EmailClient:
         # Generate dynamic subject
         subject = self._generate_dynamic_subject(report_data)
         
+        # Debug output: show the actual email content
+        print(f"\n=== EMAIL CONTENT ===")
+        print(f"Subject: {subject}")
+        print(f"Message: {message_text}")
+        print(f"Length: {len(message_text)} characters")
+        print(f"=====================\n")
+        
+        # Log the email content for debugging
+        logger.info(f"EMAIL GENERATED - Subject: {subject}")
+        logger.info(f"EMAIL GENERATED - Message: {message_text}")
+        logger.info(f"EMAIL GENERATED - Length: {len(message_text)} characters")
+        
         # Send email
-        return self.send_email(message_text, subject)
+        send_result = self.send_email(message_text, subject)
+        
+        if send_result:
+            logger.info(f"EMAIL SENT SUCCESSFULLY to {self.recipient_email}")
+        else:
+            logger.error(f"EMAIL SEND FAILED to {self.recipient_email}")
+        
+        return send_result
 
 
 def generate_gr20_report_text(report_data: Dict[str, Any], config: Dict[str, Any]) -> str:
@@ -232,283 +267,148 @@ def _format_value_or_dash(value, *args):
 
 def _generate_morning_report(report_data: Dict[str, Any], config: Dict[str, Any]) -> str:
     """
-    Generate morning report format according to email_format specification.
+    Generate morning report format using central formatter.
     """
-    location = report_data.get("location", "Unknown")
-    weather_data = report_data.get("weather_data", {})
-
-    # Extract weather values with defaults
-    g_threshold = weather_data.get("thunderstorm_threshold_pct", 0)
-    t_g_threshold = weather_data.get("thunderstorm_threshold_time", "")
-    g_pmax = weather_data.get("max_thunderstorm_probability", 0)
-    t_g_pmax = weather_data.get("thunderstorm_max_time", "")
-
-    r_threshold = weather_data.get("rain_threshold_pct", 0)
-    t_r_threshold = weather_data.get("rain_threshold_time", "")
-    r_pmax = weather_data.get("max_rain_probability", 0)
-    t_r_pmax = weather_data.get("rain_max_time", "")
-
-    regen_mm = weather_data.get("max_precipitation", 0)
-    t_regen_max = weather_data.get("rain_total_time", "")
-
-    temp_max = weather_data.get("max_temperature", 0)
-    wind = weather_data.get("wind_speed", 0)  # Average wind speed
-    wind_max = weather_data.get("max_wind_speed", 0)  # Wind gusts
-
-    g1_next = weather_data.get("thunderstorm_next_day", 0)
-    t_g1_next_threshold = weather_data.get("thunderstorm_next_day_threshold_time", "")
-
-    # Extract vigilance warning
-    vigilance_warning = _format_vigilance_warning(weather_data.get("vigilance_alerts", []))
-
-    # Format components
-    stage_part = location.replace(" ", "")
-
-    # Thunderstorm part
-    if (g_threshold == 0 or g_threshold is None) and g_pmax > 0:
-        # Use max value if threshold not crossed but value present
-        thunder_part = f"Gew.{g_pmax:.0f}%@{t_g_pmax}"
-    elif g_threshold == 0 or g_threshold is None:
-        thunder_part = "Gew. -"
-    else:
-        thunder_part = f"Gew.{g_threshold:.0f}%@{t_g_threshold}"
-        if g_pmax > g_threshold:
-            thunder_part += f"({g_pmax:.0f}%@{t_g_pmax})"
-
-    # Rain part
-    if (r_threshold == 0 or r_threshold is None) and r_pmax > 0:
-        rain_part = f"Regen{r_pmax:.0f}%@{t_r_pmax}"
-    elif r_threshold == 0 or r_threshold is None:
-        rain_part = "Regen -"
-    else:
-        rain_part = f"Regen{r_threshold:.0f}%@{t_r_threshold}"
-        if r_pmax > r_threshold:
-            rain_part += f"({r_pmax:.0f}%@{t_r_pmax})"
-
-    # Rain amount part
-    if regen_mm == 0 or regen_mm is None:
-        rain_amount_part = "Regen -mm"
-    else:
-        rain_amount_part = f"Regen{regen_mm:.1f}mm@{t_regen_max}"
-
-    # Temperature part
-    temp_part = f"Hitze{temp_max:.1f}°C" if temp_max > 0 else "Hitze -"
-
-    # Wind parts
-    wind_part = f"Wind{wind:.0f}km/h" if wind > 0 else "Wind -"
-    wind_gust_part = f"Windböen{wind_max:.0f}km/h" if wind_max > 0 else "Windböen -"
-
-    # Thunderstorm next day part
-    if g1_next == 0 or g1_next is None:
-        thunder_next_part = "Gew.+1 -"
-    else:
-        thunder_next_part = f"Gew.+1 {g1_next:.0f}%"
-        if t_g1_next_threshold:
-            thunder_next_part += f"@{t_g1_next_threshold}"
-
-    # Combine all parts
-    parts = [stage_part, thunder_part, rain_part, rain_amount_part, temp_part, wind_part, wind_gust_part, thunder_next_part]
-    if vigilance_warning:
-        parts.append(vigilance_warning)
-
-    report_text = " | ".join(parts)
-
-    # Ensure character limit
-    if len(report_text) > 160:
-        report_text = report_text[:157] + "..."
-
-    return report_text
+    try:
+        # Convert report_data to AggregatedWeatherData format
+        weather_data = report_data.get("weather_data", {})
+        location_name = weather_data.get("location_name") or weather_data.get("location") or "Unknown"
+        latitude = weather_data.get("latitude", 0.0)
+        longitude = weather_data.get("longitude", 0.0)
+        agg_data = convert_dict_to_aggregated_weather_data(weather_data, location_name, latitude, longitude)
+        
+        # Get stage names from report_data
+        stage_names_list = report_data.get("stage_names", ["Unknown"])
+        stage_name = stage_names_list[0] if stage_names_list else "Unknown"
+        stage_names_dict = {"today": stage_name}
+        
+        # Use central formatter
+        formatter = WeatherFormatter(ReportConfig())
+        return formatter.format_report_text(
+            agg_data,
+            ReportType("morning"),
+            stage_names_dict
+        )
+    except Exception as e:
+        logger.error(f"Error generating morning report: {e}")
+        return "Error generating report"
 
 
 def _generate_evening_report(report_data: Dict[str, Any], config: Dict[str, Any]) -> str:
     """
-    Generate evening report format according to email_format specification.
-    
-    Format: {etappe_morgen}→{etappe_uebermorgen} | Nacht{min_temp}°C | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind}km/h | Windböen{wind_max}km/h | Gew.+1{g1_next}%@{t_g1_next_threshold}
+    Generate evening report format using central formatter.
     """
-    location = report_data.get("location", "Unknown")
-    weather_data = report_data.get("weather_data", {})
-    
-    # Extract stage information
-    tomorrow_stage = weather_data.get("tomorrow_stage", location)
-    day_after_stage = weather_data.get("day_after_stage", "")
-    
-    # Extract weather values
-    min_temp = weather_data.get("min_temperature", 0)
-    
-    g_threshold = weather_data.get("tomorrow_thunderstorm_threshold_pct", weather_data.get("thunderstorm_threshold_pct", 0))
-    t_g_threshold = weather_data.get("tomorrow_thunderstorm_threshold_time", weather_data.get("thunderstorm_threshold_time", ""))
-    g_pmax = weather_data.get("tomorrow_thunderstorm_probability", weather_data.get("max_thunderstorm_probability", 0))
-    t_g_pmax = weather_data.get("tomorrow_thunderstorm_max_time", weather_data.get("thunderstorm_max_time", ""))
-    
-    r_threshold = weather_data.get("tomorrow_rain_threshold_pct", weather_data.get("rain_threshold_pct", 0))
-    t_r_threshold = weather_data.get("tomorrow_rain_threshold_time", weather_data.get("rain_threshold_time", ""))
-    r_pmax = weather_data.get("tomorrow_rain_probability", weather_data.get("max_rain_probability", 0))
-    t_r_pmax = weather_data.get("tomorrow_rain_max_time", weather_data.get("rain_max_time", ""))
-    
-    regen_mm = weather_data.get("tomorrow_precipitation", weather_data.get("max_precipitation", 0))
-    t_regen_max = weather_data.get("tomorrow_rain_total_time", weather_data.get("rain_total_time", ""))
-    
-    temp_max = weather_data.get("tomorrow_temperature", weather_data.get("max_temperature", 0))
-    wind = weather_data.get("tomorrow_wind_speed", weather_data.get("wind_speed", 0))
-    wind_max = weather_data.get("tomorrow_wind_gusts", weather_data.get("max_wind_speed", 0))
-    
-    g1_next = weather_data.get("thunderstorm_day_after", 0)
-    t_g1_next_threshold = weather_data.get("thunderstorm_day_after_threshold_time", "")
-    
-    # Extract vigilance warning
-    vigilance_warning = _format_vigilance_warning(weather_data.get("vigilance_alerts", []))
-    
-    # Format components
-    stage_part = tomorrow_stage.replace(" ", "")
-    if day_after_stage:
-        stage_part += f"→{day_after_stage.replace(' ', '')}"
-    
-    night_part = f"Nacht{min_temp:.1f}°C"
-    
-    # Thunderstorm part
-    if g_threshold == 0 or g_threshold is None:
-        thunder_part = "Gew. -"
-    else:
-        thunder_part = f"Gew.{g_threshold:.0f}%@{t_g_threshold}"
-        if g_pmax > g_threshold:
-            thunder_part += f"({g_pmax:.0f}%@{t_g_pmax})"
-    
-    # Rain part
-    if r_threshold == 0 or r_threshold is None:
-        rain_part = "Regen -"
-    else:
-        rain_part = f"Regen{r_threshold:.0f}%@{t_r_threshold}"
-        if r_pmax > r_threshold:
-            rain_part += f"({r_pmax:.0f}%@{t_r_pmax})"
-    
-    # Rain amount part
-    if regen_mm == 0 or regen_mm is None:
-        rain_amount_part = "Regen -mm"
-    else:
-        rain_amount_part = f"Regen{regen_mm:.1f}mm@{t_regen_max}"
-    
-    # Temperature part
-    temp_part = f"Hitze{temp_max:.1f}°C" if temp_max > 0 else "Hitze -"
-    
-    # Wind parts
-    wind_part = f"Wind{wind:.0f}km/h" if wind > 0 else "Wind -"
-    wind_gust_part = f"Windböen{wind_max:.0f}km/h" if wind_max > 0 else "Windböen -"
-    
-    # Thunderstorm next day part
-    if g1_next == 0 or g1_next is None:
-        thunder_next_part = "Gew.+1 -"
-    else:
-        thunder_next_part = f"Gew.+1{g1_next:.0f}%"
-        if t_g1_next_threshold:
-            thunder_next_part += f"@{t_g1_next_threshold}"
-    
-    # Combine all parts
-    parts = [stage_part, night_part, thunder_part, rain_part, rain_amount_part, temp_part, wind_part, wind_gust_part, thunder_next_part]
-    if vigilance_warning:
-        parts.append(vigilance_warning)
-    
-    report_text = " | ".join(parts)
-    
-    # Ensure character limit
-    if len(report_text) > 160:
-        report_text = report_text[:157] + "..."
-    
-    return report_text
+    try:
+        # Convert report_data to AggregatedWeatherData format
+        weather_data = report_data.get("weather_data", {})
+        location_name = weather_data.get("location_name") or weather_data.get("location") or "Unknown"
+        latitude = weather_data.get("latitude", 0.0)
+        longitude = weather_data.get("longitude", 0.0)
+        agg_data = convert_dict_to_aggregated_weather_data(weather_data, location_name, latitude, longitude)
+        
+        # Get stage names from report_data
+        stage_names_list = report_data.get("stage_names", [])
+        stage_names_dict = {
+            'tomorrow': stage_names_list[0] if len(stage_names_list) > 0 else 'Unknown',
+            'day_after_tomorrow': stage_names_list[1] if len(stage_names_list) > 1 else 'Unknown'
+        }
+        
+        # Use the central formatter directly with the global maxima from weather_data
+        from weather.core.formatter import WeatherFormatter
+        from weather.core.models import ReportConfig
+        formatter = WeatherFormatter(ReportConfig())
+        from weather.core.models import AggregatedWeatherData
+        from weather.core.models import ReportType
+        
+        # Debug: Print the actual values from weather_data
+        print(f"\n=== DEBUG: weather_data values ===")
+        print(f"max_temperature: {weather_data.get('max_temperature', 0)}")
+        print(f"max_temperature_time: {weather_data.get('max_temperature_time', '')}")
+        print(f"min_temperature: {weather_data.get('min_temperature', 0)}")
+        print(f"min_temperature_time: {weather_data.get('min_temperature_time', '')}")
+        print(f"max_rain_probability: {weather_data.get('max_rain_probability', 0)}")
+        print(f"rain_max_time: {weather_data.get('rain_max_time', '')}")
+        print(f"max_precipitation: {weather_data.get('max_precipitation', 0)}")
+        print(f"precipitation_time: {weather_data.get('precipitation_time', '')}")
+        print(f"max_wind_speed: {weather_data.get('max_wind_speed', 0)}")
+        print(f"wind_speed_time: {weather_data.get('wind_speed_time', '')}")
+        print(f"max_wind_gusts: {weather_data.get('max_wind_gusts', 0)}")
+        print(f"wind_gusts_time: {weather_data.get('wind_gusts_time', '')}")
+        print(f"==========================================\n")
+        
+        # Create AggregatedWeatherData with the global maxima
+        weather_data_obj = AggregatedWeatherData(
+            location_name=location_name,
+            latitude=latitude,
+            longitude=longitude,
+            max_temperature=weather_data.get('max_temperature', 0.0),
+            max_temperature_time=weather_data.get('max_temperature_time', ''),
+            min_temperature=weather_data.get('min_temperature', 0.0),
+            min_temperature_time=weather_data.get('min_temperature_time', ''),
+            max_rain_probability=weather_data.get('max_rain_probability', 0.0),
+            rain_max_time=weather_data.get('rain_max_time', ''),
+            rain_threshold_pct=weather_data.get('rain_threshold_pct', 0.0),
+            rain_threshold_time=weather_data.get('rain_threshold_time', ''),
+            max_precipitation=weather_data.get('max_precipitation', 0.0),
+            precipitation_max_time=weather_data.get('precipitation_time', ''),
+            max_wind_speed=weather_data.get('max_wind_speed', 0.0),
+            wind_max_time=weather_data.get('wind_speed_time', ''),
+            max_wind_gusts=weather_data.get('max_wind_gusts', 0.0),
+            wind_gusts_max_time=weather_data.get('wind_gusts_time', ''),
+            max_thunderstorm_probability=weather_data.get('max_thunderstorm_probability', 0.0),
+            thunderstorm_max_time=weather_data.get('thunderstorm_max_time', ''),
+            thunderstorm_threshold_pct=weather_data.get('thunderstorm_threshold_pct', 0.0),
+            thunderstorm_threshold_time=weather_data.get('thunderstorm_threshold_time', ''),
+            tomorrow_max_thunderstorm_probability=weather_data.get('thunderstorm_next_day', 0.0),
+            tomorrow_thunderstorm_max_time=weather_data.get('thunderstorm_next_day_max_time', ''),
+            tomorrow_thunderstorm_threshold_time=weather_data.get('thunderstorm_next_day_threshold_time', ''),
+            fire_risk_warning=weather_data.get('fire_risk_warning', '')
+        )
+        
+        # Debug: Print the AggregatedWeatherData values
+        print(f"\n=== DEBUG: AggregatedWeatherData values ===")
+        print(f"max_rain_probability: {weather_data_obj.max_rain_probability}")
+        print(f"rain_max_time: '{weather_data_obj.rain_max_time}' (type: {type(weather_data_obj.rain_max_time)})")
+        print(f"rain_threshold_pct: {weather_data_obj.rain_threshold_pct}")
+        print(f"rain_threshold_time: '{weather_data_obj.rain_threshold_time}' (type: {type(weather_data_obj.rain_threshold_time)})")
+        print(f"max_precipitation: {weather_data_obj.max_precipitation}")
+        print(f"precipitation_max_time: '{weather_data_obj.precipitation_max_time}' (type: {type(weather_data_obj.precipitation_max_time)})")
+        print(f"==========================================\n")
+        
+        return formatter.format_report_text(weather_data_obj, ReportType("evening"), stage_names_dict)
+        
+    except Exception as e:
+        logger.error(f"Failed to generate evening report: {e}")
+        return f"Error generating evening report: {e}"
 
 
 def _generate_dynamic_report(report_data: Dict[str, Any], config: Dict[str, Any]) -> str:
     """
-    Generate dynamic update report format according to email_format specification.
-    
-    Format: {etappe_heute} | Update: | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind}km/h | Windböen{wind_max}km/h | Gew.+1{g1_next}%@{t_g1_next_threshold}
+    Generate dynamic update report format using central formatter.
     """
-    location = report_data.get("location", "Unknown")
-    weather_data = report_data.get("weather_data", {})
-    
-    # Extract weather values (only significant changes)
-    g_threshold = weather_data.get("thunderstorm_threshold_pct", 0)
-    t_g_threshold = weather_data.get("thunderstorm_threshold_time", "")
-    g_pmax = weather_data.get("max_thunderstorm_probability", 0)
-    t_g_pmax = weather_data.get("thunderstorm_max_time", "")
-    
-    r_threshold = weather_data.get("rain_threshold_pct", 0)
-    t_r_threshold = weather_data.get("rain_threshold_time", "")
-    r_pmax = weather_data.get("max_rain_probability", 0)
-    t_r_pmax = weather_data.get("rain_max_time", "")
-    
-    regen_mm = weather_data.get("max_precipitation", 0)
-    t_regen_max = weather_data.get("rain_total_time", "")
-    
-    temp_max = weather_data.get("max_temperature", 0)
-    wind = weather_data.get("wind_speed", 0)
-    wind_max = weather_data.get("max_wind_speed", 0)
-    
-    g1_next = weather_data.get("thunderstorm_next_day", 0)
-    t_g1_next_threshold = weather_data.get("thunderstorm_next_day_threshold_time", "")
-    
-    # Extract vigilance warning
-    vigilance_warning = _format_vigilance_warning(weather_data.get("vigilance_alerts", []))
-    
-    # Format components
-    stage_part = location.replace(" ", "")
-    
-    # Thunderstorm part
-    if g_threshold == 0 or g_threshold is None:
-        thunder_part = "Gew. -"
-    else:
-        thunder_part = f"Gew.{g_threshold:.0f}%@{t_g_threshold}"
-        if g_pmax > g_threshold:
-            thunder_part += f"({g_pmax:.0f}%@{t_g_pmax})"
-    
-    # Rain part
-    if r_threshold == 0 or r_threshold is None:
-        rain_part = "Regen -"
-    else:
-        rain_part = f"Regen{r_threshold:.0f}%@{t_r_threshold}"
-        if r_pmax > r_threshold:
-            rain_part += f"({r_pmax:.0f}%@{t_r_pmax})"
-    
-    # Rain amount part
-    if regen_mm == 0 or regen_mm is None:
-        rain_amount_part = "Regen -mm"
-    else:
-        rain_amount_part = f"Regen{regen_mm:.1f}mm@{t_regen_max}"
-    
-    # Temperature part
-    temp_part = f"Hitze{temp_max:.1f}°C" if temp_max > 0 else "Hitze -"
-    
-    # Wind parts
-    wind_part = f"Wind{wind:.0f}km/h" if wind > 0 else "Wind -"
-    wind_gust_part = f"Windböen{wind_max:.0f}km/h" if wind_max > 0 else "Windböen -"
-    
-    # Thunderstorm next day part
-    if g1_next == 0 or g1_next is None:
-        thunder_next_part = "Gew.+1 -"
-    else:
-        thunder_next_part = f"Gew.+1{g1_next:.0f}%"
-        if t_g1_next_threshold:
-            thunder_next_part += f"@{t_g1_next_threshold}"
-    
-    # Combine parts (only include non-empty parts)
-    parts = [stage_part, "Update:"]
-    if thunder_part != "Gew. -":
-        parts.append(thunder_part)
-    if rain_part != "Regen -":
-        parts.append(rain_part)
-    if rain_amount_part != "Regen -mm":
-        parts.append(rain_amount_part)
-    parts.extend([temp_part, wind_part, wind_gust_part, thunder_next_part])
-    if vigilance_warning:
-        parts.append(vigilance_warning)
-    
-    report_text = " | ".join(parts)
-    
-    # Ensure character limit
-    if len(report_text) > 160:
-        report_text = report_text[:157] + "..."
-    
-    return report_text
+    try:
+        # Convert report_data to AggregatedWeatherData format
+        weather_data = report_data.get("weather_data", {})
+        location_name = weather_data.get("location_name") or weather_data.get("location") or "Unknown"
+        latitude = weather_data.get("latitude", 0.0)
+        longitude = weather_data.get("longitude", 0.0)
+        agg_data = convert_dict_to_aggregated_weather_data(weather_data, location_name, latitude, longitude)
+        
+        # Get stage names from report_data
+        stage_names_list = report_data.get("stage_names", ["Unknown"])
+        stage_name = stage_names_list[0] if stage_names_list else "Unknown"
+        stage_names_dict = {"today": stage_name}
+        
+        # Use central formatter
+        formatter = WeatherFormatter(ReportConfig())
+        return formatter.format_report_text(
+            agg_data,
+            ReportType("update"),
+            stage_names_dict
+        )
+    except Exception as e:
+        logger.error(f"Error generating dynamic report: {e}")
+        return "Error generating report"
 
 
 def _generate_legacy_report(report_data: Dict[str, Any], config: Dict[str, Any]) -> str:
@@ -564,43 +464,39 @@ def _generate_legacy_report(report_data: Dict[str, Any], config: Dict[str, Any])
 def _format_vigilance_warning(alerts: List[Dict[str, Any]]) -> str:
     """
     Format vigilance warnings to a compact string.
-    
     Args:
         alerts: List of alert dictionaries with 'phenomenon' and 'level' keys
-        
     Returns:
         Formatted warning string or empty string if no alerts
     """
     if not alerts:
         return ""
-    
-    # Find the highest level alert
+    # Exclude wind, rain, and heat from vigilance warnings
+    EXCLUDED = {"wind", "rain", "heat"}
     level_priority = {"green": 1, "risk": 2, "high": 3, "max": 4}
-    highest_alert = max(alerts, key=lambda a: level_priority.get(a.get("level", "green"), 1))
-    
-    level = highest_alert.get("level", "green")
-    phenomenon = highest_alert.get("phenomenon", "unknown")
-    
-    # Only include if level is risk or higher (equivalent to yellow or higher)
-    if level_priority.get(level, 1) < 2:
-        return ""
-    
-    # Translate phenomenon to German (excluding heat as requested)
-    phenomenon_translation = {
-        "thunderstorm": "Gewitter",
-        "rain": "Regen",
-        "wind": "Wind",
-        "snow": "Schnee",
-        "flood": "Hochwasser",
-        "forest_fire": "Waldbrand",
-        # "heat": "Hitze",  # Excluded as requested
-        "cold": "Kälte",
-        "avalanche": "Lawine",
-        "unknown": "Warnung"
-    }
-    
-    german_phenomenon = phenomenon_translation.get(phenomenon.lower(), phenomenon)
-    
-    # Format: LEVEL PHENOMENON (e.g., "ORANGE Gewitter", "ROT Waldbrand")
-    level_upper = level.upper()
-    return f"{level_upper} {german_phenomenon}" 
+    # Sort alerts by level descending
+    sorted_alerts = sorted(alerts, key=lambda a: level_priority.get(a.get("level", "green"), 1), reverse=True)
+    for alert in sorted_alerts:
+        phenomenon = alert.get("phenomenon", "unknown").lower()
+        if phenomenon in EXCLUDED:
+            continue
+        level = alert.get("level", "green")
+        if level_priority.get(level, 1) < 2:
+            continue
+        # Translate phenomenon to German (excluding heat, wind, and rain as requested)
+        phenomenon_translation = {
+            "thunderstorm": "Gewitter",
+            # "rain": "Regen",  # Excluded as requested
+            # "wind": "Wind",  # Excluded as requested
+            "snow": "Schnee",
+            "flood": "Hochwasser",
+            "forest_fire": "Waldbrand",
+            # "heat": "Hitze",  # Excluded as requested
+            "cold": "Kälte",
+            "avalanche": "Lawine",
+            "unknown": "Warnung"
+        }
+        german_phenomenon = phenomenon_translation.get(phenomenon, phenomenon)
+        level_upper = level.upper()
+        return f"{level_upper} {german_phenomenon}"
+    return "" 

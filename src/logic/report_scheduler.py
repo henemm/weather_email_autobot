@@ -237,13 +237,18 @@ def should_send_dynamic_report(
     Returns:
         True if dynamic report should be sent, False otherwise
     """
-    dynamic_config = config.get("dynamic_reports", {})
-    risk_threshold = dynamic_config.get("risk_threshold", 0.3)
-    min_interval = dynamic_config.get("min_interval_minutes", 60)
-    max_daily = dynamic_config.get("max_daily", 5)
+    # Use delta_thresholds for dynamic report triggering
+    delta_thresholds = config.get("delta_thresholds", {})
+    min_interval = config.get("min_interval_min", 60)
+    max_daily = config.get("max_daily_reports", 3)
+    
+    # Calculate risk change
+    risk_change = abs(current_risk - previous_risk)
+    
+    # Use a simple threshold for risk change (0.3 = 30% change)
+    risk_threshold = 0.3
     
     # Check if risk change exceeds threshold
-    risk_change = abs(current_risk - previous_risk)
     if risk_change < risk_threshold:
         logger.debug(f"Risk change {risk_change:.2f} below threshold {risk_threshold}")
         return False

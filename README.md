@@ -22,6 +22,10 @@ This system provides automated weather monitoring and risk assessment for the GR
   - VIGILANCE_API: Weather warnings by department
 - **Fallback**: OpenMeteo Global API (robust backup service)
 
+### Fire Risk Warnings
+Fire risk warnings are based on zone-level data (`zm`) from the French prevention API. 
+Massif-based logic is deprecated and not used. See `.cursor/rules/fire_risk_zonen_only.mdc` for details.
+
 ### Analysis Engine
 - **Threshold-based**: Evaluates CAPE, SHEAR, precipitation, and other meteorological parameters
 - **Risk Assessment**: Combines multiple weather parameters for comprehensive hazard evaluation

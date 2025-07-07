@@ -1,0 +1,9 @@
+globs:
+  - src/**
+  - scripts/**
+  - tests/**
+alwaysApply: true
+description:
+globs:
+alwaysApply: false
+---

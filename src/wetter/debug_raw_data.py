@@ -12,7 +12,10 @@ from dataclasses import dataclass
 
 from meteofrance_api.client import MeteoFranceClient
 
-from .fetch_meteofrance import ForecastResult, Alert
+try:
+    from src.wetter.fetch_meteofrance import ForecastResult, Alert
+except ImportError:
+    from fetch_meteofrance import ForecastResult, Alert
 
 logger = logging.getLogger(__name__)
 

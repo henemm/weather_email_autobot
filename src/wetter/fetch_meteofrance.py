@@ -10,8 +10,17 @@ from typing import List, Optional
 import logging
 
 from meteofrance_api.client import MeteoFranceClient
+from meteofrance_api.model import Forecast, Place
 
-from .fetch_openmeteo import fetch_openmeteo_forecast
+try:
+    from src.wetter.fetch_openmeteo import fetch_openmeteo_forecast
+except ImportError:
+    try:
+        from fetch_openmeteo import fetch_openmeteo_forecast
+    except ImportError:
+        # If both imports fail, create a dummy function
+        def fetch_openmeteo_forecast(lat: float, lon: float):
+            raise RuntimeError("OpenMeteo fallback not available")
 
 
 logger = logging.getLogger(__name__)

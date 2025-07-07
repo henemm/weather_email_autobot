@@ -12,16 +12,28 @@ from datetime import datetime
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 
-from .debug_raw_data import (
-    get_raw_weather_data,
-    format_raw_data_output,
-    compare_raw_data_with_report,
-    save_debug_output,
-    DebugWeatherData
-)
-from .fetch_meteofrance import get_forecast, get_thunderstorm
-from ..logic.analyse_weather import analyze_weather_data
-from ..model.datatypes import WeatherData, WeatherPoint
+try:
+    from src.wetter.debug_raw_data import (
+        get_raw_weather_data,
+        format_raw_data_output,
+        compare_raw_data_with_report,
+        save_debug_output,
+        DebugWeatherData
+    )
+    from src.wetter.fetch_meteofrance import get_forecast, get_thunderstorm
+    from src.logic.analyse_weather import analyze_weather_data
+    from src.model.datatypes import WeatherData, WeatherPoint
+except ImportError:
+    from debug_raw_data import (
+        get_raw_weather_data,
+        format_raw_data_output,
+        compare_raw_data_with_report,
+        save_debug_output,
+        DebugWeatherData
+    )
+    from fetch_meteofrance import get_forecast, get_thunderstorm
+    from ..logic.analyse_weather import analyze_weather_data
+    from ..model.datatypes import WeatherData, WeatherPoint
 
 logger = logging.getLogger(__name__)
 
@@ -384,3 +396,47 @@ def create_report_debugger(config: Dict[str, Any]) -> ReportDebugger:
         ReportDebugger instance
     """
     return ReportDebugger(config) 
+
+
+if __name__ == "__main__":
+    import sys
+    import os
+    # Ensure src/ is in sys.path for absolute imports
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+    from src.wetter.fire_risk_massif import FireRiskMassif
+    from src.wetter.weather_data_processor import WeatherDataProcessor
+    import yaml
+
+    # Example GR20 coordinates (replace with actual list as needed)
+    GR20_POINTS = [
+        (41.5912, 9.2806, "Conca"),
+        (41.7358, 9.2042, "Col de Bavella"),
+        (41.9181, 8.9247, "Vizzavona"),
+        (42.3061, 9.1500, "Corte"),
+        (42.4181, 8.9247, "Haut Asco"),
+        (42.4900, 8.9000, "Calenzana"),
+        # Add more as needed
+    ]
+
+    # Load config for thresholds
+    config_path = sys.argv[1] if len(sys.argv) > 1 else "config.yaml"
+    with open(config_path, "r") as f:
+        config = yaml.safe_load(f)
+
+    fire_risk = FireRiskMassif()
+    processor = WeatherDataProcessor(config)
+
+    print("Stage | Lat | Lon | Massif | FireWarn | MaxTemp | MaxRain | MaxRainProb | MaxThunderProb | MaxWind | MaxWindGusts")
+    print("-"*120)
+    for lat, lon, name in GR20_POINTS:
+        massif_id = fire_risk._get_massif_for_coordinates(lat, lon)
+        massif_name = fire_risk._get_massif_name(massif_id) if massif_id else "-"
+        fire_warn = fire_risk.format_fire_warnings(lat, lon)
+        report = processor.process_weather_data(lat, lon, name)
+        max_temp = report.get("max_temperature", "-")
+        max_rain = report.get("max_precipitation", "-")
+        max_rain_prob = report.get("max_rain_probability", "-")
+        max_thunder_prob = report.get("max_thunderstorm_probability", "-")
+        max_wind = report.get("wind_speed", "-")
+        max_wind_gusts = report.get("max_wind_speed", "-")
+        print(f"{name} | {lat:.4f} | {lon:.4f} | {massif_name} | {fire_warn} | {max_temp} | {max_rain} | {max_rain_prob} | {max_thunder_prob} | {max_wind} | {max_wind_gusts}") 

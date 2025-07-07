@@ -1,0 +1,24 @@
+# 🔒 Fire Risk: Zonen-Only Regel
+
+**Verbindliche Architekturregel:**
+
+- Alle Fire-Risk-Abfragen und -Warnungen erfolgen ausschließlich auf Basis der Zonen-IDs (`zm`) der offiziellen API.
+- Die Zuordnung von Koordinaten zu Warngebiet erfolgt über das Zonen-Polygon (z. B. via `ZonePolygonMapper`).
+- Die Massif-Logik (`massifs`) wird nicht verwendet und ist für die Berichterstellung irrelevant.
+- Die Ausgabe und Schwellenwerte richten sich nach dem Zonen-Level (`zm_key` → Level).
+- Die Formatierung und Schwellenwerte bleiben wie in `email_format.mdc` beschrieben (ab Level 3: `WARN/HIGH/MAX Waldbrand`).
+- Die Integration in E-Mail-Subject und Berichtstext erfolgt immer auf Basis der Zonen-Warnung.
+
+**Begründung:**
+- Die Zonenabdeckung ist vollständig und robust.
+- Die Massif-Zuordnung ist technisch und fachlich nicht zuverlässig lösbar.
+- Die API liefert für Zonen konsistente und aktuelle Werte.
+
+**Pflicht:**
+- Entferne oder deaktiviere alle Massif-basierten Methoden und Mappings.
+- Dokumentiere diese Regel klar in der Codebase.
+- Alle zukünftigen Features und Tests müssen sich an diese Zonen-Logik halten.
+description:
+globs:
+alwaysApply: false
+---

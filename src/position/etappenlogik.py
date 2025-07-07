@@ -12,9 +12,15 @@ from datetime import datetime, date
 from typing import Dict, List, Optional, Tuple
 from pathlib import Path
 
-from utils.logging_setup import get_logger
-
-logger = get_logger(__name__)
+try:
+    from utils.logging_setup import get_logger
+    logger = get_logger(__name__)
+except Exception:
+    class NullLogger:
+        def info(self, *a, **k): pass
+        def warning(self, *a, **k): pass
+        def error(self, *a, **k): pass
+    logger = NullLogger()
 
 
 def load_etappen_data(etappen_path: str = "etappen.json") -> List[Dict]:

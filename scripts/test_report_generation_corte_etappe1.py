@@ -314,7 +314,16 @@ def prepare_weather_data_for_report(weather_data: Dict[str, Any], report_type: s
     
     # Add vigilance alerts
     if weather_data["alerts"]:
-        report_data["weather_data"]["vigilance_alerts"] = weather_data["alerts"]
+        # Convert Alert objects to dictionaries for JSON serialization
+        alert_dicts = []
+        for alert in weather_data["alerts"]:
+            alert_dict = {
+                "phenomenon": alert.phenomenon,
+                "level": alert.level,
+                "description": alert.description
+            }
+            alert_dicts.append(alert_dict)
+        report_data["weather_data"]["vigilance_alerts"] = alert_dicts
     else:
         report_data["weather_data"]["vigilance_alerts"] = []
     

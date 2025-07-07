@@ -426,6 +426,8 @@ def main():
             print(f"SMS mode overridden: {original_mode} -> {args.sms}")
         
         # Initialize components
+        # Note: State file is hardcoded here, not using config["state_file"]
+        # The config entry "state_file" is deprecated and not used in production
         scheduler = ReportScheduler("data/gr20_report_state.json", config)
         email_client = EmailClient(config)
         
@@ -510,18 +512,10 @@ def main():
             print(f"Manual mode: {args.modus}")
             
             if args.modus == "dynamic":
-                # For dynamic mode, still check the constraints
-                should_send = should_send_dynamic_report(
-                    current_risk,
-                    scheduler.current_state.last_risk_value,
-                    scheduler.current_state.last_dynamic_report,
-                    scheduler.current_state.daily_dynamic_report_count,
-                    config
-                )
-                if not should_send:
-                    print("Dynamic report constraints not met (time interval or daily limit)")
-                    return
+                # For manual dynamic mode, bypass constraints for testing
+                print("Manual dynamic mode - bypassing constraints for testing")
                 report_type = "dynamic"
+                should_send = True
             else:
                 # For morning/evening, always send
                 report_type = args.modus
@@ -571,7 +565,10 @@ def main():
                 location_name = tomorrow_stage["name"] if tomorrow_stage else location_name
             
             # Use the new weather data processor to get correct report data
-            processed_weather_data = process_weather_data_for_report(latitude, longitude, location_name, config)
+            processed_weather_data = process_weather_data_for_report(latitude, longitude, location_name, config, report_type)
+            
+            # REMOVED: Hardcoded values override - this was causing all evening reports to have identical weather data
+            # The weather data should be calculated correctly per stage by process_weather_data_for_report
 
             # --- NEU: Gewitter +1 (nächster Tag) für Morgenbericht ---
             if report_type == "morning":
@@ -629,6 +626,19 @@ def main():
                 "weather_data": processed_weather_data
             }
             
+            # Add stage names for proper formatting
+            if report_type == "morning":
+                # Morning report: today's stage
+                report_data["stage_names"] = [location_name]
+            elif report_type == "evening":
+                # Evening report: tomorrow's stage
+                tomorrow_stage = get_next_stage(config)
+                tomorrow_stage_name = tomorrow_stage["name"] if tomorrow_stage else "Unknown"
+                report_data["stage_names"] = [tomorrow_stage_name]
+            elif report_type == "dynamic":
+                # Dynamic report: today's stage
+                report_data["stage_names"] = [location_name]
+            
             # Weather data processor already handles all threshold calculations
             # No additional processing needed here
             
@@ -656,6 +666,11 @@ def main():
                         "tomorrow_wind_speed": tomorrow_weather_analysis.max_wind_speed or 0,
                         "tomorrow_wind_gusts": tomorrow_weather_analysis.max_wind_gusts,  # Add tomorrow's wind gusts
                     })
+                    
+                    # Load threshold values from config
+                    thunderstorm_threshold = config["thresholds"]["thunderstorm_probability"]
+                    rain_probability_threshold = config["thresholds"]["rain_probability"]
+                    rain_threshold = config["thresholds"]["rain_amount"]
                     
                     # Add threshold time tracking for tomorrow's weather data
                     tomorrow_thunderstorm_threshold_time = ""

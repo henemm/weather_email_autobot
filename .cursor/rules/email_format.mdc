@@ -1,8 +1,3 @@
----
-description: 
-globs: 
-alwaysApply: true
----
 # 📬 Output Format Specification: Weather Reports (InReach, max. 160 characters)
 
 This specification defines the exact structure of weather reports in three operation modes: **Morning Report (e.g., 04:30)**, **Evening Report (e.g., 19:00)**, and **Update Report (dynamic on risk changes)**.
@@ -26,13 +21,13 @@ This specification defines the exact structure of weather reports in three opera
 **Components:**
 - `{subject}`: Base subject from `config.yaml`
 - `{etappe}`: Current stage name (e.g., "Vizzavona", "Conca")
-- `{risk_level}`: Vigilance warning level (e.g., "ORANGE", "ROT") - empty if no warnings
+- `{risk_level}`: Vigilance warning level (e.g., "WARN", "HIGH", "MAX") - empty if no warnings
 - `{highest_risk}`: Vigilance warning phenomenon (e.g., "Gewitter", "Waldbrand") - empty if no warnings
 - `{report_type}`: Report type (e.g., "morning", "evening", "update")
 
 **Examples:**
-- `GR20 Wetter Vizzavona: ORANGE - Gewitter (morning)`
-- `GR20 Wetter Conca: ROT - Waldbrand (evening)`
+- `GR20 Wetter Vizzavona: HIGH - Gewitter (morning)`
+- `GR20 Wetter Conca: MAX - Waldbrand (evening)`
 - `GR20 Wetter Corte:  (update)` (no vigilance warnings)
 
 ---
@@ -47,12 +42,12 @@ This specification defines the exact structure of weather reports in three opera
 
 ### Format
 ```
-{etappe_heute} | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind}km/h | Windböen{wind_max}km/h | Gew.+1{g1_next}%@{t_g1_next_threshold}
+{etappe_heute} | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind} | Böen{wind_max} | Gew.+1{g1_next}%@{t_g1_next_threshold} | {fire_risk_warning}
 ```
 
 ### Example
 ```
-Startdorf→Waldpass | Gew.30%@13(80%@15) | Regen55%@15(70%@16) | Regen2.0mm@15 | Hitze28.0°C | Wind15km/h | Windböen25km/h | Gew.+180%@14
+Waldpass | Gew.30%@13(80%@15) | Regen55%@15(70%@16) | Regen2.0mm@15 | Hitze28°C | Wind15 | Böen25 | Gew.+180%@14 | WARN Waldbrand
 ```
 
 ### Placeholders
@@ -72,6 +67,7 @@ Startdorf→Waldpass | Gew.30%@13(80%@15) | Regen55%@15(70%@16) | Regen2.0mm@15 
 - `{wind_max}`: Maximum wind gusts
 - `{g1_next}`: Thunderstorm probability for tomorrow
 - `{t_g1_next_threshold}`: Time of first threshold crossing tomorrow
+- `{fire_risk_warning}`: Fire risk warning (e.g., "WARN Waldbrand", "HIGH Waldbrand") or empty if no warning
 
 ---
 
@@ -87,12 +83,12 @@ Startdorf→Waldpass | Gew.30%@13(80%@15) | Regen55%@15(70%@16) | Regen2.0mm@15 
 
 ### Format
 ```
-{etappe_morgen}→{etappe_uebermorgen} | Nacht{min_temp}°C | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind}km/h | Windböen{wind_max}km/h | Gew.+1{g1_next}%@{t_g1_next_threshold}
+{etappe_morgen} | Nacht{min_temp}°C | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind} | Böen{wind_max} | Gew.+1{g1_next}%@{t_g1_next_threshold} | {fire_risk_warning}
 ```
 
 ### Example
 ```
-Waldpass→Almhütte | Nacht15.5°C | Gew.40%@14(95%@17) | Regen50%@14(70%@17) | Regen2.0mm@14 | Hitze33.5°C | Wind18km/h | Windböen38km/h | Gew.+190%@15
+Waldpass | Nacht16°C | Gew.40%@14(95%@17) | Regen50%@14(70%@17) | Regen2.0mm@14 | Hitze34°C | Wind18 | Böen38 | Gew.+190%@15 | WARN Waldbrand
 ```
 
 ### Additional Placeholders
@@ -111,12 +107,12 @@ Only triggered by significant changes in the risk situation for the current day 
 
 ### Format
 ```
-{etappe_heute} | Update: | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind}km/h | Windböen{wind_max}km/h | Gew.+1{g1_next}%@{t_g1_next_threshold}
+{etappe_heute} | Update: | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind} | Böen{wind_max} | Gew.+1{g1_next}%@{t_g1_next_threshold} | {fire_risk_warning}
 ```
 
 ### Example
 ```
-Almhütte→Gipfel | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2.0mm@15 | Hitze29.1°C | Wind12km/h | Windböen31km/h | Gew.+185%@14
+Almhütte | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2.0mm@15 | Hitze29°C | Wind12 | Böen31 | Gew.+185%@14 | WARN Waldbrand
 ```
 
 ---
@@ -131,13 +127,17 @@ Almhütte→Gipfel | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2
 ### Abbreviations
 - **Thunderstorm** → **Gew.**
 - **Rain** → **Regen** (distinguished by "%" vs "mm")
-- **Stage names** → Abbreviated to max. 10 characters (format: "Start→End")
+- **Wind gusts** → **Böen** (without km/h)
+- **Stage names** → Abbreviated to max. 10 characters (single stage name only)
 
 ### Formatting
 - Spaces between all `|` separators
 - Time format: Hours only (HH), no minutes
 - Threshold@Time (max. Maximum@Time) for all values
 - Example: "Gew.30%@13(80%@15)"
+- Temperature: No decimal places (e.g., "Hitze28°C" not "Hitze28.0°C")
+- Wind: No km/h suffix (e.g., "Wind15" not "Wind15km/h")
+- Wind gusts: "Böen25" not "Windböen25km/h"
 
 ### Thresholds (from config.yaml)
 - Rain probability: 25% (`thresholds.regen_probability`)
@@ -159,7 +159,7 @@ Almhütte→Gipfel | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2
   - `cold` → `Kälte`
   - `avalanche` → `Lawine`
   - `unknown` → `Warnung`
-- Format: `{LEVEL} {GERMAN_PHENOMENON}` (e.g., "ORANGE Gewitter", "ROT Waldbrand")
+- Format: `{LEVEL} {GERMAN_PHENOMENON}` (e.g., "HIGH Gewitter", "MAX Waldbrand")
 - Only include warnings with level yellow (2) or higher
 - Multiple alerts: Show highest level only
 
@@ -195,18 +195,18 @@ Almhütte→Gipfel | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2
 
 ### Morning Report
 ```
-Startdorf→Waldpass | Gew.30%@13(80%@15) | Regen55%@15(70%@16) | Regen2.0mm@15 | Hitze28.0°C | Wind15km/h | Windböen25km/h | Gew.+180%@14
+Waldpass | Gew.30%@13(80%@15) | Regen55%@15(70%@16) | Regen2.0mm@15 | Hitze28°C | Wind15 | Böen25 | Gew.+180%@14 | WARN Waldbrand
 ```
-**Length:** 130 characters
+**Length:** 118 characters
 
 ### Evening Report
 ```
-Waldpass→Almhütte | Nacht15.5°C | Gew.40%@14(95%@17) | Regen50%@14(70%@17) | Regen2.0mm@14 | Hitze33.5°C | Wind18km/h | Windböen38km/h | Gew.+190%@15
+Waldpass | Nacht16°C | Gew.40%@14(95%@17) | Regen50%@14(70%@17) | Regen2.0mm@14 | Hitze34°C | Wind18 | Böen38 | Gew.+190%@15 | WARN Waldbrand
 ```
-**Length:** 140 characters
+**Length:** 128 characters
 
 ### Update Report
 ```
-Almhütte→Gipfel | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2.0mm@15 | Hitze29.1°C | Wind12km/h | Windböen31km/h | Gew.+185%@14
+Almhütte | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2.0mm@15 | Hitze29°C | Wind12 | Böen31 | Gew.+185%@14 | WARN Waldbrand
 ```
-**Length:** 135 characters 
+**Length:** 123 characters 

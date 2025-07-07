@@ -4,58 +4,56 @@ Detailed debug script to examine all possible fields in the meteofrance API resp
 """
 
 import sys
-import json
-from datetime import datetime
-from pathlib import Path
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-
+from datetime import datetime, date
 from meteofrance_api.client import MeteoFranceClient
-
+from src.wetter.weather_data_processor import WeatherDataProcessor
 
 def debug_api_detailed():
-    """Debug the meteofrance API response in detail."""
+    """Debug meteofrance-api data structure in detail."""
     
-    # Test coordinates (Asco)
-    latitude = 42.426238
-    longitude = 8.900291
+    # Test coordinates (Conca, GR20)
+    lat, lon = 41.7, 9.3
     
-    print(f"🔍 DETAILED MÉTÉO-FRANCE API ANALYSIS")
+    print(f"🔍 DEBUGGING METEOFRANCE API FOR {lat}, {lon}")
     print("=" * 60)
-    print(f"Coordinates: {latitude}, {longitude}")
-    print()
     
     try:
+        # Get raw forecast data
         client = MeteoFranceClient()
-        forecast = client.get_forecast(latitude, longitude)
+        forecast = client.get_forecast(lat, lon)
         
-        if not forecast.forecast:
+        if not forecast or not forecast.forecast:
             print("❌ No forecast data received")
             return
         
         print(f"✅ Received {len(forecast.forecast)} forecast entries")
         print()
         
-        # Find entries for today 14-17 Uhr
+        # Get today's date
+        today = date.today()
+        
+        # Filter entries for today, 05:00-17:00
         today_entries = []
         for i, entry in enumerate(forecast.forecast):
             dt_timestamp = entry.get('dt')
             if dt_timestamp:
                 entry_datetime = datetime.fromtimestamp(dt_timestamp)
-                today = datetime.now().date()
-                
-                if entry_datetime.date() == today and 14 <= entry_datetime.hour <= 17:
+                if (entry_datetime.date() == today and 
+                    5 <= entry_datetime.hour <= 17):
                     today_entries.append({
                         'index': i,
                         'datetime': entry_datetime,
                         'entry': entry
                     })
         
-        print(f"📅 Found {len(today_entries)} entries for today 14-17 Uhr:")
+        print(f"📅 Found {len(today_entries)} entries for today 05:00-17:00")
         print()
         
-        for entry_info in today_entries:
+        # Process first 3 entries in detail
+        for entry_info in today_entries[:3]:
             i = entry_info['index']
             dt = entry_info['datetime']
             entry = entry_info['entry']
@@ -100,51 +98,69 @@ def debug_api_detailed():
             
             # Check weather description
             weather = entry.get('weather', {})
-            if isinstance(weather, dict):
-                weather_desc = weather.get('desc', 'Unknown')
-                print(f"  Weather description: {weather_desc}")
-                
-                # Check if weather description indicates rain probability
-                if 'averse' in weather_desc.lower() or 'pluie' in weather_desc.lower():
-                    print(f"    -> Weather description suggests rain!")
+            weather_desc = weather.get('desc', 'N/A') if isinstance(weather, dict) else str(weather)
+            print(f"  Weather description: '{weather_desc}'")
+            
+            # Check temperature
+            temp_data = entry.get('T', {})
+            temp = temp_data.get('value', 'N/A') if isinstance(temp_data, dict) else 'N/A'
+            print(f"  Temperature: {temp}°C")
+            
+            # Check precipitation amount
+            rain_data = entry.get('rain', {})
+            rain_1h = rain_data.get('1h', 0) if isinstance(rain_data, dict) else 0
+            print(f"  Rain 1h: {rain_1h}mm")
             
             print()
-            print("=" * 50)
+            
+            # Simulate WeatherDataProcessor extraction
+            print("🔧 WEATHERDATAPROCESSOR SIMULATION:")
+            processor = WeatherDataProcessor({})
+            
+            # Extract weather condition
+            weather_condition = processor._extract_weather_condition(entry)
+            print(f"  Extracted weather condition: '{weather_condition}'")
+            
+            # Extract precipitation amount
+            precipitation_amount = processor._extract_precipitation_amount(entry)
+            print(f"  Extracted precipitation amount: {precipitation_amount}mm")
+            
+            # Determine rain probability
+            rain_probability = processor._determine_rain_probability(
+                weather_condition, precip_prob, precipitation_amount
+            )
+            print(f"  Determined rain probability: {rain_probability}%")
+            
+            # Determine thunderstorm probability
+            thunderstorm_probability = processor._determine_thunderstorm_probability(
+                weather_condition, precip_prob
+            )
+            print(f"  Determined thunderstorm probability: {thunderstorm_probability}%")
+            
+            print()
+            print("=" * 60)
             print()
         
-        # Save detailed data to file
-        output_file = "output/debug/detailed_api_analysis.json"
-        Path("output/debug").mkdir(parents=True, exist_ok=True)
+        # Summary
+        print("📊 SUMMARY:")
+        print(f"Total entries: {len(forecast.forecast)}")
+        print(f"Today 05:00-17:00 entries: {len(today_entries)}")
         
-        detailed_data = {
-            'timestamp': datetime.now().isoformat(),
-            'coordinates': {'lat': latitude, 'lon': longitude},
-            'total_entries': len(forecast.forecast),
-            'today_entries': [
-                {
-                    'index': entry['index'],
-                    'datetime': entry['datetime'].isoformat(),
-                    'all_fields': entry['entry'],
-                    'weather_description': entry['entry'].get('weather', {}).get('desc') if isinstance(entry['entry'].get('weather'), dict) else str(entry['entry'].get('weather')),
-                    'precipitation_probability': entry['entry'].get('precipitation_probability'),
-                    'rain_data': entry['entry'].get('rain', {}),
-                    'temperature': entry['entry'].get('T', {}),
-                    'wind': entry['entry'].get('wind', {})
-                }
-                for entry in today_entries
-            ]
-        }
+        # Check if precipitation_probability exists in any entry
+        has_precip_prob = any('precipitation_probability' in entry for entry in forecast.forecast)
+        print(f"Has precipitation_probability field: {has_precip_prob}")
         
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(detailed_data, f, indent=2, default=str)
-        
-        print(f"💾 Detailed analysis saved to: {output_file}")
+        # Check if any entry has non-None precipitation_probability
+        has_precip_prob_values = any(
+            entry.get('precipitation_probability') is not None 
+            for entry in forecast.forecast
+        )
+        print(f"Has non-None precipitation_probability values: {has_precip_prob_values}")
         
     except Exception as e:
         print(f"❌ Error: {e}")
         import traceback
         traceback.print_exc()
-
 
 if __name__ == "__main__":
     debug_api_detailed() 
