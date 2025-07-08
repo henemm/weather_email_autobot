@@ -66,31 +66,33 @@ smtp:
   # Sender E-Mail address (must match SMTP user)
   user: henning.emmrich@gmail.com
 
-# --- Dynamic Report Thresholds (Delta) ---
-delta_thresholds:
-  # Minimum change in rain probability (%) to trigger update
-  rain_probability: 5.0
-  # Minimum change in temperature (°C) to trigger update
-  temperature: 1.0
-  # Minimum change in thunderstorm probability (%) to trigger update
-  thunderstorm_probability: 5.0
-  # Minimum change in wind speed (km/h) to trigger update
-  wind_speed: 5.0
+
 
 # --- Weather Parameter Thresholds ---
 thresholds:
   # Cloud cover threshold (%)
   cloud_cover: 90.0
   # Rain amount threshold (mm)
-  rain_amount: 0.1
+  rain_amount: 0.5
   # Rain probability threshold (%)
-  rain_probability: 5.0
+  rain_probability: 10.0
   # Temperature threshold (°C)
   temperature: 30.0
   # Thunderstorm probability threshold (%)
-  thunderstorm_probability: 20.0
+  thunderstorm_probability: 10.0
   # Wind speed threshold (km/h)
   wind_speed: 40.0
+
+# --- Dynamic Report Thresholds (Delta) ---
+delta_thresholds:
+  # Minimum change in rain probability (%) to trigger update
+  rain_probability: 10.0
+  # Minimum change in temperature (°C) to trigger update
+  temperature: 2.0
+  # Minimum change in thunderstorm probability (%) to trigger update
+  thunderstorm_probability: 10.0
+  # Minimum change in wind speed (km/h) to trigger update
+  wind_speed: 5.0
 
 # --- Output file for warning messages (InReach) ---
 warning_output_file: output/inreach_warnung.txt

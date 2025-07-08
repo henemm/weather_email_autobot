@@ -237,20 +237,28 @@ def should_send_dynamic_report(
     Returns:
         True if dynamic report should be sent, False otherwise
     """
-    # Use delta_thresholds for dynamic report triggering
+    # Get configuration values
     delta_thresholds = config.get("delta_thresholds", {})
-    min_interval = config.get("min_interval_min", 60)
-    max_daily = config.get("max_daily_reports", 3)
+    min_interval = config.get("min_interval_min", 60)  # Root level config
+    max_daily = config.get("max_daily_reports", 3)     # Root level config
     
     # Calculate risk change
     risk_change = abs(current_risk - previous_risk)
     
-    # Use a simple threshold for risk change (0.3 = 30% change)
-    risk_threshold = 0.3
+    # Use delta_thresholds from config instead of hardcoded value
+    # For now, use the highest threshold as the risk threshold
+    # This is a simplified approach - in a more sophisticated system,
+    # we would compare individual weather parameters
+    risk_threshold = max(
+        delta_thresholds.get("thunderstorm_probability", 10.0) / 100.0,
+        delta_thresholds.get("rain_probability", 10.0) / 100.0,
+        delta_thresholds.get("temperature", 2.0) / 50.0,  # Normalize temperature change
+        delta_thresholds.get("wind_speed", 5.0) / 100.0   # Normalize wind speed change
+    )
     
     # Check if risk change exceeds threshold
     if risk_change < risk_threshold:
-        logger.debug(f"Risk change {risk_change:.2f} below threshold {risk_threshold}")
+        logger.debug(f"Risk change {risk_change:.2f} below threshold {risk_threshold:.2f} (from delta_thresholds)")
         return False
     
     # Check if enough time has passed since last report

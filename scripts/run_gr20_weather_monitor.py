@@ -493,17 +493,21 @@ def main():
         print("Analyzing weather data...")
         weather_analysis = analyze_weather_data(weather_data_list, config)
         
-        # Compute risk score
+        # Compute risk score PER STAGE (not globally)
+        # Use the processed weather data for the current stage to compute risk
+        processed_weather_data = process_weather_data_for_report(latitude, longitude, location_name, config, report_type)
+        
+        # Compute risk based on the current stage's weather data
         risk_metrics = {
-            "thunderstorm_probability": weather_analysis.max_thunderstorm_probability or 0.0,
-            "wind_speed": weather_analysis.max_wind_speed,
-            "precipitation": weather_analysis.max_precipitation,
-            "temperature": weather_analysis.max_temperature,
-            "cape": weather_analysis.max_cape_shear or 0.0
+            "thunderstorm_probability": processed_weather_data.get("max_thunderstorm_probability", 0.0),
+            "wind_speed": processed_weather_data.get("max_wind_speed", 0.0),
+            "precipitation": processed_weather_data.get("max_precipitation", 0.0),
+            "temperature": processed_weather_data.get("max_temperature", 0.0),
+            "cape": processed_weather_data.get("max_cape_shear", 0.0)
         }
         
         current_risk = compute_risk(risk_metrics, config)
-        print(f"Current risk score: {current_risk:.2f}")
+        print(f"Current risk score for {location_name}: {current_risk:.2f}")
         
         current_time = datetime.now()
         
@@ -564,8 +568,7 @@ def main():
                 tomorrow_stage = get_next_stage(config)
                 location_name = tomorrow_stage["name"] if tomorrow_stage else location_name
             
-            # Use the new weather data processor to get correct report data
-            processed_weather_data = process_weather_data_for_report(latitude, longitude, location_name, config, report_type)
+            # processed_weather_data is already calculated above for risk computation
             
             # REMOVED: Hardcoded values override - this was causing all evening reports to have identical weather data
             # The weather data should be calculated correctly per stage by process_weather_data_for_report
