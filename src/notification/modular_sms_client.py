@@ -11,6 +11,8 @@ from datetime import datetime
 from .sms_factory import SmsProviderFactory
 from .sms_provider import SmsProvider
 from .email_client import generate_gr20_report_text
+import os
+from .gsm7_validator import GSM7Validator
 
 logger = logging.getLogger(__name__)
 
@@ -120,6 +122,55 @@ class ModularSmsClient:
         
         if not message_text or not message_text.strip():
             logger.warning("Empty message text provided")
+            return False
+
+        # Normalize message to GSM-7
+        validator = GSM7Validator()
+        normalization_result = validator.normalize_with_logging(message_text)
+        
+        if normalization_result["was_changed"]:
+            # Log normalization changes
+            log_dir = os.path.join("output", "logs")
+            os.makedirs(log_dir, exist_ok=True)
+            log_path = os.path.join(log_dir, "sms_normalization.log")
+            from datetime import datetime
+            now = datetime.now().strftime("[%Y-%m-%d %H:%M]")
+            
+            with open(log_path, "a", encoding="utf-8") as f:
+                f.write(f"{now} SMS text normalized to GSM-7\n")
+                f.write(f"Original: {message_text}\n")
+                f.write(f"Normalized: {normalization_result['normalized_text']}\n")
+                
+                if normalization_result["replacements"]:
+                    f.write("Replacements:\n")
+                    for rep in normalization_result["replacements"]:
+                        f.write(f"  '{rep['original']}' -> '{rep['replacement']}' at position {rep['position']}\n")
+                
+                if normalization_result["removed_chars"]:
+                    f.write("Removed characters:\n")
+                    for rem in normalization_result["removed_chars"]:
+                        f.write(f"  '{rem['character']}' at position {rem['position']}\n")
+                
+                f.write(f"Sender: SMS module weather report\n\n")
+            
+            logger.info(f"SMS text normalized to GSM-7. See sms_normalization.log for details.")
+            message_text = normalization_result["normalized_text"]
+
+        # GSM-7 validation (should now always pass)
+        validation_result = validator.validate_message(message_text)
+        if not validation_result["is_valid"]:
+            # This should not happen after normalization, but log as error
+            log_dir = os.path.join("output", "logs")
+            os.makedirs(log_dir, exist_ok=True)
+            log_path = os.path.join(log_dir, "sms_encoding_violation.log")
+            from datetime import datetime
+            now = datetime.now().strftime("[%Y-%m-%d %H:%M]")
+            with open(log_path, "a", encoding="utf-8") as f:
+                f.write(f"{now} Aborted SMS send: Invalid characters found in text after normalization.\n")
+                for v in validation_result["violations"]:
+                    f.write(f"Character: '{v['character']}', Position: {v['position']}, Context: '{v['context']}'\n")
+                f.write(f"Sender: SMS module weather report\n")
+            logger.error("SMS send aborted due to invalid GSM-7 characters after normalization. See sms_encoding_violation.log for details.")
             return False
         
         # Ensure message doesn't exceed 160 characters

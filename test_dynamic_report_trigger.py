@@ -160,6 +160,68 @@ def test_scheduler_integration():
     return True
 
 
+def test_delta_thresholds_triggering():
+    """Test that dynamic reports are only triggered when delta_thresholds are exceeded."""
+    from datetime import datetime, timedelta
+    from src.logic.report_scheduler import should_send_dynamic_report
+    
+    config = {
+        "delta_thresholds": {
+            "thunderstorm_probability": 20.0,
+            "rain_probability": 30.0,
+            "wind_speed": 10.0,
+            "temperature": 2.0
+        },
+        "min_interval_min": 60,
+        "max_daily_reports": 3
+    }
+    last_report_time = datetime.now() - timedelta(minutes=90)
+    daily_report_count = 0
+    
+    # Case 1: Change below threshold (should NOT trigger)
+    current_risk = 0.10
+    previous_risk = 0.09  # Only 1% change, below all thresholds
+    should_send = should_send_dynamic_report(current_risk, previous_risk, last_report_time, daily_report_count, config)
+    print(f"Delta below threshold: Should send? {should_send}")
+    assert should_send is False
+    
+    # Case 2: Change above threshold (should trigger)
+    current_risk = 0.50
+    previous_risk = 0.10  # 40% change, above thunderstorm threshold
+    should_send = should_send_dynamic_report(current_risk, previous_risk, last_report_time, daily_report_count, config)
+    print(f"Delta above threshold: Should send? {should_send}")
+    assert should_send is True
+
+test_delta_thresholds_triggering()
+
+
+def test_force_high_risk_triggers_report():
+    """Test that a dynamic report is triggered when the risk score is forced high by extreme weather data."""
+    from datetime import datetime, timedelta
+    from src.logic.report_scheduler import should_send_dynamic_report
+    
+    # Simuliere einen extremen Wetterpunkt (z. B. 100% Regenwahrscheinlichkeit)
+    current_risk = 1.0  # Extrem hoher Risk-Score
+    previous_risk = 0.0
+    last_report_time = datetime.now() - timedelta(minutes=90)
+    daily_report_count = 0
+    config = {
+        "delta_thresholds": {
+            "thunderstorm_probability": 1.0,
+            "rain_probability": 1.0,
+            "wind_speed": 1.0,
+            "temperature": 1.0
+        },
+        "min_interval_min": 60,
+        "max_daily_reports": 3
+    }
+    should_send = should_send_dynamic_report(current_risk, previous_risk, last_report_time, daily_report_count, config)
+    print(f"Force high risk: Should send? {should_send}")
+    assert should_send is True
+
+test_force_high_risk_triggers_report()
+
+
 def main():
     """Main test function."""
     print("🚀 Dynamic Report Trigger Test")

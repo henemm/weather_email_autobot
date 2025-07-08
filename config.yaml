@@ -1,98 +1,66 @@
-# ============================================================================
-# GR20 Weather Autobot Configuration
-# ============================================================================
+# Weather Email Automation Configuration
+# This file contains all configuration parameters for the weather monitoring system
 
-# --- Debugging & Output ---
+# Debug settings for development and troubleshooting
 debug:
-  # Enable/disable debug mode (true/false)
-  enabled: true
-  # Save raw data files for each report (true/false)
-  raw_data_output: true
-  # Save debug files (true/false)
-  save_debug_files: true
-  # Output directory for debug files
-  output_directory: output/debug
-  # Validate thresholds in reports (true/false)
-  threshold_validation: true
-  # Compare generated report with previous (true/false)
   comparison_with_report: true
+  enabled: true
+  output_directory: output/debug
+  raw_data_output: true
+  save_debug_files: true
+  threshold_validation: true
 
-# --- Start date for report generation (YYYY-MM-DD) ---
-startdatum: '2025-07-07'
+# Delta thresholds for change detection (when to trigger warnings)
+delta_thresholds:
+  rain_probability: 1.0
+  temperature: 1.0
+  thunderstorm_probability: 1.0
+  wind_speed: 1.0
 
-# --- Report Scheduling ---
-# Maximum number of dynamic reports per day
-max_daily_reports: 3
-# Minimum interval (minutes) between dynamic reports
-min_interval_min: 60
+# Report frequency and timing settings
+max_daily_reports: 4  # Maximum number of reports per day
+min_interval_min: 90  # Minimum interval between reports in minutes
 
-# --- SMS Configuration ---
+# SMS notification settings
 sms:
-  # Enable/disable SMS sending (true/false)
-  enabled: false
-  # Mode: 'test' (send to test_number) or 'production' (send to production_number)
-  mode: test  # Options: test, production
-  # SMS provider: 'seven' or 'twilio'
-  provider: seven  # Options: seven, twilio
-  # Production recipient number (used if mode=production)
+  api_key: ${SEVEN_API_KEY}
+  enabled: true
+  mode: test # 'test' or 'production'
   production_number: '+4917717816897'
-  # Test recipient number (used if mode=test)
-  test_number: '+4915158450319'
-  # --- Seven.io Provider Settings ---
+  provider: seven  # 'seven' or 'twilio'
+  # Seven.io configuration
   seven:
-    # API key for seven.io (from environment variable SEVEN_API_KEY)
     api_key: ${SEVEN_API_KEY}
-    # Sender name/number (max 11 chars for alphanumeric)
     sender: '4916092170813'
-  # --- Twilio Provider Settings ---
+
+  # Phone numbers for notifications
+  test_number: '+49123456789'
+
+  # Twilio configuration (alternative provider)
   twilio:
-    # Twilio Account SID (from environment variable TWILIO_ACCOUNT_SID)
     account_sid: ${TWILIO_ACCOUNT_SID}
-    # Twilio Auth Token (from environment variable TWILIO_AUTH_TOKEN)
     auth_token: ${TWILIO_AUTH_TOKEN}
-    # Sender phone number (from environment variable TWILIO_PHONE_NUMBER)
     from: ${TWILIO_PHONE_NUMBER}
 
-# --- SMTP (E-Mail) Configuration ---
+# Email configuration for sending weather reports
 smtp:
-  # SMTP server host (e.g. smtp.gmail.com)
   host: smtp.gmail.com
-  # SMTP server port (e.g. 587 for TLS)
   port: 587
-  # E-Mail subject prefix
   subject: GR20
-  # Recipient E-Mail address
   to: henningemmrich@icloud.com
-  # Sender E-Mail address (must match SMTP user)
   user: henning.emmrich@gmail.com
 
+# Start date for the weather monitoring (YYYY-MM-DD format)
+startdatum: '2025-07-08'
 
-
-# --- Weather Parameter Thresholds ---
+# Weather thresholds for triggering alerts
 thresholds:
-  # Cloud cover threshold (%)
-  cloud_cover: 90.0
-  # Rain amount threshold (mm)
-  rain_amount: 0.5
-  # Rain probability threshold (%)
-  rain_probability: 10.0
-  # Temperature threshold (°C)
-  temperature: 30.0
-  # Thunderstorm probability threshold (%)
-  thunderstorm_probability: 10.0
-  # Wind speed threshold (km/h)
-  wind_speed: 40.0
+  cloud_cover: 90.0  # Cloud cover percentage
+  rain_amount: 0.5   # Rain amount in mm
+  rain_probability: 15.0  # Rain probability percentage
+  temperature: 25.0  # Temperature in Celsius
+  thunderstorm_probability: 10.0  # Thunderstorm probability percentage
+  wind_speed: 40.0   # Wind speed in km/h
 
-# --- Dynamic Report Thresholds (Delta) ---
-delta_thresholds:
-  # Minimum change in rain probability (%) to trigger update
-  rain_probability: 10.0
-  # Minimum change in temperature (°C) to trigger update
-  temperature: 2.0
-  # Minimum change in thunderstorm probability (%) to trigger update
-  thunderstorm_probability: 10.0
-  # Minimum change in wind speed (km/h) to trigger update
-  wind_speed: 5.0
-
-# --- Output file for warning messages (InReach) ---
+# Output file for warning messages
 warning_output_file: output/inreach_warnung.txt

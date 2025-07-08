@@ -15,7 +15,7 @@ from typing import Dict, Any, Optional, List
 import logging
 
 from weather.core.formatter import WeatherFormatter
-from weather.core.models import ReportType, ReportConfig, convert_dict_to_aggregated_weather_data
+from weather.core.models import ReportType, ReportConfig, convert_dict_to_aggregated_weather_data, create_report_config_from_yaml
 
 logger = logging.getLogger(__name__)
 
@@ -283,7 +283,7 @@ def _generate_morning_report(report_data: Dict[str, Any], config: Dict[str, Any]
         stage_names_dict = {"today": stage_name}
         
         # Use central formatter
-        formatter = WeatherFormatter(ReportConfig())
+        formatter = WeatherFormatter(create_report_config_from_yaml(config))
         return formatter.format_report_text(
             agg_data,
             ReportType("morning"),
@@ -313,10 +313,8 @@ def _generate_evening_report(report_data: Dict[str, Any], config: Dict[str, Any]
             'day_after_tomorrow': stage_names_list[1] if len(stage_names_list) > 1 else 'Unknown'
         }
         
-        # Use the central formatter directly with the global maxima from weather_data
-        from weather.core.formatter import WeatherFormatter
-        from weather.core.models import ReportConfig
-        formatter = WeatherFormatter(ReportConfig())
+        # Use central formatter with config from yaml
+        formatter = WeatherFormatter(create_report_config_from_yaml(config))
         from weather.core.models import AggregatedWeatherData
         from weather.core.models import ReportType
         
@@ -400,7 +398,7 @@ def _generate_dynamic_report(report_data: Dict[str, Any], config: Dict[str, Any]
         stage_names_dict = {"today": stage_name}
         
         # Use central formatter
-        formatter = WeatherFormatter(ReportConfig())
+        formatter = WeatherFormatter(create_report_config_from_yaml(config))
         return formatter.format_report_text(
             agg_data,
             ReportType("update"),

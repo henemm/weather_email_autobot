@@ -14,7 +14,7 @@ from src.config.config_loader import load_config
 from src.wetter.fire_risk_massif import FireRiskZone
 from src.position.etappenlogik import get_stage_info
 from src.weather.core.formatter import WeatherFormatter
-from src.weather.core.models import AggregatedWeatherData, ReportType, ReportConfig, convert_dict_to_aggregated_weather_data
+from src.weather.core.models import AggregatedWeatherData, ReportType, ReportConfig, convert_dict_to_aggregated_weather_data, create_report_config_from_yaml
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,8 @@ def generate_weather_report(
         # Aggregiere Wetterdaten über alle Koordinaten
         aggregated_data = _aggregate_weather_data(weather_data_list, report_type)
 
-        formatter = WeatherFormatter(ReportConfig())
+        # Use central formatter
+        formatter = WeatherFormatter(create_report_config_from_yaml(config))
         stage_names = {
             'today': stage_name,
             'tomorrow': config.get('stage_tomorrow', ''),
@@ -350,7 +351,7 @@ def _format_morning_report(
         wind_text,
         thunderstorm_next_text
     ]
-    return " | ".join(filter(None, parts))
+    return " - ".join(filter(None, parts))
 
 
 def _format_evening_report(
@@ -366,15 +367,15 @@ def _format_evening_report(
     """Format evening report according to email_format.mdc."""
     parts = [
         stage_name,
-        night_temp,  # Night temperature (e.g., "Nacht15.5°C")
+        night_temp,  # Night temperature (e.g., "Nacht15.5")
         thunderstorm_text,
         rain_text,
         precipitation_text,
-        day_temp,  # Day temperature (e.g., "Hitze33.5°C")
+        day_temp,  # Day temperature (e.g., "Hitze33.5")
         wind_text,
         thunderstorm_next_text
     ]
-    return " | ".join(filter(None, parts))
+    return " - ".join(filter(None, parts))
 
 
 def _format_update_report(
@@ -397,7 +398,7 @@ def _format_update_report(
         wind_text,
         thunderstorm_next_text
     ]
-    return " | ".join(filter(None, parts))
+    return " - ".join(filter(None, parts))
 
 
 def _shorten_stage_name(stage_name: str) -> str:
@@ -482,12 +483,12 @@ def _format_temperature_data(weather_data: Dict[str, Any], report_type: str) -> 
     if report_type == 'evening':
         # Evening report shows both night and day temperature
         if min_temp > 0:
-            return f"Nacht{min_temp}°C"
+            return f"Nacht{min_temp}"
         else:
-            return f"Hitze{max_temp}°C"
+            return f"Hitze{max_temp}"
     else:
         # Morning and update reports show only max temperature
-        return f"Hitze{max_temp}°C"
+        return f"Hitze{max_temp}"
 
 
 def _format_temperature_data_separate(weather_data: Dict[str, Any], report_type: str) -> tuple[str, str]:
@@ -497,12 +498,12 @@ def _format_temperature_data_separate(weather_data: Dict[str, Any], report_type:
     
     if report_type == 'evening':
         # Evening report shows both night and day temperature
-        night_temp = f"Nacht{min_temp}°C" if min_temp > 0 else ""
-        day_temp = f"Hitze{max_temp}°C" if max_temp > 0 else ""
+        night_temp = f"Nacht{min_temp}" if min_temp > 0 else ""
+        day_temp = f"Hitze{max_temp}" if max_temp > 0 else ""
         return night_temp, day_temp
     else:
         # Morning and update reports show only max temperature
-        day_temp = f"Hitze{max_temp}°C" if max_temp > 0 else ""
+        day_temp = f"Hitze{max_temp}" if max_temp > 0 else ""
         return "", day_temp
 
 
@@ -511,9 +512,9 @@ def _format_wind_data(weather_data: Dict[str, Any]) -> str:
     wind_speed = weather_data.get('wind_speed', 0)
     max_wind_gusts = weather_data.get('max_wind_gusts', 0)
     
-    wind_text = f"Wind{wind_speed}km/h"
+    wind_text = f"Wind{wind_speed}"
     if max_wind_gusts > 0:
-        wind_text += f" | Windböen{max_wind_gusts}km/h"
+        wind_text += f" - Böen{max_wind_gusts}"
     
     return wind_text
 

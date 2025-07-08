@@ -78,23 +78,23 @@ class TestCentralFormatter:
         assert "Regen" in report_text
         assert "Hitze" in report_text
         assert "Wind" in report_text
-        assert "Windböen" in report_text
+        assert "Böen" in report_text
         assert "Gew.+1" in report_text
         
         # Verify character limit
         assert len(report_text) <= 160
         
         # Verify format structure
-        parts = report_text.split(" | ")
+        parts = report_text.split(" - ")
         assert len(parts) == 8  # 8 components for morning report
         
         # Verify specific formatting
         assert "Gew.35%@14(65%@15)" in report_text  # Thunderstorm with threshold and max
-        assert "Regen25%@15(45%@16)" in report_text  # Rain with threshold and max
+        assert "Regen25%@15:00(45%@16:00)" in report_text  # Rain with threshold and max
         assert "Regen2.1mm@16" in report_text  # Precipitation
-        assert "Hitze25.5°C" in report_text  # Temperature
-        assert "Wind18km/h" in report_text  # Wind
-        assert "Windböen32km/h" in report_text  # Wind gusts
+        assert "Hitze25.5" in report_text  # Temperature
+        assert "Wind18" in report_text  # Wind
+        assert "Böen32" in report_text  # Wind gusts
         assert "Gew.+1 75%@14" in report_text  # Thunderstorm next day
     
     def test_evening_report_format(self):
@@ -106,20 +106,20 @@ class TestCentralFormatter:
         )
         
         # Verify all required components are present
-        assert "Vizzavona→Corte" in report_text
+        assert "Vizzavona" in report_text
         assert "Nacht" in report_text
         assert "Gew." in report_text
         assert "Regen" in report_text
         assert "Hitze" in report_text
         assert "Wind" in report_text
-        assert "Windböen" in report_text
+        assert "Böen" in report_text
         assert "Gew.+1" in report_text
         
         # Verify character limit
         assert len(report_text) <= 160
         
         # Verify format structure
-        parts = report_text.split(" | ")
+        parts = report_text.split(" - ")
         assert len(parts) == 9  # 9 components for evening report (includes night temp)
         
         # Verify specific formatting
@@ -127,9 +127,9 @@ class TestCentralFormatter:
         assert "Gew.35%@14(65%@15)" in report_text  # Thunderstorm
         assert "Regen25%@15(45%@16)" in report_text  # Rain
         assert "Regen2.1mm@16" in report_text  # Precipitation
-        assert "Hitze25.5°C" in report_text  # Temperature
-        assert "Wind18km/h" in report_text  # Wind
-        assert "Windböen32km/h" in report_text  # Wind gusts
+        assert "Hitze25.5" in report_text  # Temperature
+        assert "Wind18" in report_text  # Wind
+        assert "Böen32" in report_text  # Wind gusts
         assert "Gew.+1 80%@15" in report_text  # Thunderstorm day after tomorrow
     
     def test_update_report_format(self):
@@ -147,14 +147,14 @@ class TestCentralFormatter:
         assert "Regen" in report_text
         assert "Hitze" in report_text
         assert "Wind" in report_text
-        assert "Windböen" in report_text
+        assert "Böen" in report_text
         assert "Gew.+1" in report_text
         
         # Verify character limit
         assert len(report_text) <= 160
         
         # Verify format structure
-        parts = report_text.split(" | ")
+        parts = report_text.split(" - ")
         assert len(parts) == 9  # 9 components for update report (includes "Update:")
         
         # Verify "Update:" prefix is present
@@ -188,7 +188,7 @@ class TestCentralFormatter:
         assert "Regen -" in report_text
         assert "Regen -mm" in report_text
         assert "Wind -" in report_text
-        assert "Windböen -" in report_text
+        assert "Böen -" in report_text
         assert "Gew. -" in report_text
         assert "Gew.+1 -" in report_text
         
@@ -210,7 +210,7 @@ class TestCentralFormatter:
         )
         
         # Verify stage name is shortened
-        parts = report_text.split(" | ")
+        parts = report_text.split(" - ")
         stage_name = parts[0]
         assert len(stage_name) <= 10
         
@@ -221,7 +221,7 @@ class TestCentralFormatter:
             long_stage_names
         )
         
-        evening_parts = evening_text.split(" | ")
+        evening_parts = evening_text.split(" - ")
         stage_names_part = evening_parts[0]  # "Start→End"
         assert "→" in stage_names_part
         # Each part should be <= 10 characters
@@ -335,8 +335,8 @@ class TestCentralFormatter:
         )
         
         # Extract weather components (excluding stage name and "Update:" prefix)
-        morning_parts = morning_text.split(" | ")[1:]  # Skip stage name
-        update_parts = update_text.split(" | ")[2:]  # Skip stage name and "Update:"
+        morning_parts = morning_text.split(" - ")[1:]  # Skip stage name
+        update_parts = update_text.split(" - ")[2:]  # Skip stage name and "Update:"
         
         # Weather components should be identical
         assert morning_parts == update_parts

@@ -96,7 +96,7 @@ class WeatherFormatter:
             fire_risk
         ]
         
-        report_text = " | ".join(filter(None, report_parts))
+        report_text = " - ".join(filter(None, report_parts))
         
         # Validate character limit
         if len(report_text) > self.config.max_report_length:
@@ -160,7 +160,7 @@ class WeatherFormatter:
             fire_risk
         ]
         
-        report_text = " | ".join(filter(None, report_parts))
+        report_text = " - ".join(filter(None, report_parts))
         
         # Validate character limit
         if len(report_text) > self.config.max_report_length:
@@ -219,7 +219,7 @@ class WeatherFormatter:
             fire_risk
         ]
         
-        report_text = " | ".join(filter(None, report_parts))
+        report_text = " - ".join(filter(None, report_parts))
         
         # Validate character limit
         if len(report_text) > self.config.max_report_length:
@@ -259,26 +259,30 @@ class WeatherFormatter:
         Returns:
             Formatted rain field string
         """
-        # Debug: Print input values
-        print(f"\n=== DEBUG: _format_rain_field input ===")
-        print(f"threshold_pct: {threshold_pct} (type: {type(threshold_pct)})")
-        print(f"threshold_time: '{threshold_time}' (type: {type(threshold_time)})")
-        print(f"max_pct: {max_pct} (type: {type(max_pct)})")
-        print(f"max_time: '{max_time}' (type: {type(max_time)})")
+        # Get rain probability threshold from config
+        rain_threshold = self.config.rain_probability_threshold
         
-        has_threshold = threshold_pct and threshold_pct > 0 and threshold_time
-        has_max = max_pct and max_pct > 0 and max_time
-        
-        print(f"has_threshold: {has_threshold}")
-        print(f"has_max: {has_max}")
-        print(f"threshold_pct != max_pct: {threshold_pct != max_pct}")
-        
-        if has_threshold and has_max and threshold_pct != max_pct:
-            return f"Regen{int(threshold_pct)}%@{threshold_time}({int(max_pct)}%@{max_time})"
-        elif has_max:
-            return f"Regen{int(max_pct)}%@{max_time}"
-        else:
+        # Only show rain probability if it exceeds the threshold
+        if threshold_pct < rain_threshold and max_pct < rain_threshold:
             return "Regen -"
+        
+        # Format threshold crossing
+        if threshold_pct >= rain_threshold and threshold_time:
+            threshold_part = f"Regen{threshold_pct:.0f}%@{threshold_time}"
+        else:
+            threshold_part = "Regen -"
+        
+        # Format maximum
+        if max_pct >= rain_threshold and max_time:
+            max_part = f"({max_pct:.0f}%@{max_time})"
+        else:
+            max_part = ""
+        
+        # Combine parts
+        if max_part:
+            return f"{threshold_part}{max_part}"
+        else:
+            return threshold_part
     
     def _format_precipitation_field(self, precipitation_mm: Optional[float], max_time: Optional[str]) -> str:
         """Format precipitation field according to specification."""
@@ -290,21 +294,21 @@ class WeatherFormatter:
     
     def _format_temperature_field(self, temperature: Optional[float]) -> str:
         """Format temperature field according to specification."""
-        if temperature and temperature > 0:
-            return f"Hitze{temperature:.0f}°C"
+        if temperature is not None and temperature > 0:
+            return f"Hitze{temperature:.0f}"
         else:
             return "Hitze -"
     
     def _format_wind_field(self, wind_speed: Optional[float]) -> str:
         """Format wind field according to specification."""
-        if wind_speed and wind_speed > 0:
+        if wind_speed is not None and wind_speed > 0:
             return f"Wind{wind_speed:.0f}"
         else:
             return "Wind -"
     
     def _format_wind_gust_field(self, wind_gusts: Optional[float]) -> str:
         """Format wind gust field according to specification."""
-        if wind_gusts and wind_gusts > 0:
+        if wind_gusts is not None and wind_gusts > 0:
             return f"Böen{wind_gusts:.0f}"
         else:
             return "Böen -"
@@ -312,9 +316,9 @@ class WeatherFormatter:
     def _format_night_temperature_field(self, min_temperature: Optional[float]) -> str:
         """Format night temperature field for evening reports."""
         if min_temperature is not None:
-            return f"Nacht{min_temperature:.0f}°C"
+            return f"Nacht{min_temperature:.0f}"
         else:
-            return "Nacht -°C"
+            return "Nacht -"
     
     def _format_thunderstorm_next_field(self, probability: Optional[float], threshold_time: Optional[str]) -> str:
         """Format thunderstorm next day field according to specification."""
@@ -330,6 +334,8 @@ class WeatherFormatter:
     def _format_fire_risk_warning(self, warning: Optional[str]) -> str:
         """Format fire risk warning field."""
         if warning and warning.strip():
+            # The warning is already formatted as "WARN Waldbrand", "HIGH Waldbrand", etc.
+            # Just return it as is
             return warning.strip()
         else:
             return ""
@@ -618,8 +624,8 @@ class WeatherFormatter:
             day_after_tomorrow_stage = stage_names.get('day_after_tomorrow', '')
             tomorrow_short = self._shorten_stage_name(tomorrow_stage)
             day_after_short = self._shorten_stage_name(day_after_tomorrow_stage)
-            return f"{tomorrow_short}→{day_after_short} | Nacht -°C | Gew. - | Regen - | Regen -mm | Hitze -°C | Wind -km/h | Böen -km/h | Gew.+1 -"
+            return f"{tomorrow_short}→{day_after_short} - Nacht - - Gew. - - Regen - - Regen -mm - Hitze - - Wind - - Böen - - Gew.+1 -"
         elif report_type == ReportType.UPDATE:
-            return f"{stage_name_short} | Update: | Gew. - | Regen - | Regen -mm | Hitze -°C | Wind -km/h | Böen -km/h | Gew.+1 -"
+            return f"{stage_name_short} - Update: - Gew. - - Regen - - Regen -mm - Hitze - - Wind - - Böen - - Gew.+1 -"
         else:  # MORNING
-            return f"{stage_name_short} | Gew. - | Regen - | Regen -mm | Hitze -°C | Wind -km/h | Böen -km/h | Gew.+1 -" 
+            return f"{stage_name_short} - Gew. - - Regen - - Regen -mm - Hitze - - Wind - - Böen - - Gew.+1 -" 

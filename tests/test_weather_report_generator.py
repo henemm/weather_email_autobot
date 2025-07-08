@@ -23,8 +23,8 @@ def test_format_temperature_data_separate_evening_report():
     
     night_temp, day_temp = _format_temperature_data_separate(weather_data, 'evening')
     
-    assert night_temp == "Nacht15.5°C"
-    assert day_temp == "Hitze33.5°C"
+    assert night_temp == "Nacht15.5"
+    assert day_temp == "Hitze33.5"
 
 
 def test_format_temperature_data_separate_morning_report():
@@ -37,18 +37,18 @@ def test_format_temperature_data_separate_morning_report():
     night_temp, day_temp = _format_temperature_data_separate(weather_data, 'morning')
     
     assert night_temp == ""
-    assert day_temp == "Hitze33.5°C"
+    assert day_temp == "Hitze33.5"
 
 
 def test_format_evening_report_with_temperatures():
     """Test that evening reports include both night and day temperatures."""
     stage_name = "Corte→Vizzavona"
-    night_temp = "Nacht15.5°C"
-    day_temp = "Hitze33.5°C"
+    night_temp = "Nacht15.5"
+    day_temp = "Hitze33.5"
     thunderstorm_text = "Gew.40%@14(95%@17)"
     rain_text = "Regen50%@14(70%@17)"
     precipitation_text = "Regen2.0mm@14"
-    wind_text = "Wind18km/h | Windböen38km/h"
+    wind_text = "Wind18 - Böen38"
     thunderstorm_next_text = "Gew.+190%@15"
     
     report = _format_evening_report(
@@ -57,14 +57,14 @@ def test_format_evening_report_with_temperatures():
     )
     
     # Check that both temperatures are present
-    assert "Nacht15.5°C" in report
-    assert "Hitze33.5°C" in report
+    assert "Nacht15.5" in report
+    assert "Hitze33.5" in report
     
     # Check the order according to specification
-    parts = report.split(" | ")
+    parts = report.split(" - ")
     assert parts[0] == "Corte→Vizzavona"  # Stage name
-    assert parts[1] == "Nacht15.5°C"      # Night temperature
-    assert parts[5] == "Hitze33.5°C"      # Day temperature
+    assert parts[1] == "Nacht15.5"      # Night temperature
+    assert parts[5] == "Hitze33.5"      # Day temperature
 
 
 def test_evening_report_temperature_plausibility():
@@ -111,8 +111,8 @@ def test_evening_report_temperature_plausibility():
         report_text = result['report_text']
         
         # Verify both temperatures are present and plausible
-        assert "Nacht15.5°C" in report_text
-        assert "Hitze33.5°C" in report_text
+        assert "Nacht15.5" in report_text
+        assert "Hitze33.5" in report_text
         
         # Verify temperature difference is reasonable (night should be lower than day)
         night_temp = 15.5
@@ -165,4 +165,4 @@ def test_evening_report_missing_min_temperature():
         
         # Should not show night temperature when not available
         assert "Nacht" not in report_text
-        assert "Hitze33.5°C" in report_text 
+        assert "Hitze33.5" in report_text 

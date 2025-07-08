@@ -241,8 +241,8 @@ class WeatherAnalyzer:
             parts.append(f"Regen{aggregated_data['max_rain_amount']:.1f}mm")
         
         parts.extend([
-            f"Hitze{aggregated_data['max_temperature']:.1f}°C",
-            f"Wind{aggregated_data['max_wind_speed']:.0f}km/h",
+            f"Hitze{aggregated_data['max_temperature']:.1f}",
+            f"Wind{aggregated_data['max_wind_speed']:.0f}",
             f"Gew.+1{aggregated_data['max_lightning_probability']:.0f}%"
         ])
         
@@ -282,8 +282,8 @@ class WeatherAnalyzer:
             parts.append(f"Regen{aggregated_data['max_rain_amount']:.1f}mm")
         
         parts.extend([
-            f"Hitze{aggregated_data['max_temperature']:.1f}°C",
-            f"Wind{aggregated_data['max_wind_speed']:.0f}km/h"
+            f"Hitze{aggregated_data['max_temperature']:.1f}",
+            f"Wind{aggregated_data['max_wind_speed']:.0f}"
         ])
         
         return "|".join(parts)
@@ -306,8 +306,8 @@ class WeatherAnalyzer:
             parts.append(f"Regen{rain_amount_threshold:.1f}mm@{rain_amount_threshold_time}")
         
         parts.extend([
-            f"Hitze{aggregated_data['max_temperature']:.1f}°C",
-            f"Wind{aggregated_data['max_wind_speed']:.0f}km/h"
+            f"Hitze{aggregated_data['max_temperature']:.1f}",
+            f"Wind{aggregated_data['max_wind_speed']:.0f}"
         ])
         
         return "|".join(parts)
@@ -464,7 +464,7 @@ class TestDummyWeatherData:
             r"Gew\.30%@13:00\(max\.80%@15:00\)\|"
             r"Regen55%@15:00\(max\.55%@15:00\)\|"
             r"Regen2\.0mm@15:00\(max\.6\.0mm@15:00\)\|"
-            r"Hitze28\.0°C\|Wind25km/h\|"
+            r"Hitze28\.0 - Wind25 - "
             r"Gew\.\+180%"
         )
         assert re.match(expected_pattern, report), f"Report did not match expected pattern. Got: {report}"
@@ -480,7 +480,7 @@ class TestDummyWeatherData:
             r"Gew\.\+190%\|"
             r"Regen50%@14:00\(max\.70%@17:00\)\|"
             r"Regen2\.0mm@14:00\(max\.8\.0mm@17:00\)\|"
-            r"Hitze33\.5°C\|Wind38km/h"
+            r"Hitze33\.5 - Wind38"
         )
         assert re.match(expected_pattern, report), f"Report did not match expected pattern. Got: {report}"
         assert len(report) <= 160, f"Report length {len(report)} exceeds 160 characters"
@@ -494,7 +494,7 @@ class TestDummyWeatherData:
             r"Gew\.35%@15:00\|"
             r"Regen55%@16:00\|"
             r"Regen2\.0mm@15:00\|"
-            r"Hitze29\.1°C\|Wind31km/h"
+            r"Hitze29\.1 - Wind31"
         )
         assert re.match(expected_pattern, report), f"Report did not match expected pattern. Got: {report}"
         assert len(report) <= 160, f"Report length {len(report)} exceeds 160 characters"

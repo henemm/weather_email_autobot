@@ -259,8 +259,8 @@ class TestGenerateGR20ReportText:
         # Should use new dynamic format
         assert "HautAsco" in text
         assert "Update:" in text
-        assert "Hitze 25.0°C" in text
-        assert "Wind 30km/h" in text
+        assert "Hitze 25.0" in text
+        assert "Wind 30" in text
         assert len(text) <= 160
         assert "https://share.garmin.com/PDFCF" not in text  # No links
     
@@ -364,7 +364,7 @@ class TestGenerateGR20ReportText:
         
         text = generate_gr20_report_text(report_data, config)
         
-        # Check format: {EtappeHeute} | Gewitter {g1}%@{t1} {g2}%@{t2} | Gewitter +1 {g1_next}% | Regen {r1}%@{t3} {r2}%@{t4} {regen_mm}mm | Hitze {temp_max}°C | Wind {wind_max}km/h
+        # Check format: {EtappeHeute} - Gewitter {g1}%@{t1} {g2}%@{t2} - Gewitter +1 {g1_next}% - Regen {r1}%@{t3} {r2}%@{t4} {regen_mm}mm - Hitze {temp_max} - Wind {wind_max}
         assert "Vizzavona" in text
         assert "Gewitter 45%" in text
         assert "@14:00 30%" in text
@@ -372,8 +372,8 @@ class TestGenerateGR20ReportText:
         assert "Regen 60%" in text
         assert "@12:00 50%" in text
         assert "5.2mm" in text
-        assert "Hitze 28.5°C" in text
-        assert "Wind 25km/h" in text
+        assert "Hitze 28.5" in text
+        assert "Wind 25" in text
         assert len(text) <= 160
         assert "http" not in text  # No links
     
@@ -409,17 +409,17 @@ class TestGenerateGR20ReportText:
         
         text = generate_gr20_report_text(report_data, config)
         
-        # Check format: {EtappeMorgen}→{EtappeÜbermorgen} | Nacht {min_temp}°C | Gewitter {g1}%@{t1} ({g2}%@{t2}) | Gewitter +1 {g1_next}% | Regen {r1}%@{t3} ({r2}%@{t4}) {regen_mm}mm | Hitze {temp_max}°C | Wind {wind_max}km/h
+        # Check format: {EtappeMorgen}→{EtappeÜbermorgen} - Nacht {min_temp} - Gewitter {g1}%@{t1} ({g2}%@{t2}) - Gewitter +1 {g1_next}% - Regen {r1}%@{t3} ({r2}%@{t4}) {regen_mm}mm - Hitze {temp_max} - Wind {wind_max}
         assert "HautAsco→Vizzavona" in text
-        assert "Nacht 12.5°C" in text
+        assert "Nacht 12.5" in text
         assert "Gewitter 35%" in text
         assert "(25%@15:00)" in text
         assert "Gewitter +1 40%" in text
         assert "Regen 45%" in text
         assert "(40%@13:00)" in text
         assert "3.8mm" in text
-        assert "Hitze 26.0°C" in text
-        assert "Wind 30km/h" in text
+        assert "Hitze 26.0" in text
+        assert "Wind 30" in text
         assert len(text) <= 160
         assert "http" not in text  # No links
     
@@ -448,13 +448,13 @@ class TestGenerateGR20ReportText:
         
         text = generate_gr20_report_text(report_data, config)
         
-        # Check format: {EtappeHeute} | Update: Gewitter {g2}%@{t2} | Regen {r2}%@{t4} | Hitze {temp_max}°C | Wind {wind_max}km/h
+        # Check format: {EtappeHeute} - Update: Gewitter {g2}%@{t2} - Regen {r2}%@{t4} - Hitze {temp_max} - Wind {wind_max}
         assert "Conca" in text
         assert "Update:" in text
         assert "Gewitter 40%@16:00" in text
         assert "Regen 55%@14:00" in text
-        assert "Hitze 29.0°C" in text
-        assert "Wind 35km/h" in text
+        assert "Hitze 29.0" in text
+        assert "Wind 35" in text
         assert len(text) <= 160
         assert "http" not in text  # No links
     
@@ -477,8 +477,8 @@ class TestGenerateGR20ReportText:
         # Should only include temperature and wind, no thunder/rain parts
         assert "Calenzana" in text
         assert "Update:" in text
-        assert "Hitze 25.0°C" in text
-        assert "Wind 20km/h" in text
+        assert "Hitze 25.0" in text
+        assert "Wind 20" in text
         assert "Gewitter" not in text  # No thunderstorm data
         assert "Regen" not in text  # No rain data
         assert len(text) <= 160
@@ -585,8 +585,8 @@ class TestGenerateGR20ReportText:
         assert "Gewitter 0%" in text
         assert "Gewitter +1 0%" in text
         assert "Regen 0%" in text
-        assert "Hitze 0.0°C" in text
-        assert "Wind 0km/h" in text
+        assert "Hitze 0.0" in text
+        assert "Wind 0" in text
         assert len(text) <= 160
     
     def test_generate_evening_report_with_missing_data(self):
@@ -604,12 +604,12 @@ class TestGenerateGR20ReportText:
         
         # Should handle missing data gracefully
         assert "TestLocation" in text
-        assert "Nacht 0.0°C" in text
+        assert "Nacht 0.0" in text
         assert "Gewitter 0%" in text
         assert "Gewitter +1 0%" in text
         assert "Regen 0%" in text
-        assert "Hitze 0.0°C" in text
-        assert "Wind 0km/h" in text
+        assert "Hitze 0.0" in text
+        assert "Wind 0" in text
         assert len(text) <= 160 
 
     def test_generate_morning_report_with_vigilance_warning(self):

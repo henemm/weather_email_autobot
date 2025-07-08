@@ -494,10 +494,7 @@ def main():
         weather_analysis = analyze_weather_data(weather_data_list, config)
         
         # Compute risk score PER STAGE (not globally)
-        # Use the processed weather data for the current stage to compute risk
-        processed_weather_data = process_weather_data_for_report(latitude, longitude, location_name, config, report_type)
-        
-        # Compute risk based on the current stage's weather data
+        processed_weather_data = process_weather_data_for_report(latitude, longitude, location_name, config, "dynamic")
         risk_metrics = {
             "thunderstorm_probability": processed_weather_data.get("max_thunderstorm_probability", 0.0),
             "wind_speed": processed_weather_data.get("max_wind_speed", 0.0),
@@ -505,21 +502,19 @@ def main():
             "temperature": processed_weather_data.get("max_temperature", 0.0),
             "cape": processed_weather_data.get("max_cape_shear", 0.0)
         }
-        
         current_risk = compute_risk(risk_metrics, config)
         print(f"Current risk score for {location_name}: {current_risk:.2f}")
-        
         current_time = datetime.now()
-        
         # Handle manual mode vs automatic mode
         if args.modus:
             print(f"Manual mode: {args.modus}")
-            
             if args.modus == "dynamic":
-                # For manual dynamic mode, bypass constraints for testing
-                print("Manual dynamic mode - bypassing constraints for testing")
+                # For manual dynamic mode, check if a dynamic report would actually be triggered
+                should_send = scheduler.should_send_report(current_time, current_risk)
+                if not should_send:
+                    print("[MANUAL] Dynamic report would NOT be triggered (thresholds/intervall/limit not met). Exiting.")
+                    return  # <--- Ensure early exit here
                 report_type = "dynamic"
-                should_send = True
             else:
                 # For morning/evening, always send
                 report_type = args.modus
@@ -533,6 +528,10 @@ def main():
                 print("No report needed at this time")
                 return
         
+        if not should_send or not report_type:
+            return
+
+        # --- ab hier nur noch, wenn ein Report wirklich gesendet werden soll ---
         # For evening reports, also get tomorrow's weather data
         tomorrow_weather_data_list = []
         day_after_tomorrow_thunderstorm_data_list = []

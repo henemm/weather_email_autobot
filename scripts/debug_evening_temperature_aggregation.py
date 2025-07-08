@@ -6,6 +6,7 @@ from datetime import date, timedelta, datetime as dt
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.config.config_loader import load_config
+from src.config.config_preserver import update_yaml_preserving_comments
 from src.wetter.weather_data_processor import WeatherDataProcessor
 from src.position.etappenlogik import get_current_stage, get_stage_coordinates
 
@@ -29,10 +30,8 @@ print("-" * 140)
 for idx, stage in enumerate(etappen):
     today = date.today()
     stage_start = today - timedelta(days=idx)
-    config['startdatum'] = stage_start.strftime('%Y-%m-%d')
-    # Save config
-    with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
-        yaml.safe_dump(config, f)
+    # Update config using comment-preserving function
+    update_yaml_preserving_comments(CONFIG_PATH, 'startdatum', stage_start.strftime('%Y-%m-%d'))
     # Reload config and get current stage
     config_reload = load_config()
     current_stage = get_current_stage(config_reload, ETAPPEN_PATH)
@@ -111,7 +110,5 @@ for idx, stage in enumerate(etappen):
 
 # Restore original config
 if original_start:
-    config['startdatum'] = original_start
-    with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
-        yaml.safe_dump(config, f)
+    update_yaml_preserving_comments(CONFIG_PATH, 'startdatum', original_start)
 print("Debugging complete.") 

@@ -205,6 +205,29 @@ class ReportConfig:
     fallback_data_source: str = "open-meteo"
 
 
+def create_report_config_from_yaml(config_dict: Dict[str, Any]) -> ReportConfig:
+    """
+    Create a ReportConfig from a config dictionary loaded from config.yaml.
+    
+    Args:
+        config_dict: Configuration dictionary from config.yaml
+        
+    Returns:
+        ReportConfig with values from config.yaml
+    """
+    thresholds = config_dict.get('thresholds', {})
+    
+    return ReportConfig(
+        rain_probability_threshold=thresholds.get('rain_probability', 25.0),
+        thunderstorm_probability_threshold=thresholds.get('thunderstorm_probability', 20.0),
+        rain_amount_threshold=thresholds.get('rain_amount', 2.0),
+        wind_speed_threshold=thresholds.get('wind_speed', 20.0),
+        temperature_threshold=thresholds.get('temperature', 32.0),
+        max_report_length=config_dict.get('max_characters', 160),
+        subject_base=config_dict.get('smtp', {}).get('subject', 'GR20 Wetter')
+    )
+
+
 def convert_dict_to_aggregated_weather_data(data: Dict[str, Any], location_name: str, latitude: float, longitude: float) -> AggregatedWeatherData:
     """
     Convert dictionary-based weather data to AggregatedWeatherData.

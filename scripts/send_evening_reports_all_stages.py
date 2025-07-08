@@ -7,6 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.report.weather_report_generator import generate_weather_report
 from src.config.config_loader import load_config
+from src.config.config_preserver import update_yaml_preserving_comments
 from src.notification.email_client import EmailClient
 from src.position.etappenlogik import get_current_stage
 
@@ -31,15 +32,13 @@ for idx, stage in enumerate(etappen):
     # Set start date so that this stage is 'today'
     today = date.today()
     stage_start = today - timedelta(days=idx)
-    config['startdatum'] = stage_start.strftime('%Y-%m-%d')
-    # Save config
-    with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
-        yaml.safe_dump(config, f)
+    # Update config using comment-preserving function
+    update_yaml_preserving_comments(CONFIG_PATH, 'startdatum', stage_start.strftime('%Y-%m-%d'))
     # Reload config and get current stage name
     config_reload = load_config()
     current_stage = get_current_stage(config_reload, ETAPPEN_PATH)
     stage_name = current_stage['name'] if current_stage else 'Unknown'
-    print(f"[DEBUG] Processing stage {idx+1}: {stage_name} (startdatum={config['startdatum']})")
+    print(f"[DEBUG] Processing stage {idx+1}: {stage_name} (startdatum={stage_start.strftime('%Y-%m-%d')})")
     # Generate and send evening report
     result = generate_weather_report('evening')
     if result['success']:
@@ -50,7 +49,5 @@ for idx, stage in enumerate(etappen):
 
 # Restore original config
 if original_start:
-    config['startdatum'] = original_start
-    with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
-        yaml.safe_dump(config, f)
+    update_yaml_preserving_comments(CONFIG_PATH, 'startdatum', original_start)
 print("All evening reports sent.") 

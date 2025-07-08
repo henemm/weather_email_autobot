@@ -42,12 +42,12 @@ This specification defines the exact structure of weather reports in three opera
 
 ### Format
 ```
-{etappe_heute} | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind} | Böen{wind_max} | Gew.+1{g1_next}%@{t_g1_next_threshold} | {fire_risk_warning}
+{etappe_heute} - Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) - Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) - Regen{regen_mm}mm@{t_regen_max} - Hitze{temp_max} - Wind{wind} - Böen{wind_max} - Gew.+1{g1_next}%@{t_g1_next_threshold} - {fire_risk_warning}
 ```
 
 ### Example
 ```
-Waldpass | Gew.30%@13(80%@15) | Regen55%@15(70%@16) | Regen2.0mm@15 | Hitze28°C | Wind15 | Böen25 | Gew.+180%@14 | WARN Waldbrand
+Waldpass - Gew.30%@13(80%@15) - Regen55%@15(70%@16) - Regen2.0mm@15 - Hitze28 - Wind15 - Böen25 - Gew.+180%@14 - WARN Waldbrand
 ```
 
 ### Placeholders
@@ -62,7 +62,7 @@ Waldpass | Gew.30%@13(80%@15) | Regen55%@15(70%@16) | Regen2.0mm@15 | Hitze28°C
 - `{t_r_pmax}`: Time of maximum rain probability
 - `{regen_mm}`: Daily maximum rain sum
 - `{t_regen_max}`: Time of maximum rain amount
-- `{temp_max}`: Daily maximum temperature
+- `{temp_max}`: Daily maximum temperature (number only, no °C)
 - `{wind}`: Average wind speed
 - `{wind_max}`: Maximum wind gusts
 - `{g1_next}`: Thunderstorm probability for tomorrow
@@ -83,18 +83,18 @@ Waldpass | Gew.30%@13(80%@15) | Regen55%@15(70%@16) | Regen2.0mm@15 | Hitze28°C
 
 ### Format
 ```
-{etappe_morgen} | Nacht{min_temp}°C | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind} | Böen{wind_max} | Gew.+1{g1_next}%@{t_g1_next_threshold} | {fire_risk_warning}
+{etappe_morgen} - Nacht{min_temp} - Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) - Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) - Regen{regen_mm}mm@{t_regen_max} - Hitze{temp_max} - Wind{wind} - Böen{wind_max} - Gew.+1{g1_next}%@{t_g1_next_threshold} - {fire_risk_warning}
 ```
 
 ### Example
 ```
-Waldpass | Nacht16°C | Gew.40%@14(95%@17) | Regen50%@14(70%@17) | Regen2.0mm@14 | Hitze34°C | Wind18 | Böen38 | Gew.+190%@15 | WARN Waldbrand
+Waldpass - Nacht16 - Gew.40%@14(95%@17) - Regen50%@14(70%@17) - Regen2.0mm@14 - Hitze34 - Wind18 - Böen38 - Gew.+190%@15 - WARN Waldbrand
 ```
 
 ### Additional Placeholders
 - `{etappe_morgen}`: Name of tomorrow's stage
 - `{etappe_uebermorgen}`: Name of day after tomorrow's stage
-- `{min_temp}`: Night temperature (minimum from tomorrow's stage start point, 22:00–05:00)
+- `{min_temp}`: Night temperature (minimum from tomorrow's stage start point, 22:00–05:00, number only, no °C)
 
 **Note:** `{g1_next}` refers to the day after tomorrow's stage and day.
 
@@ -107,12 +107,12 @@ Only triggered by significant changes in the risk situation for the current day 
 
 ### Format
 ```
-{etappe_heute} | Update: | Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) | Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) | Regen{regen_mm}mm@{t_regen_max} | Hitze{temp_max}°C | Wind{wind} | Böen{wind_max} | Gew.+1{g1_next}%@{t_g1_next_threshold} | {fire_risk_warning}
+{etappe_heute} - Update: - Gew.{g_threshold}%@{t_g_threshold}({g_pmax}%@{t_g_pmax}) - Regen{r_threshold}%@{t_r_threshold}({r_pmax}%@{t_r_pmax}) - Regen{regen_mm}mm@{t_regen_max} - Hitze{temp_max} - Wind{wind} - Böen{wind_max} - Gew.+1{g1_next}%@{t_g1_next_threshold} - {fire_risk_warning}
 ```
 
 ### Example
 ```
-Almhütte | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2.0mm@15 | Hitze29°C | Wind12 | Böen31 | Gew.+185%@14 | WARN Waldbrand
+Almhütte - Update: - Gew.35%@15(85%@16) - Regen55%@16(75%@17) - Regen2.0mm@15 - Hitze29 - Wind12 - Böen31 - Gew.+185%@14 - WARN Waldbrand
 ```
 
 ---
@@ -131,11 +131,11 @@ Almhütte | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2.0mm@15 |
 - **Stage names** → Abbreviated to max. 10 characters (single stage name only)
 
 ### Formatting
-- Spaces between all `|` separators
+- Spaces around all `-` separators
 - Time format: Hours only (HH), no minutes
 - Threshold@Time (max. Maximum@Time) for all values
 - Example: "Gew.30%@13(80%@15)"
-- Temperature: No decimal places (e.g., "Hitze28°C" not "Hitze28.0°C")
+- Temperature: Number only, no °C or decimal places (e.g., "Hitze28" not "Hitze28°C" or "Hitze28.0°C")
 - Wind: No km/h suffix (e.g., "Wind15" not "Wind15km/h")
 - Wind gusts: "Böen25" not "Windböen25km/h"
 
@@ -195,18 +195,34 @@ Almhütte | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2.0mm@15 |
 
 ### Morning Report
 ```
-Waldpass | Gew.30%@13(80%@15) | Regen55%@15(70%@16) | Regen2.0mm@15 | Hitze28°C | Wind15 | Böen25 | Gew.+180%@14 | WARN Waldbrand
+Waldpass - Gew.30%@13(80%@15) - Regen55%@15(70%@16) - Regen2.0mm@15 - Hitze28 - Wind15 - Böen25 - Gew.+180%@14 - WARN Waldbrand
 ```
 **Length:** 118 characters
 
 ### Evening Report
 ```
-Waldpass | Nacht16°C | Gew.40%@14(95%@17) | Regen50%@14(70%@17) | Regen2.0mm@14 | Hitze34°C | Wind18 | Böen38 | Gew.+190%@15 | WARN Waldbrand
+Waldpass - Nacht16 - Gew.40%@14(95%@17) - Regen50%@14(70%@17) - Regen2.0mm@14 - Hitze34 - Wind18 - Böen38 - Gew.+190%@15 - WARN Waldbrand
 ```
 **Length:** 128 characters
 
 ### Update Report
 ```
-Almhütte | Update: | Gew.35%@15(85%@16) | Regen55%@16(75%@17) | Regen2.0mm@15 | Hitze29°C | Wind12 | Böen31 | Gew.+185%@14 | WARN Waldbrand
+Almhütte - Update: - Gew.35%@15(85%@16) - Regen55%@16(75%@17) - Regen2.0mm@15 - Hitze29 - Wind12 - Böen31 - Gew.+185%@14 - WARN Waldbrand
 ```
 **Length:** 123 characters 
+
+## SMS Encoding & GSM-7 Normalization
+
+- All SMS texts are automatically normalized to the GSM-7 character set before sending.
+- Non-GSM-7 characters (e.g., German umlauts, typographic quotes, emojis, special symbols) are replaced or removed.
+- Replacement rules for German umlauts and sharp S:
+    - ä → ae
+    - ö → oe
+    - ü → ue
+    - ß → ss
+    - Ä → Ae
+    - Ö → Oe
+    - Ü → Ue
+- Other unsupported characters are either replaced with a close ASCII/GSM-7 equivalent or removed if no safe replacement exists.
+- If normalization changes the message, this is logged in `output/logs/sms_normalization.log`.
+- If a message cannot be normalized to valid GSM-7, sending is aborted and logged in `output/logs/sms_encoding_violation.log`. 
