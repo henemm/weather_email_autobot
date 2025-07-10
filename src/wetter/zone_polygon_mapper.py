@@ -6,14 +6,21 @@ ZONE_GEOJSON_PATH = os.path.join(os.path.dirname(__file__), '../../data/digital_
 
 # Static mapping from zone name to zm_key (API key)
 ZONE_NAME_TO_ZM_KEY = {
-    "Zone - BALAGNE": "201",
-    "Zone - MONTI": "202",
-    "Zone - SILLON CENTRAL": "203",
-    "Zone - VIZZAVONA": "204",
-    "Zone - MOYENNE MONTAGNE NORD": "205",
-    "Zone - MOYENNE MONTAGNE SUD": "206",
-    "Zone - SARTENAIS": "207",
-    "Zone - REGION DE CONCA": "208"
+    "Zone - CAP CORSE": "201",
+    "Zone - NEBBIU - AGRIATES": "202",
+    "Zone - BALAGNE": "203",
+    "Zone - MONTI": "204",
+    "Zone - SILLON CENTRAL": "205",
+    "Zone - CASTAGNICCIA": "206",
+    "Zone - MOYENNE MONTAGNE NORD": "207",
+    "Zone - PLAINE ORIENTALE": "208",
+    "Zone - DEUX SEVI": "209",
+    "Zone - MONTAGNE": "210",
+    "Zone - FIUM ORBU": "211",
+    "Zone - MOYENNE MONTAGNE SUD": "212",
+    "Zone - SARTENAIS": "213",
+    "Zone - REGION DE CONCA": "214",
+    "Zone - EXTREME SUD": "215"
 }
 
 class ZonePolygonMapper:
