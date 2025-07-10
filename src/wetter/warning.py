@@ -252,7 +252,7 @@ def _translate_warning_to_german(details: dict, risk_name: str) -> str:
         'vents': 'Wind',
         'vent fort': 'starker Wind',
         'vent violent': 'heftiger Wind',
-        'rafales': 'Böen',
+        'rafales': 'Boen',
         
         # Snow and ice
         'neige': 'Schnee',

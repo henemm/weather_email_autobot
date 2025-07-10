@@ -309,9 +309,9 @@ class WeatherFormatter:
     def _format_wind_gust_field(self, wind_gusts: Optional[float]) -> str:
         """Format wind gust field according to specification."""
         if wind_gusts is not None and wind_gusts > 0:
-            return f"Böen{wind_gusts:.0f}"
+            return f"Boen{wind_gusts:.0f}"
         else:
-            return "Böen -"
+            return "Boen -"
     
     def _format_night_temperature_field(self, min_temperature: Optional[float]) -> str:
         """Format night temperature field for evening reports."""
@@ -324,12 +324,12 @@ class WeatherFormatter:
         """Format thunderstorm next day field according to specification."""
         t_time = self._format_time_hour(threshold_time)
         if probability and probability > 0:
-            thunder_next_part = f"Gew.+1 {probability:.0f}%"
+            thunder_next_part = f"Gew+1 {probability:.0f}%"
             if threshold_time:
                 thunder_next_part += f"@{t_time}"
             return thunder_next_part
         else:
-            return "Gew.+1 -"
+            return "Gew+1 -"
     
     def _format_fire_risk_warning(self, warning: Optional[str]) -> str:
         """Format fire risk warning field."""
@@ -624,8 +624,8 @@ class WeatherFormatter:
             day_after_tomorrow_stage = stage_names.get('day_after_tomorrow', '')
             tomorrow_short = self._shorten_stage_name(tomorrow_stage)
             day_after_short = self._shorten_stage_name(day_after_tomorrow_stage)
-            return f"{tomorrow_short}→{day_after_short} - Nacht - - Gew. - - Regen - - Regen -mm - Hitze - - Wind - - Böen - - Gew.+1 -"
+            return f"{tomorrow_short}→{day_after_short} - Nacht - - Gew. - - Regen - - Regen -mm - Hitze - - Wind - - Boen - - Gew+1 -"
         elif report_type == ReportType.UPDATE:
-            return f"{stage_name_short} - Update: - Gew. - - Regen - - Regen -mm - Hitze - - Wind - - Böen - - Gew.+1 -"
+            return f"{stage_name_short} - Update: - Gew. - - Regen - - Regen -mm - Hitze - - Wind - - Boen - - Gew+1 -"
         else:  # MORNING
-            return f"{stage_name_short} - Gew. - - Regen - - Regen -mm - Hitze - - Wind - - Böen - - Gew.+1 -" 
+            return f"{stage_name_short} - Gew. - - Regen - - Regen -mm - Hitze - - Wind - - Boen - - Gew+1 -" 

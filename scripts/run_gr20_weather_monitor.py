@@ -505,6 +505,38 @@ def main():
         current_risk = compute_risk(risk_metrics, config)
         print(f"Current risk score for {location_name}: {current_risk:.2f}")
         current_time = datetime.now()
+        
+        # --- OPTIMIZED DEBUG OUTPUT FOR ALL GEO-POINTS ---
+        # Call the debug aggregation to show all geo-points clearly
+        from wetter.weather_data_processor import WeatherDataProcessor
+        processor = WeatherDataProcessor(config)
+        
+        if args.modus == "evening":
+            # Show debug output for evening report (all 7 geo-points)
+            processor._debug_evening_report_aggregation(
+                location_name=location_name,
+                latitude=latitude,
+                longitude=longitude,
+                target_date=current_time.date()
+            )
+        elif args.modus == "morning":
+            # Show debug output for morning report (all 6 geo-points)
+            processor._debug_morning_report_aggregation(
+                location_name=location_name,
+                latitude=latitude,
+                longitude=longitude,
+                target_date=current_time.date()
+            )
+        elif args.modus == "dynamic":
+            # Show debug output for update report (all 6 geo-points)
+            processor._debug_update_report_aggregation(
+                location_name=location_name,
+                latitude=latitude,
+                longitude=longitude,
+                target_date=current_time.date()
+            )
+        # --- END OPTIMIZED DEBUG OUTPUT ---
+
         # Handle manual mode vs automatic mode
         if args.modus:
             print(f"Manual mode: {args.modus}")

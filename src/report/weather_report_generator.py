@@ -514,7 +514,7 @@ def _format_wind_data(weather_data: Dict[str, Any]) -> str:
     
     wind_text = f"Wind{wind_speed}"
     if max_wind_gusts > 0:
-        wind_text += f" - Böen{max_wind_gusts}"
+        wind_text += f" - Boen{max_wind_gusts}"
     
     return wind_text
 
@@ -525,12 +525,12 @@ def _format_thunderstorm_next_day(weather_data: Dict[str, Any]) -> str:
     threshold_time = weather_data.get('thunderstorm_next_day_threshold_time', '')
     
     if next_day_prob == 0:
-        return "Gew.+1 -"
+        return "Gew+1 -"
     
     if threshold_time:
-        return f"Gew.+1{next_day_prob}%@{threshold_time}"
+        return f"Gew+1 {next_day_prob}%@{threshold_time}"
     else:
-        return f"Gew.+1{next_day_prob}%"
+        return f"Gew+1 {next_day_prob}%"
 
 
 def _generate_email_subject(

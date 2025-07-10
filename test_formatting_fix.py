@@ -79,7 +79,7 @@ def test_formatting_functions():
         "temperature": "Hitze34.7°C",
         "wind": "Wind4km/h",
         "wind_gusts": "Windböen13km/h",
-        "thunderstorm_next": "Gew.+1 -"
+        "thunderstorm_next": "Gew+1 -"
     }
     
     actual_results = {
@@ -150,7 +150,7 @@ def test_formatting_functions():
         "temperature": "Hitze28.0°C",
         "wind": "Wind15km/h",
         "wind_gusts": "Windböen25km/h",
-        "thunderstorm_next": "Gew.+1 80%@14"
+        "thunderstorm_next": "Gew+1 80%@14"
     }
     
     actual_results_2 = {

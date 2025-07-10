@@ -203,7 +203,7 @@ def test_null_values():
     print(f"Contains 'Hitze -': {'✅' if 'Hitze -' in result else '❌'}")
     print(f"Contains 'Wind -': {'✅' if 'Wind -' in result else '❌'}")
     print(f"Contains 'Windböen -': {'✅' if 'Windböen -' in result else '❌'}")
-    print(f"Contains 'Gew.+1 -': {'✅' if 'Gew.+1 -' in result else '❌'}")
+    print(f"Contains 'Gew+1 -': {'✅' if 'Gew+1 -' in result else '❌'}")
     print()
 
 def test_no_vigilance_warnings():

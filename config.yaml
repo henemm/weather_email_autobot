@@ -51,7 +51,7 @@ smtp:
   user: henning.emmrich@gmail.com
 
 # Start date for the weather monitoring (YYYY-MM-DD format)
-startdatum: '2025-07-08'
+startdatum: '2025-07-10'
 
 # Weather thresholds for triggering alerts
 thresholds:

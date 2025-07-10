@@ -243,7 +243,7 @@ class WeatherAnalyzer:
         parts.extend([
             f"Hitze{aggregated_data['max_temperature']:.1f}",
             f"Wind{aggregated_data['max_wind_speed']:.0f}",
-            f"Gew.+1{aggregated_data['max_lightning_probability']:.0f}%"
+            f"Gew+1 {aggregated_data['max_lightning_probability']:.0f}%"
         ])
         
         return "|".join(parts)
@@ -261,7 +261,7 @@ class WeatherAnalyzer:
             parts.append(f"Gew.{aggregated_data['max_lightning_probability']:.0f}%")
         
         # Gewitter +1
-        parts.append(f"Gew.+1{aggregated_data['max_lightning_probability']-5:.0f}%")
+        parts.append(f"Gew+1 {aggregated_data['max_lightning_probability']-5:.0f}%")
         
         # Regen: Schwellenwert@Zeit (max. Maximum@Zeit)
         if aggregated_data["rain_threshold_time"]:

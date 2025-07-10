@@ -183,39 +183,76 @@ class WeatherDataProcessor:
                 
         except Exception as e:
             logger.warning(f"Failed to fetch fire risk warning for {location_name} ({latitude}, {longitude}): {e}")
-        # Build report data using global maxima instead of single point data
-        report_data = {
-            'max_temperature': global_maxima.get('max_temperature', 0.0),
-            'max_temperature_time': global_maxima.get('max_temperature_time', ''),
-            'min_temperature': global_maxima.get('min_temperature', min_temperature),
-            'min_temperature_time': global_maxima.get('min_temperature_time', ''),
-            'max_precipitation': global_maxima.get('max_precipitation', 0.0),
-            'precipitation_time': global_maxima.get('precipitation_time', ''),
-            'max_rain_probability': global_maxima.get('max_rain_probability', 0.0),
-            'rain_max_time': global_maxima.get('rain_max_time', ''),
-            'max_thunderstorm_probability': global_maxima.get('max_thunderstorm_probability', 0.0),
-            'max_wind_speed': global_maxima.get('max_wind_speed', 0.0),
-            'wind_speed_time': global_maxima.get('wind_speed_time', ''),
-            'max_wind_gusts': global_maxima.get('max_wind_gusts', 0.0),
-            'wind_gusts_time': global_maxima.get('wind_gusts_time', ''),
-            'wind_speed': global_maxima.get('wind_speed', 0.0),
-            'thunderstorm_threshold_pct': main_weather_data.get('thunderstorm_threshold_pct', 0),
-            'thunderstorm_threshold_time': main_weather_data.get('thunderstorm_threshold_time', ''),
-            'thunderstorm_max_time': global_maxima.get('thunderstorm_max_time', ''),
-            'rain_threshold_pct': main_weather_data.get('rain_threshold_pct', 0),
-            'rain_threshold_time': main_weather_data.get('rain_threshold_time', ''),
-            'rain_total_time': global_maxima.get('precipitation_time', ''),
-            'thunderstorm_next_day': thunderstorm_next_day.get('thunderstorm_next_day', 0),
-            'thunderstorm_next_day_threshold_time': thunderstorm_next_day.get('thunderstorm_next_day_threshold_time', ''),
-            'thunderstorm_next_day_max_time': thunderstorm_next_day.get('thunderstorm_next_day_max_time', ''),
-            'location': location_name,
-            'report_type': report_type,
-            'target_date': main_weather_data.get('target_date', ''),
-            'thunderstorm_next_day_date': thunderstorm_next_day.get('target_date', ''),
-            'data_source': 'meteofrance-api',
-            'processed_at': datetime.now().isoformat(),
-            'fire_risk_warning': fire_risk_warning,
-        }
+        # Build report data using the correct data source
+        # For evening reports: use main_weather_data (current stage) for main values, global_maxima only for stage-wide aggregation
+        if report_type == 'evening':
+            # Use main_weather_data for the primary values (from current stage)
+            report_data = {
+                'max_temperature': main_weather_data.get('max_temperature', 0.0),
+                'max_temperature_time': main_weather_data.get('max_temperature_time', ''),
+                'min_temperature': min_temperature,  # Night temperature from current stage
+                'min_temperature_time': main_weather_data.get('min_temperature_time', ''),
+                'max_precipitation': main_weather_data.get('max_precipitation', 0.0),
+                'precipitation_time': main_weather_data.get('precipitation_time', ''),
+                'max_rain_probability': main_weather_data.get('max_rain_probability', 0.0),
+                'rain_max_time': main_weather_data.get('rain_max_time', ''),
+                'max_thunderstorm_probability': main_weather_data.get('max_thunderstorm_probability', 0.0),
+                'max_wind_speed': main_weather_data.get('max_wind_speed', 0.0),
+                'wind_speed_time': main_weather_data.get('wind_speed_time', ''),
+                'max_wind_gusts': main_weather_data.get('max_wind_gusts', 0.0),
+                'wind_gusts_time': global_maxima.get('wind_gusts_time', ''),
+                'wind_speed': main_weather_data.get('wind_speed', 0.0),
+                'thunderstorm_threshold_pct': main_weather_data.get('thunderstorm_threshold_pct', 0),
+                'thunderstorm_threshold_time': main_weather_data.get('thunderstorm_threshold_time', ''),
+                'thunderstorm_max_time': global_maxima.get('thunderstorm_max_time', ''),
+                'rain_threshold_pct': main_weather_data.get('rain_threshold_pct', 0),
+                'rain_threshold_time': main_weather_data.get('rain_threshold_time', ''),
+                'rain_total_time': global_maxima.get('precipitation_time', ''),
+                'thunderstorm_next_day': thunderstorm_next_day.get('thunderstorm_next_day', 0),
+                'thunderstorm_next_day_threshold_time': thunderstorm_next_day.get('thunderstorm_next_day_threshold_time', ''),
+                'thunderstorm_next_day_max_time': thunderstorm_next_day.get('thunderstorm_next_day_max_time', ''),
+                'location': location_name,
+                'report_type': report_type,
+                'target_date': main_weather_data.get('target_date', ''),
+                'thunderstorm_next_day_date': thunderstorm_next_day.get('target_date', ''),
+                'data_source': 'meteofrance-api',
+                'processed_at': datetime.now().isoformat(),
+                'fire_risk_warning': fire_risk_warning,
+            }
+        else:
+            # Use global_maxima for morning/update reports (current stage)
+            report_data = {
+                'max_temperature': global_maxima.get('max_temperature', 0.0),
+                'max_temperature_time': global_maxima.get('max_temperature_time', ''),
+                'min_temperature': global_maxima.get('min_temperature', min_temperature),
+                'min_temperature_time': global_maxima.get('min_temperature_time', ''),
+                'max_precipitation': global_maxima.get('max_precipitation', 0.0),
+                'precipitation_time': global_maxima.get('precipitation_time', ''),
+                'max_rain_probability': global_maxima.get('max_rain_probability', 0.0),
+                'rain_max_time': global_maxima.get('rain_max_time', ''),
+                'max_thunderstorm_probability': global_maxima.get('max_thunderstorm_probability', 0.0),
+                'max_wind_speed': global_maxima.get('max_wind_speed', 0.0),
+                'wind_speed_time': global_maxima.get('wind_speed_time', ''),
+                'max_wind_gusts': global_maxima.get('max_wind_gusts', 0.0),
+                'wind_gusts_time': global_maxima.get('wind_gusts_time', ''),
+                'wind_speed': global_maxima.get('wind_speed', 0.0),
+                'thunderstorm_threshold_pct': main_weather_data.get('thunderstorm_threshold_pct', 0),
+                'thunderstorm_threshold_time': main_weather_data.get('thunderstorm_threshold_time', ''),
+                'thunderstorm_max_time': global_maxima.get('thunderstorm_max_time', ''),
+                'rain_threshold_pct': main_weather_data.get('rain_threshold_pct', 0),
+                'rain_threshold_time': main_weather_data.get('rain_threshold_time', ''),
+                'rain_total_time': global_maxima.get('precipitation_time', ''),
+                'thunderstorm_next_day': thunderstorm_next_day.get('thunderstorm_next_day', 0),
+                'thunderstorm_next_day_threshold_time': thunderstorm_next_day.get('thunderstorm_next_day_threshold_time', ''),
+                'thunderstorm_next_day_max_time': thunderstorm_next_day.get('thunderstorm_next_day_max_time', ''),
+                'location': location_name,
+                'report_type': report_type,
+                'target_date': main_weather_data.get('target_date', ''),
+                'thunderstorm_next_day_date': thunderstorm_next_day.get('target_date', ''),
+                'data_source': 'meteofrance-api',
+                'processed_at': datetime.now().isoformat(),
+                'fire_risk_warning': fire_risk_warning,
+            }
         return report_data
     
     def _extract_weather_condition(self, entry: Dict) -> Optional[str]:
@@ -379,7 +416,16 @@ class WeatherDataProcessor:
             'wind_gusts_time': ''
         }
         for point in time_points:
-            time_str = point['datetime'].strftime('%H')
+            # Handle both datetime objects and strings
+            dt_val = point['datetime']
+            if isinstance(dt_val, str):
+                try:
+                    dt_obj = datetime.fromisoformat(dt_val.replace('Z', '+00:00'))
+                    time_str = dt_obj.strftime('%H')
+                except Exception:
+                    time_str = '00'
+            else:
+                time_str = dt_val.strftime('%H')
             # Temperatur
             if point['temperature'] is not None and point['temperature'] > max_values['temperature']:
                 max_values['temperature'] = point['temperature']
@@ -422,8 +468,15 @@ class WeatherDataProcessor:
         }
         
         for point in time_points:
-            time_str = point['datetime'].strftime('%H')
-            
+            dt_val = point['datetime']
+            if isinstance(dt_val, str):
+                try:
+                    dt_obj = datetime.fromisoformat(dt_val.replace('Z', '+00:00'))
+                    time_str = dt_obj.strftime('%H')
+                except Exception:
+                    time_str = '00'
+            else:
+                time_str = dt_val.strftime('%H')
             if (point['thunderstorm_probability'] and 
                 point['thunderstorm_probability'] >= thunderstorm_threshold and
                 crossings['thunderstorm']['value'] == 0):
@@ -431,8 +484,6 @@ class WeatherDataProcessor:
                     'value': point['thunderstorm_probability'],
                     'time': time_str
                 }
-            
-            # Use rain_probability if available, otherwise fallback to precipitation_probability
             rain_prob = point.get('rain_probability') or point.get('precipitation_probability')
             if (rain_prob and 
                 rain_prob >= rain_threshold and
@@ -441,7 +492,6 @@ class WeatherDataProcessor:
                     'value': rain_prob,
                     'time': time_str
                 }
-        
         return crossings
     
     def _calculate_min_temperature(self, latitude: float, longitude: float, location_name: str) -> float:
@@ -511,13 +561,14 @@ class WeatherDataProcessor:
         longitude: float, 
         location_name: str,
         target_date: datetime.date,
-        start_hour: int = 5,
-        end_hour: int = 17,
+        start_hour: int = 4,
+        end_hour: int = 22,
         return_raw: bool = False
     ) -> Dict[str, Any]:
         """
-        Calculate weather data for a specific day and time window.
+        Calculate weather data for a specific day and time window (now 04:00–22:00).
         Optionally return all raw temperature values for debugging.
+        Note: Maxima/minima may shift compared to previous 05–17 Uhr logic.
         """
         try:
             client = MeteoFranceClient()
@@ -525,15 +576,11 @@ class WeatherDataProcessor:
             if not forecast.forecast:
                 logger.warning(f"No forecast data for {location_name} on {target_date}")
                 return self._create_empty_result()
-            
             # Initialize lists before processing entries
             time_points = []
             raw_temperatures = []
             raw_rain_probabilities = []
             raw_precipitations = []
-            
-            # Check if MeteoFrance temperatures are realistic for summer
-            # If max temperature is below 15°C in July, try Open-Meteo fallback
             max_temp_found = 0.0
             for entry in forecast.forecast:
                 try:
@@ -543,39 +590,11 @@ class WeatherDataProcessor:
                     entry_datetime = datetime.fromtimestamp(dt_timestamp)
                     entry_date = entry_datetime.date()
                     hour = entry_datetime.hour
-                    
-                    # Debug: Show all entries for the target date (jetzt in CEST)
-                    utc_datetime = datetime.fromtimestamp(dt_timestamp, pytz.UTC)
-                    cest_datetime = utc_datetime.astimezone(pytz.timezone('Europe/Paris'))
-                    if cest_datetime.date() == target_date:
-                        temperature = self._extract_temperature(entry)
-                        if temperature and temperature > max_temp_found:
-                            max_temp_found = temperature
-                        precipitation_amount = self._extract_precipitation_amount(entry)
-                        wind_speed = self._extract_wind_speed(entry)
-                        wind_gusts = self._extract_wind_gusts(entry)
-                        weather_condition = self._extract_weather_condition(entry)
-                        precipitation_probability = entry.get('precipitation_probability')
-                        thunderstorm_probability = self._determine_thunderstorm_probability(
-                            weather_condition, precipitation_probability
-                        )
-                        rain_probability = self._determine_rain_probability(
-                            weather_condition, precipitation_probability, precipitation_amount
-                        )
-                        temp_str = f"{temperature}°C" if temperature is not None else "-"
-                        rain_prob_str = f"{rain_probability}%" if rain_probability is not None else "-"
-                        precip_str = f"{precipitation_amount}mm" if precipitation_amount is not None else "-"
-                        wind_str = f"{int(round(wind_speed))}km/h" if wind_speed is not None else "-"
-                        gusts_str = f"{int(round(wind_gusts))}km/h" if wind_gusts is not None else "-"
-                        thunder_str = f"{thunderstorm_probability}%" if thunderstorm_probability is not None else "-"
-                        print(f"[TIMESTAMP-DEBUG] {location_name} | {cest_datetime.strftime('%Y-%m-%d %H:%M:%S')} (CEST) | Temp: {temp_str} | RainW: {rain_prob_str} | Rain: {precip_str} | Wind: {wind_str} | Gusts: {gusts_str} | Thunder: {thunder_str}")
-                    
-                    # Check if this is for the target date and time window
+                    # Only consider entries in the new window 04:00–22:00
                     if entry_date == target_date and start_hour <= hour <= end_hour:
                         temperature = self._extract_temperature(entry)
                         if temperature is not None:
                             raw_temperatures.append(temperature)
-                        # Extract data
                         weather_condition = self._extract_weather_condition(entry)
                         wind_speed = self._extract_wind_speed(entry)
                         wind_gusts = self._extract_wind_gusts(entry)
@@ -608,23 +627,19 @@ class WeatherDataProcessor:
                 except Exception as e:
                     logger.warning(f"Failed to process forecast entry: {e}")
                     continue
-            
-            # Check if MeteoFrance temperatures are realistic for summer
-            if max_temp_found < 15.0 and target_date.month in [6, 7, 8]:  # Summer months
+            if max_temp_found < 15.0 and target_date.month in [6, 7, 8]:
                 logger.warning(f"MeteoFrance temperatures too low for summer ({max_temp_found}°C), trying Open-Meteo fallback")
                 try:
                     from .fetch_openmeteo import fetch_openmeteo_forecast
                     openmeteo_data = fetch_openmeteo_forecast(latitude, longitude)
-                    # Process Open-Meteo data instead
                     return self._process_openmeteo_data(openmeteo_data, latitude, longitude, location_name, target_date, start_hour, end_hour)
                 except Exception as e:
                     logger.warning(f"Open-Meteo fallback failed: {e}")
-                    # Continue with MeteoFrance data even if unrealistic
-            
-            # Check if we found any data
             if not time_points:
                 logger.warning(f"No weather data found for {location_name} on {target_date} between {start_hour:02d}:00-{end_hour:02d}:00")
                 return self._create_empty_result()
+            # Only pretty tabular debug output will be shown elsewhere
+            # ... rest of function unchanged ...
             
             # Sammle pro Etappenpunkt alle Werte und berechne Min/Max je Kategorie inkl. Zeitstempel
             # Nach allen Etappenpunkten: berechne das globale Min/Max über alle Punkte
@@ -982,57 +997,68 @@ class WeatherDataProcessor:
             
             print(f"[TIMESTAMP-DEBUG] {label} | {time_str} | Temp: {temp} | RainW: {rainw} | Rain: {rain} | Wind: {wind} | Gusts: {gusts} | Thunder: {thunder}")
         
-        # Print summary for this point
+        # Print tabular summary for this point
         if weather_points:
-            temps = [p.temperature for p in weather_points if p.temperature is not None]
-            rain_probs = [p.rain_probability for p in weather_points if p.rain_probability is not None]
-            precipitations = [p.precipitation for p in weather_points if p.precipitation is not None]
-            wind_speeds = [p.wind_speed for p in weather_points if p.wind_speed is not None]
-            wind_gusts = [p.wind_gusts for p in weather_points if p.wind_gusts is not None]
-            thunderstorms = [p.thunderstorm_probability for p in weather_points if p.thunderstorm_probability is not None]
+            self._print_tabular_summary(label, weather_points)
+
+    def _print_tabular_summary(self, label: str, weather_points: list):
+        """
+        Print tabular summary with Min/Max values for a list of weather points.
+        """
+        if not weather_points:
+            return
             
-            print(f"📍 {label}")
+        # Sort points by hour
+        sorted_points = sorted(weather_points, key=lambda p: p.time.hour)
+        
+        # Print header
+        print(f"{label}")
+        print("+-------+--------+--------+--------+--------+--------+--------+")
+        print("| Hour  |  Temp  | RainW% | Rainmm |  Wind  | Gusts  | Thund% |")
+        print("+-------+--------+--------+--------+--------+--------+--------+")
+        
+        # Print data rows
+        for point in sorted_points:
+            hour = point.time.strftime('%H')
+            temp = f"{point.temperature:.1f}" if point.temperature is not None else " -"
+            rainw = f"{point.rain_probability:.1f}" if point.rain_probability is not None else " -"
+            rain = f"{point.precipitation:.1f}" if point.precipitation is not None else " -"
+            wind = f"{point.wind_speed:.1f}" if point.wind_speed is not None else " -"
+            gusts = f"{point.wind_gusts:.1f}" if point.wind_gusts is not None else " -"
+            thunder = f"{point.thunderstorm_probability:.1f}" if point.thunderstorm_probability is not None else " -"
             
-            if temps:
-                max_temp = max(temps)
-                min_temp = min(temps)
-                max_temp_time = next(p.time for p in weather_points if p.temperature == max_temp)
-                min_temp_time = next(p.time for p in weather_points if p.temperature == min_temp)
-                print(f"   🌡️  Temperatures: {temps}")
-                print(f"   🔥 Max temp: {max_temp:.1f}°C@{max_temp_time.strftime('%H')}")
-                print(f"   ❄️  Min temp: {min_temp:.1f}°C@{min_temp_time.strftime('%H')}")
-            
-            if rain_probs:
-                max_rain_prob = max(rain_probs)
-                max_rain_prob_time = next(p.time for p in weather_points if p.rain_probability == max_rain_prob)
-                print(f"   🌧️  Rain probabilities: {rain_probs}")
-                print(f"   💧 Max rain prob: {max_rain_prob:.1f}%@{max_rain_prob_time.strftime('%H')}")
-            
-            if precipitations:
-                max_precip = max(precipitations)
-                max_precip_time = next(p.time for p in weather_points if p.precipitation == max_precip)
-                print(f"   💦 Precipitations: {precipitations}")
-                print(f"   🌊 Max precip: {max_precip:.1f}mm@{max_precip_time.strftime('%H')}")
-            
-            if wind_speeds:
-                max_wind = max(wind_speeds)
-                max_wind_time = next(p.time for p in weather_points if p.wind_speed == max_wind)
-                print(f"   💨 Wind speeds: {wind_speeds}")
-                print(f"   🌪️  Max wind: {max_wind:.0f}km/h@{max_wind_time.strftime('%H')}")
-            
-            if wind_gusts:
-                max_gusts = max(wind_gusts)
-                max_gusts_time = next(p.time for p in weather_points if p.wind_gusts == max_gusts)
-                print(f"   💨 Wind gusts: {wind_gusts}")
-                print(f"   🌪️  Max gusts: {max_gusts:.0f}km/h@{max_gusts_time.strftime('%H')}")
-            
-            if thunderstorms:
-                max_thunder = max(thunderstorms)
-                max_thunder_time = next(p.time for p in weather_points if p.thunderstorm_probability == max_thunder)
-                print(f"   ⚡ Thunderstorm probabilities: {thunderstorms}")
-                print(f"   🔥 Max thunder: {max_thunder:.1f}%@{max_thunder_time.strftime('%H')}")
-            
-            print()
+            print(f"|  {hour}   | {temp:>6} | {rainw:>6} | {rain:>6} | {wind:>6} | {gusts:>6} | {thunder:>6} |")
+        
+        # Calculate and print Min/Max summary
+        temps = [p.temperature for p in weather_points if p.temperature is not None]
+        rain_probs = [p.rain_probability for p in weather_points if p.rain_probability is not None]
+        precipitations = [p.precipitation for p in weather_points if p.precipitation is not None]
+        wind_speeds = [p.wind_speed for p in weather_points if p.wind_speed is not None]
+        wind_gusts = [p.wind_gusts for p in weather_points if p.wind_gusts is not None]
+        thunderstorms = [p.thunderstorm_probability for p in weather_points if p.thunderstorm_probability is not None]
+        
+        print("+-------+--------+--------+--------+--------+--------+--------+")
+        
+        # Min row
+        min_temp = f"{min(temps):.1f}" if temps else " -"
+        min_rainw = f"{min(rain_probs):.1f}" if rain_probs else " -"
+        min_rain = f"{min(precipitations):.1f}" if precipitations else " -"
+        min_wind = f"{min(wind_speeds):.1f}" if wind_speeds else " -"
+        min_gusts = f"{min(wind_gusts):.1f}" if wind_gusts else " -"
+        min_thunder = f"{min(thunderstorms):.1f}" if thunderstorms else " -"
+        print(f"|  Min  | {min_temp:>6} | {min_rainw:>6} | {min_rain:>6} | {min_wind:>6} | {min_gusts:>6} | {min_thunder:>6} |")
+        
+        # Max row
+        max_temp = f"{max(temps):.1f}" if temps else " -"
+        max_rainw = f"{max(rain_probs):.1f}" if rain_probs else " -"
+        max_rain = f"{max(precipitations):.1f}" if precipitations else " -"
+        max_wind = f"{max(wind_speeds):.1f}" if wind_speeds else " -"
+        max_gusts = f"{max(wind_gusts):.1f}" if wind_gusts else " -"
+        max_thunder = f"{max(thunderstorms):.1f}" if thunderstorms else " -"
+        print(f"|  Max  | {max_temp:>6} | {max_rainw:>6} | {max_rain:>6} | {max_wind:>6} | {max_gusts:>6} | {max_thunder:>6} |")
+        
+        print("+-------+--------+--------+--------+--------+--------+--------+")
+        print()
 
     def _print_global_summary(self, stage_name: str, all_points_data: list):
         """

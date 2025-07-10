@@ -79,7 +79,7 @@ class TestCentralFormatter:
         assert "Hitze" in report_text
         assert "Wind" in report_text
         assert "Böen" in report_text
-        assert "Gew.+1" in report_text
+        assert "Gew+1 " in report_text
         
         # Verify character limit
         assert len(report_text) <= 160
@@ -95,7 +95,7 @@ class TestCentralFormatter:
         assert "Hitze25.5" in report_text  # Temperature
         assert "Wind18" in report_text  # Wind
         assert "Böen32" in report_text  # Wind gusts
-        assert "Gew.+1 75%@14" in report_text  # Thunderstorm next day
+        assert "Gew+1 75%@14" in report_text  # Thunderstorm next day
     
     def test_evening_report_format(self):
         """Test evening report formatting."""
@@ -113,7 +113,7 @@ class TestCentralFormatter:
         assert "Hitze" in report_text
         assert "Wind" in report_text
         assert "Böen" in report_text
-        assert "Gew.+1" in report_text
+        assert "Gew+1 " in report_text
         
         # Verify character limit
         assert len(report_text) <= 160
@@ -130,7 +130,7 @@ class TestCentralFormatter:
         assert "Hitze25.5" in report_text  # Temperature
         assert "Wind18" in report_text  # Wind
         assert "Böen32" in report_text  # Wind gusts
-        assert "Gew.+1 80%@15" in report_text  # Thunderstorm day after tomorrow
+        assert "Gew+1 80%@15" in report_text  # Thunderstorm day after tomorrow
     
     def test_update_report_format(self):
         """Test update report formatting."""
@@ -148,7 +148,7 @@ class TestCentralFormatter:
         assert "Hitze" in report_text
         assert "Wind" in report_text
         assert "Böen" in report_text
-        assert "Gew.+1" in report_text
+        assert "Gew+1 " in report_text
         
         # Verify character limit
         assert len(report_text) <= 160
@@ -190,7 +190,7 @@ class TestCentralFormatter:
         assert "Wind -" in report_text
         assert "Böen -" in report_text
         assert "Gew. -" in report_text
-        assert "Gew.+1 -" in report_text
+        assert "Gew+1 -" in report_text
         
         # Verify character limit
         assert len(report_text) <= 160

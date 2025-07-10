@@ -49,7 +49,7 @@ def test_format_evening_report_with_temperatures():
     rain_text = "Regen50%@14(70%@17)"
     precipitation_text = "Regen2.0mm@14"
     wind_text = "Wind18 - Böen38"
-    thunderstorm_next_text = "Gew.+190%@15"
+    thunderstorm_next_text = "Gew+1 90%@15"
     
     report = _format_evening_report(
         stage_name, night_temp, day_temp, thunderstorm_text, rain_text,

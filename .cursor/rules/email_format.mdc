@@ -36,7 +36,7 @@ This specification defines the exact structure of weather reports in three opera
 
 ### Content
 - **Valid for:** Current day
-- **Time period:** 05:00–17:00 CEST
+- **Time period:** 04:00–22:00 CEST
 - **Geopoints:** All points of today's stage
 - **Aggregation:** Maximum values over time and geopoints
 
@@ -75,10 +75,10 @@ Waldpass - Gew.30%@13(80%@15) - Regen55%@15(70%@16) - Regen2.0mm@15 - Hitze28 - 
 
 ### Content
 - **Valid for:** Tomorrow and day after tomorrow
-- **Time period:** 05:00–17:00 CEST (each day)
+- **Time period:** 04:00–22:00 CEST (each day)
 - **Geopoints:** 
   - `{min_temp}`: Last geopoint of today's stage, 22:00–05:00
-  - All other values: All points of tomorrow's stage, 05:00–17:00
+  - All other values: All points of tomorrow's stage, 04:00–22:00
 - **Aggregation:** Maximum values over time and geopoints
 
 ### Format
@@ -176,12 +176,13 @@ Almhütte - Update: - Gew.35%@15(85%@16) - Regen55%@16(75%@17) - Regen2.0mm@15 -
 - **Centralized threshold management** from config.yaml
 
 ### Data Aggregation Strategy
-1. **Collect data** for all relevant geopoints and time periods
+1. **Collect data** for all relevant geopoints and time periods (now 04:00–22:00)
 2. **Apply thresholds** to determine crossing times
 3. **Find maxima** for each weather parameter
 4. **Format consistently** according to report type
 5. **Handle null values** uniformly
 6. **Validate character count** (max 160)
+7. **Note:** Maxima/minima may shift due to the extended time window (compared to previous 05–17 Uhr logic)
 
 ### Error Handling
 - **Graceful degradation** if data unavailable

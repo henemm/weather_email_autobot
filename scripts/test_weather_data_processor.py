@@ -128,7 +128,7 @@ def test_weather_data_processor():
         # Compare with actual report output
         print("📋 COMPARISON WITH ACTUAL REPORT:")
         print("-" * 30)
-        print("Actual report shows: Ascu | Gew. - | Regen5%@ | Regen0.2mm@14 | Hitze25.0°C | Wind - | Windböen9km/h | Gew.+1 -")
+        print("Actual report shows: Ascu | Gew. - | Regen5%@ | Regen0.2mm@14 | Hitze25.0°C | Wind - | Windböen9km/h | Gew+1 -")
         print()
         
         # Check discrepancies
