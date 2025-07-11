@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_4ec08ac5097ae50b7a9a230d61e4c93e {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_4ec08ac5097ae50b7a9a230d61e4c93e" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_4ec08ac5097ae50b7a9a230d61e4c93e = L.map(
+                "map_4ec08ac5097ae50b7a9a230d61e4c93e",
+                {
+                    center: [42.2, 9.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 8,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_9b0703ce2f0d0f22d0526e823bba2631 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_9b0703ce2f0d0f22d0526e823bba2631.addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var marker_c4db31910032b0a90bea7f8eb0ccb671 = L.marker(
+                [42.6857405026112, 9.301135724825503],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_acd122d8c78457246937dc2c616a4354 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_6fb9d2c7ba102ade423e20101b5d3e5d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_375ae2173c5b05e479cad829806073e5 = $(`<div id="html_375ae2173c5b05e479cad829806073e5" style="width: 100.0%; height: 100.0%;">ID: 213<br>Zone à caractère méditerranéen, avec pentes fortes</div>`)[0];
+                popup_6fb9d2c7ba102ade423e20101b5d3e5d.setContent(html_375ae2173c5b05e479cad829806073e5);
+            
+        
+
+        marker_c4db31910032b0a90bea7f8eb0ccb671.bindPopup(popup_6fb9d2c7ba102ade423e20101b5d3e5d)
+        ;
+
+        
+    
+    
+            marker_c4db31910032b0a90bea7f8eb0ccb671.bindTooltip(
+                `<div>
+                     ID: 213
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c4db31910032b0a90bea7f8eb0ccb671.setIcon(icon_acd122d8c78457246937dc2c616a4354);
+            
+    
+            var marker_555351e1c82ced3178c8c87db86baa44 = L.marker(
+                [42.25060608869606, 9.082839712268276],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_85f6d5745e71673162b9d430e2c11169 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ccfccacbb9817152b071393fe02f0846 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d6e2f5bf9cecfb072824dddf858406b9 = $(`<div id="html_d6e2f5bf9cecfb072824dddf858406b9" style="width: 100.0%; height: 100.0%;">ID: 216<br>Zone non méditerranéenne, avec pentes fortes</div>`)[0];
+                popup_ccfccacbb9817152b071393fe02f0846.setContent(html_d6e2f5bf9cecfb072824dddf858406b9);
+            
+        
+
+        marker_555351e1c82ced3178c8c87db86baa44.bindPopup(popup_ccfccacbb9817152b071393fe02f0846)
+        ;
+
+        
+    
+    
+            marker_555351e1c82ced3178c8c87db86baa44.bindTooltip(
+                `<div>
+                     ID: 216
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_555351e1c82ced3178c8c87db86baa44.setIcon(icon_85f6d5745e71673162b9d430e2c11169);
+            
+    
+            var marker_2036ef24098254fc00dafb1a9d588d7a = L.marker(
+                [42.339069036860465, 9.344307970124541],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_7058f1dac5e19bcdb412ddcca57591fb = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8dbda8cf26187dd9c03001e7bbfa1eaa = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9b4caa03fdce40561f76a5cb4eee703c = $(`<div id="html_9b4caa03fdce40561f76a5cb4eee703c" style="width: 100.0%; height: 100.0%;">ID: 214<br>Zone non méditerranéenne, avec pentes fortes</div>`)[0];
+                popup_8dbda8cf26187dd9c03001e7bbfa1eaa.setContent(html_9b4caa03fdce40561f76a5cb4eee703c);
+            
+        
+
+        marker_2036ef24098254fc00dafb1a9d588d7a.bindPopup(popup_8dbda8cf26187dd9c03001e7bbfa1eaa)
+        ;
+
+        
+    
+    
+            marker_2036ef24098254fc00dafb1a9d588d7a.bindTooltip(
+                `<div>
+                     ID: 214
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_2036ef24098254fc00dafb1a9d588d7a.setIcon(icon_7058f1dac5e19bcdb412ddcca57591fb);
+            
+    
+            var marker_e805e56c24e04a58e3b05619080c979a = L.marker(
+                [42.38997000144994, 9.237801595970067],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_a94e94af4b41a187ff23ae69dde3d6ec = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d632e9a0902a24f2b9dbad1ab3ac3a28 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3d016a506c115ea856a89cf7c3f6a474 = $(`<div id="html_3d016a506c115ea856a89cf7c3f6a474" style="width: 100.0%; height: 100.0%;">ID: 215<br>Zone à caractère méditerranéen, avec pentes fortes</div>`)[0];
+                popup_d632e9a0902a24f2b9dbad1ab3ac3a28.setContent(html_3d016a506c115ea856a89cf7c3f6a474);
+            
+        
+
+        marker_e805e56c24e04a58e3b05619080c979a.bindPopup(popup_d632e9a0902a24f2b9dbad1ab3ac3a28)
+        ;
+
+        
+    
+    
+            marker_e805e56c24e04a58e3b05619080c979a.bindTooltip(
+                `<div>
+                     ID: 215
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e805e56c24e04a58e3b05619080c979a.setIcon(icon_a94e94af4b41a187ff23ae69dde3d6ec);
+            
+    
+            var marker_e292878cac2eb72c61916d162daa7402 = L.marker(
+                [42.811987398997246, 9.419499941449988],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_d1e9d6c25e752e0d48d97c9abd63325f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3e3ad83d4efa3416f41d0a740a8f1338 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_133fd8761be240cb729825f0cae54caf = $(`<div id="html_133fd8761be240cb729825f0cae54caf" style="width: 100.0%; height: 100.0%;">ID: 211<br>Zone à caractère méditerranéen, avec pentes fortes</div>`)[0];
+                popup_3e3ad83d4efa3416f41d0a740a8f1338.setContent(html_133fd8761be240cb729825f0cae54caf);
+            
+        
+
+        marker_e292878cac2eb72c61916d162daa7402.bindPopup(popup_3e3ad83d4efa3416f41d0a740a8f1338)
+        ;
+
+        
+    
+    
+            marker_e292878cac2eb72c61916d162daa7402.bindTooltip(
+                `<div>
+                     ID: 211
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e292878cac2eb72c61916d162daa7402.setIcon(icon_d1e9d6c25e752e0d48d97c9abd63325f);
+            
+    
+            var marker_3ba0fdf083687a53fe3f02bc4ce359d5 = L.marker(
+                [42.362463654400166, 9.468591771268873],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_0f2b20b8567a72519ff0e746a213b946 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4593e4c1ce1b2db988ba706d33c804d0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f7125cffdd812e1f961aca85c8a77336 = $(`<div id="html_f7125cffdd812e1f961aca85c8a77336" style="width: 100.0%; height: 100.0%;">ID: 212<br>Zone à caractère méditerranéen</div>`)[0];
+                popup_4593e4c1ce1b2db988ba706d33c804d0.setContent(html_f7125cffdd812e1f961aca85c8a77336);
+            
+        
+
+        marker_3ba0fdf083687a53fe3f02bc4ce359d5.bindPopup(popup_4593e4c1ce1b2db988ba706d33c804d0)
+        ;
+
+        
+    
+    
+            marker_3ba0fdf083687a53fe3f02bc4ce359d5.bindTooltip(
+                `<div>
+                     ID: 212
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_3ba0fdf083687a53fe3f02bc4ce359d5.setIcon(icon_0f2b20b8567a72519ff0e746a213b946);
+            
+    
+            var marker_1fb701a8dfce2fa8665d69c90e2df4eb = L.marker(
+                [42.02663652999585, 9.405827318246065],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_5acd0bb5807b280204a5f1dfac3f2c9b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_864e9995ece7a615500e77c3da433cbf = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_17acac9e416dcfd934b72fc5f9412170 = $(`<div id="html_17acac9e416dcfd934b72fc5f9412170" style="width: 100.0%; height: 100.0%;">ID: 218<br>Zone à caractère méditerranéen</div>`)[0];
+                popup_864e9995ece7a615500e77c3da433cbf.setContent(html_17acac9e416dcfd934b72fc5f9412170);
+            
+        
+
+        marker_1fb701a8dfce2fa8665d69c90e2df4eb.bindPopup(popup_864e9995ece7a615500e77c3da433cbf)
+        ;
+
+        
+    
+    
+            marker_1fb701a8dfce2fa8665d69c90e2df4eb.bindTooltip(
+                `<div>
+                     ID: 218
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_1fb701a8dfce2fa8665d69c90e2df4eb.setIcon(icon_5acd0bb5807b280204a5f1dfac3f2c9b);
+            
+    
+            var marker_d77c7bec39afee35be2ceb9d2b39ad9c = L.marker(
+                [41.7374486160491, 9.123326824939255],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_b6f47fd33ad0d178ea5941a7c407d9e7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ad2255fdee6aeafddc0d93b313f67174 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_414f546181e2d09ba5364bd591e84543 = $(`<div id="html_414f546181e2d09ba5364bd591e84543" style="width: 100.0%; height: 100.0%;">ID: 205<br>Zone à caractère méditerranéen, avec pentes fortes</div>`)[0];
+                popup_ad2255fdee6aeafddc0d93b313f67174.setContent(html_414f546181e2d09ba5364bd591e84543);
+            
+        
+
+        marker_d77c7bec39afee35be2ceb9d2b39ad9c.bindPopup(popup_ad2255fdee6aeafddc0d93b313f67174)
+        ;
+
+        
+    
+    
+            marker_d77c7bec39afee35be2ceb9d2b39ad9c.bindTooltip(
+                `<div>
+                     ID: 205
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_d77c7bec39afee35be2ceb9d2b39ad9c.setIcon(icon_b6f47fd33ad0d178ea5941a7c407d9e7);
+            
+    
+            var marker_1edf4b04c127d3f2b36073d86950d553 = L.marker(
+                [42.20828595327168, 8.67895538310912],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_e7cdf88dff721b2f3f55f9647653e075 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5aa3be95eae2c35742b5276cadaecbc7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cc9626cd9da3b8097748470d68a24fcb = $(`<div id="html_cc9626cd9da3b8097748470d68a24fcb" style="width: 100.0%; height: 100.0%;">ID: 201<br>Zone à caractère méditerranéen, avec pentes fortes</div>`)[0];
+                popup_5aa3be95eae2c35742b5276cadaecbc7.setContent(html_cc9626cd9da3b8097748470d68a24fcb);
+            
+        
+
+        marker_1edf4b04c127d3f2b36073d86950d553.bindPopup(popup_5aa3be95eae2c35742b5276cadaecbc7)
+        ;
+
+        
+    
+    
+            marker_1edf4b04c127d3f2b36073d86950d553.bindTooltip(
+                `<div>
+                     ID: 201
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_1edf4b04c127d3f2b36073d86950d553.setIcon(icon_e7cdf88dff721b2f3f55f9647653e075);
+            
+    
+            var marker_c8d74cf4f006be841cdf5932ed816bd7 = L.marker(
+                [41.93566898649095, 8.803504547712919],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_2c0426c7ce46f6ed0b3aaf56e531fab9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f696c1da6a29d2a9b33474c6b513e181 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5ea180813a690b4137410ea04a29ddd6 = $(`<div id="html_5ea180813a690b4137410ea04a29ddd6" style="width: 100.0%; height: 100.0%;">ID: 202<br>Zone à caractère méditerranéen, avec pentes fortes</div>`)[0];
+                popup_f696c1da6a29d2a9b33474c6b513e181.setContent(html_5ea180813a690b4137410ea04a29ddd6);
+            
+        
+
+        marker_c8d74cf4f006be841cdf5932ed816bd7.bindPopup(popup_f696c1da6a29d2a9b33474c6b513e181)
+        ;
+
+        
+    
+    
+            marker_c8d74cf4f006be841cdf5932ed816bd7.bindTooltip(
+                `<div>
+                     ID: 202
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c8d74cf4f006be841cdf5932ed816bd7.setIcon(icon_2c0426c7ce46f6ed0b3aaf56e531fab9);
+            
+    
+            var marker_bb37aea74bee0d14e203dd774eae58f6 = L.marker(
+                [41.66029887360461, 8.929554038795146],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_8ad158441210a4c2a2a9604c83ee8eb6 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3867f70572d628d0a0f14bf57d9920c2 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cbfd7280235f92894c17417f7c43de01 = $(`<div id="html_cbfd7280235f92894c17417f7c43de01" style="width: 100.0%; height: 100.0%;">ID: 203<br>Zone à caractère méditerranéen, avec pentes fortes</div>`)[0];
+                popup_3867f70572d628d0a0f14bf57d9920c2.setContent(html_cbfd7280235f92894c17417f7c43de01);
+            
+        
+
+        marker_bb37aea74bee0d14e203dd774eae58f6.bindPopup(popup_3867f70572d628d0a0f14bf57d9920c2)
+        ;
+
+        
+    
+    
+            marker_bb37aea74bee0d14e203dd774eae58f6.bindTooltip(
+                `<div>
+                     ID: 203
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_bb37aea74bee0d14e203dd774eae58f6.setIcon(icon_8ad158441210a4c2a2a9604c83ee8eb6);
+            
+    
+            var marker_94f2762d91f5c9ec191c0b654d626ee2 = L.marker(
+                [42.09968687501468, 8.907573278727343],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_440e195b260279b03dbeda601a7e2d40 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_903c554bc546be93570063f1425703ef = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3a72e4231864fe1248e0746d49866dda = $(`<div id="html_3a72e4231864fe1248e0746d49866dda" style="width: 100.0%; height: 100.0%;">ID: 204<br>Zone à caractère méditerranéen, avec pentes fortes</div>`)[0];
+                popup_903c554bc546be93570063f1425703ef.setContent(html_3a72e4231864fe1248e0746d49866dda);
+            
+        
+
+        marker_94f2762d91f5c9ec191c0b654d626ee2.bindPopup(popup_903c554bc546be93570063f1425703ef)
+        ;
+
+        
+    
+    
+            marker_94f2762d91f5c9ec191c0b654d626ee2.bindTooltip(
+                `<div>
+                     ID: 204
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_94f2762d91f5c9ec191c0b654d626ee2.setIcon(icon_440e195b260279b03dbeda601a7e2d40);
+            
+    
+            var marker_ca30339cbbd8fab20599fe81d2366ab4 = L.marker(
+                [42.54124201957747, 8.917238680599239],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_76afdfbc1426f8c059d6a0a6e4229152 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_680d47600007da93dbd5d67a2640fbee = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4b41c8b4d9c49dbc3de3b5f01933e731 = $(`<div id="html_4b41c8b4d9c49dbc3de3b5f01933e731" style="width: 100.0%; height: 100.0%;">ID: 217<br>Zone à caractère méditerranéen, avec pentes fortes</div>`)[0];
+                popup_680d47600007da93dbd5d67a2640fbee.setContent(html_4b41c8b4d9c49dbc3de3b5f01933e731);
+            
+        
+
+        marker_ca30339cbbd8fab20599fe81d2366ab4.bindPopup(popup_680d47600007da93dbd5d67a2640fbee)
+        ;
+
+        
+    
+    
+            marker_ca30339cbbd8fab20599fe81d2366ab4.bindTooltip(
+                `<div>
+                     ID: 217
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ca30339cbbd8fab20599fe81d2366ab4.setIcon(icon_76afdfbc1426f8c059d6a0a6e4229152);
+            
+    
+            var marker_0697906003fc853d05c5d06e2ecde7d8 = L.marker(
+                [42.03001181219895, 9.082348362737097],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_aff2712efbf02c0044dd8829abe7867a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_9cc9b57b206aa83a4144cc75461e43f0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_68425fafb8f087c45c9ef497caa1db26 = $(`<div id="html_68425fafb8f087c45c9ef497caa1db26" style="width: 100.0%; height: 100.0%;">ID: 206<br>Zone non méditerranéenne, avec pentes fortes</div>`)[0];
+                popup_9cc9b57b206aa83a4144cc75461e43f0.setContent(html_68425fafb8f087c45c9ef497caa1db26);
+            
+        
+
+        marker_0697906003fc853d05c5d06e2ecde7d8.bindPopup(popup_9cc9b57b206aa83a4144cc75461e43f0)
+        ;
+
+        
+    
+    
+            marker_0697906003fc853d05c5d06e2ecde7d8.bindTooltip(
+                `<div>
+                     ID: 206
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_0697906003fc853d05c5d06e2ecde7d8.setIcon(icon_aff2712efbf02c0044dd8829abe7867a);
+            
+    
+            var marker_cea938aa675f9616b0281b85f4f4a69d = L.marker(
+                [41.63205950802437, 9.289628858419631],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_6bf0f23aaae381ba444a3984ee2e4e86 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cc2356cff5d4c140e4b89470a33ca65b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f8a813e04ef72d58e1616c9d960734e8 = $(`<div id="html_f8a813e04ef72d58e1616c9d960734e8" style="width: 100.0%; height: 100.0%;">ID: 208<br>Zone à caractère méditerranéen</div>`)[0];
+                popup_cc2356cff5d4c140e4b89470a33ca65b.setContent(html_f8a813e04ef72d58e1616c9d960734e8);
+            
+        
+
+        marker_cea938aa675f9616b0281b85f4f4a69d.bindPopup(popup_cc2356cff5d4c140e4b89470a33ca65b)
+        ;
+
+        
+    
+    
+            marker_cea938aa675f9616b0281b85f4f4a69d.bindTooltip(
+                `<div>
+                     ID: 208
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_cea938aa675f9616b0281b85f4f4a69d.setIcon(icon_6bf0f23aaae381ba444a3984ee2e4e86);
+            
+    
+            var marker_22d709984a25adc30c6ce6e1788bb1f9 = L.marker(
+                [41.473629733446046, 9.15650096314041],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_448a56704bc572972895331a6a83017e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_642c55aa75662ccbe7332693e0dc6ee9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a1e26609618909b5a7f9db34ddda9f9c = $(`<div id="html_a1e26609618909b5a7f9db34ddda9f9c" style="width: 100.0%; height: 100.0%;">ID: 207<br>Zone à caractère méditerranéen</div>`)[0];
+                popup_642c55aa75662ccbe7332693e0dc6ee9.setContent(html_a1e26609618909b5a7f9db34ddda9f9c);
+            
+        
+
+        marker_22d709984a25adc30c6ce6e1788bb1f9.bindPopup(popup_642c55aa75662ccbe7332693e0dc6ee9)
+        ;
+
+        
+    
+    
+            marker_22d709984a25adc30c6ce6e1788bb1f9.bindTooltip(
+                `<div>
+                     ID: 207
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_22d709984a25adc30c6ce6e1788bb1f9.setIcon(icon_448a56704bc572972895331a6a83017e);
+            
+    
+            var marker_c5382e9757eb04aeadca8662d3b28aa6 = L.marker(
+                [41.79702292460437, 9.32738609692466],
+                {
+}
+            ).addTo(map_4ec08ac5097ae50b7a9a230d61e4c93e);
+        
+    
+            var icon_488af25efb631c590f4c9211867c16dd = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5425768403b4ac38fbaff7c376feb835 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_eeb998f0e4b681a6f3906d7d6e28dadc = $(`<div id="html_eeb998f0e4b681a6f3906d7d6e28dadc" style="width: 100.0%; height: 100.0%;">ID: 209<br>Zone à caractère méditerranéen</div>`)[0];
+                popup_5425768403b4ac38fbaff7c376feb835.setContent(html_eeb998f0e4b681a6f3906d7d6e28dadc);
+            
+        
+
+        marker_c5382e9757eb04aeadca8662d3b28aa6.bindPopup(popup_5425768403b4ac38fbaff7c376feb835)
+        ;
+
+        
+    
+    
+            marker_c5382e9757eb04aeadca8662d3b28aa6.bindTooltip(
+                `<div>
+                     ID: 209
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c5382e9757eb04aeadca8662d3b28aa6.setIcon(icon_488af25efb631c590f4c9211867c16dd);
+            
+</script>
+</html>

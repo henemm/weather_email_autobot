@@ -38,5 +38,5 @@ for stage in load_stage_endpoints():
     zone_alert = fire_risk.get_zone_fire_alert_for_location(lat, lon, date.today())
     zone_name = zone_alert.get('zone_name', '-')
     level = zone_alert.get('level', '-')
-    warn = fire_risk._level_to_warning(level) if isinstance(level, int) else '-'
+    warn = fire_risk.format_fire_warnings(lat, lon) if zone_alert else '-'
     print(f"{name:<18} | {lat:8.4f} | {lon:9.4f} | {zone_name:<30} | {str(level):>5} | {warn}") 

@@ -15,7 +15,8 @@ from typing import Dict, Any, Optional, List
 import logging
 
 from weather.core.formatter import WeatherFormatter
-from weather.core.models import ReportType, ReportConfig, convert_dict_to_aggregated_weather_data, create_report_config_from_yaml
+from weather.core.models import AggregatedWeatherData, ReportType, ReportConfig, convert_dict_to_aggregated_weather_data, create_report_config_from_yaml
+from fire.risk_block_formatter import format_risk_block
 
 logger = logging.getLogger(__name__)
 
@@ -247,15 +248,47 @@ def generate_gr20_report_text(report_data: Dict[str, Any], config: Dict[str, Any
     """
     report_type = report_data.get("report_type", "morning")
     
+    # Generate base report text
     if report_type == "morning":
-        return _generate_morning_report(report_data, config)
+        base_text = _generate_morning_report(report_data, config)
     elif report_type == "evening":
-        return _generate_evening_report(report_data, config)
+        base_text = _generate_evening_report(report_data, config)
     elif report_type == "dynamic":
-        return _generate_dynamic_report(report_data, config)
+        base_text = _generate_dynamic_report(report_data, config)
     else:
         # Fallback to old format for backward compatibility
-        return _generate_legacy_report(report_data, config)
+        base_text = _generate_legacy_report(report_data, config)
+    
+    # Add risk block if relevant
+    try:
+        weather_data = report_data.get("weather_data", {})
+        latitude = weather_data.get("latitude", 0.0)
+        longitude = weather_data.get("longitude", 0.0)
+        
+        if latitude and longitude:
+            risk_block = format_risk_block(latitude, longitude)
+            if risk_block:
+                # Append risk block to base text
+                combined_text = f"{base_text} {risk_block}"
+                
+                # Ensure total length doesn't exceed 160 characters
+                if len(combined_text) <= 160:
+                    return combined_text
+                else:
+                    # If too long, truncate the base text to make room for risk block
+                    available_space = 160 - len(risk_block) - 1  # -1 for space
+                    if available_space > 0:
+                        truncated_base = base_text[:available_space]
+                        return f"{truncated_base} {risk_block}"
+                    else:
+                        # If risk block is too long, return base text only
+                        logger.warning(f"Risk block too long ({len(risk_block)} chars), using base text only")
+                        return base_text
+    except Exception as e:
+        logger.error(f"Error adding risk block to report: {e}")
+        # Return base text if risk block fails
+    
+    return base_text
 
 
 def _format_value_or_dash(value, *args):

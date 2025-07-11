@@ -650,6 +650,10 @@ def main():
                 print(f"Failed to fetch vigilance alerts: {e}")
                 processed_weather_data["vigilance_alerts"] = []
             
+            # Add coordinates to weather_data for risk block generation
+            processed_weather_data["latitude"] = latitude
+            processed_weather_data["longitude"] = longitude
+            
             report_data = {
                 "location": location_name,
                 "risk_percentage": int(current_risk * 100),

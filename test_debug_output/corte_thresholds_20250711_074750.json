@@ -1,0 +1,22 @@
+{
+  "location": "Corte",
+  "timestamp": "2025-07-11T07:47:50.686867",
+  "thresholds": {
+    "rain_probability": 25.0,
+    "rain_amount": 2.0,
+    "thunderstorm_probability": 20.0,
+    "wind_speed": 40.0
+  },
+  "crossings": [
+    {
+      "time": "07:47",
+      "crossings": [
+        "Rain probability 30.0% >= 25.0%",
+        "Thunderstorm probability 25.0% >= 20.0%",
+        "Precipitation amount 3.0mm >= 2.0mm",
+        "Wind speed 45.0km/h >= 40.0km/h"
+      ]
+    }
+  ],
+  "issues": []
+}

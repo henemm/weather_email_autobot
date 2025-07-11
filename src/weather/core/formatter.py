@@ -245,8 +245,8 @@ class WeatherFormatter:
         else:
             return "Gew. -"
     
-    def _format_rain_field(self, threshold_pct: float, threshold_time: str, 
-                          max_pct: float, max_time: str) -> str:
+    def _format_rain_field(self, threshold_pct: Optional[float], threshold_time: Optional[str], 
+                          max_pct: Optional[float], max_time: Optional[str]) -> str:
         """
         Format rain probability field according to specification.
         
@@ -261,6 +261,10 @@ class WeatherFormatter:
         """
         # Get rain probability threshold from config
         rain_threshold = self.config.rain_probability_threshold
+        
+        # Handle None values
+        threshold_pct = threshold_pct or 0.0
+        max_pct = max_pct or 0.0
         
         # Only show rain probability if it exceeds the threshold
         if threshold_pct < rain_threshold and max_pct < rain_threshold:
@@ -530,6 +534,7 @@ class WeatherFormatter:
             max_wind_gusts=global_maxima.get('wind_gusts', 0.0),
             wind_gusts_max_time=global_maxima.get('wind_gusts_time', ''),
             max_thunderstorm_probability=global_maxima.get('thunderstorm', 0.0),
+            thunderstorm_threshold_pct=global_maxima.get('thunderstorm', 0.0),
             thunderstorm_threshold_time=global_maxima.get('thunderstorm_threshold_time', ''),
             thunderstorm_max_time=global_maxima.get('thunderstorm_max_time', ''),
             tomorrow_max_thunderstorm_probability=global_maxima.get('thunderstorm_next_day', 0.0),

@@ -1,0 +1,87 @@
+[
+  {
+    "zone_id": "213",
+    "zone_name": "Zone à caractère méditerranéen, avec pentes fortes",
+    "level": 0
+  },
+  {
+    "zone_id": "216",
+    "zone_name": "Zone non méditerranéenne, avec pentes fortes",
+    "level": 0
+  },
+  {
+    "zone_id": "214",
+    "zone_name": "Zone non méditerranéenne, avec pentes fortes",
+    "level": 0
+  },
+  {
+    "zone_id": "215",
+    "zone_name": "Zone à caractère méditerranéen, avec pentes fortes",
+    "level": 0
+  },
+  {
+    "zone_id": "211",
+    "zone_name": "Zone à caractère méditerranéen, avec pentes fortes",
+    "level": 0
+  },
+  {
+    "zone_id": "212",
+    "zone_name": "Zone à caractère méditerranéen",
+    "level": 0
+  },
+  {
+    "zone_id": "218",
+    "zone_name": "Zone à caractère méditerranéen",
+    "level": 0
+  },
+  {
+    "zone_id": "205",
+    "zone_name": "Zone à caractère méditerranéen, avec pentes fortes",
+    "level": 0
+  },
+  {
+    "zone_id": "201",
+    "zone_name": "Zone à caractère méditerranéen, avec pentes fortes",
+    "level": 0
+  },
+  {
+    "zone_id": "202",
+    "zone_name": "Zone à caractère méditerranéen, avec pentes fortes",
+    "level": 0
+  },
+  {
+    "zone_id": "203",
+    "zone_name": "Zone à caractère méditerranéen, avec pentes fortes",
+    "level": 0
+  },
+  {
+    "zone_id": "204",
+    "zone_name": "Zone à caractère méditerranéen, avec pentes fortes",
+    "level": 0
+  },
+  {
+    "zone_id": "217",
+    "zone_name": "Zone à caractère méditerranéen, avec pentes fortes",
+    "level": 0
+  },
+  {
+    "zone_id": "206",
+    "zone_name": "Zone non méditerranéenne, avec pentes fortes",
+    "level": 0
+  },
+  {
+    "zone_id": "208",
+    "zone_name": "Zone à caractère méditerranéen",
+    "level": 0
+  },
+  {
+    "zone_id": "207",
+    "zone_name": "Zone à caractère méditerranéen",
+    "level": 0
+  },
+  {
+    "zone_id": "209",
+    "zone_name": "Zone à caractère méditerranéen",
+    "level": 0
+  }
+]

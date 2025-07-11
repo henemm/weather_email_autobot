@@ -1,0 +1,277 @@
+{
+  "217": {
+    "zone_name": "Zone à caractère méditerranéen, avec pentes fortes",
+    "coordinates": [
+      {
+        "lat": 42.510501,
+        "lon": 8.851262,
+        "stage": "Ortu"
+      },
+      {
+        "lat": 42.471362,
+        "lon": 8.897105,
+        "stage": "Ortu"
+      },
+      {
+        "lat": 42.463894,
+        "lon": 8.894516,
+        "stage": "Carozzu"
+      }
+    ]
+  },
+  "216": {
+    "zone_name": "Zone non méditerranéenne, avec pentes fortes",
+    "coordinates": [
+      {
+        "lat": 42.465338,
+        "lon": 8.906984,
+        "stage": "Ortu"
+      },
+      {
+        "lat": 42.465338,
+        "lon": 8.906787,
+        "stage": "Carozzu"
+      },
+      {
+        "lat": 42.42624,
+        "lon": 8.90029,
+        "stage": "Carozzu"
+      },
+      {
+        "lat": 42.426238,
+        "lon": 8.900291,
+        "stage": "Ascu"
+      },
+      {
+        "lat": 42.410526,
+        "lon": 8.908343,
+        "stage": "Ascu"
+      },
+      {
+        "lat": 42.403526,
+        "lon": 8.921923,
+        "stage": "Ascu"
+      },
+      {
+        "lat": 42.403407,
+        "lon": 8.922049,
+        "stage": "Ballone"
+      },
+      {
+        "lat": 42.376742,
+        "lon": 8.937944,
+        "stage": "Ballone"
+      },
+      {
+        "lat": 42.353003,
+        "lon": 8.907812,
+        "stage": "Ballone"
+      },
+      {
+        "lat": 42.353003,
+        "lon": 8.907812,
+        "stage": "Vergio"
+      },
+      {
+        "lat": 42.334736,
+        "lon": 8.873431,
+        "stage": "Vergio"
+      },
+      {
+        "lat": 42.286453,
+        "lon": 8.893872,
+        "stage": "Vergio"
+      },
+      {
+        "lat": 42.286473,
+        "lon": 8.893564,
+        "stage": "Manganu"
+      },
+      {
+        "lat": 42.229355,
+        "lon": 8.977679,
+        "stage": "Manganu"
+      },
+      {
+        "lat": 42.210865,
+        "lon": 9.006806,
+        "stage": "Petra"
+      },
+      {
+        "lat": 42.198058,
+        "lon": 9.051533,
+        "stage": "Petra"
+      },
+      {
+        "lat": 42.198159,
+        "lon": 9.0522,
+        "stage": "Onda"
+      },
+      {
+        "lat": 42.194579,
+        "lon": 9.06349,
+        "stage": "Onda"
+      },
+      {
+        "lat": 42.153294,
+        "lon": 9.074076,
+        "stage": "Onda"
+      },
+      {
+        "lat": 42.153294,
+        "lon": 9.074076,
+        "stage": "Monte"
+      },
+      {
+        "lat": 42.13681,
+        "lon": 9.077219,
+        "stage": "Monte"
+      },
+      {
+        "lat": 42.113638,
+        "lon": 9.119143,
+        "stage": "Monte"
+      },
+      {
+        "lat": 42.113672,
+        "lon": 9.119232,
+        "stage": "Capanelle"
+      },
+      {
+        "lat": 42.114069,
+        "lon": 9.157221,
+        "stage": "Capanelle"
+      },
+      {
+        "lat": 42.077314,
+        "lon": 9.150127,
+        "stage": "Capanelle"
+      },
+      {
+        "lat": 42.077314,
+        "lon": 9.150127,
+        "stage": "SanPetru"
+      },
+      {
+        "lat": 42.036324,
+        "lon": 9.169495,
+        "stage": "SanPetru"
+      }
+    ]
+  },
+  "206": {
+    "zone_name": "Zone non méditerranéenne, avec pentes fortes",
+    "coordinates": [
+      {
+        "lat": 42.25421,
+        "lon": 8.925527,
+        "stage": "Manganu"
+      },
+      {
+        "lat": 42.22026,
+        "lon": 8.980731,
+        "stage": "Manganu"
+      },
+      {
+        "lat": 42.219882,
+        "lon": 8.980494,
+        "stage": "Petra"
+      },
+      {
+        "lat": 42.02803,
+        "lon": 9.194359,
+        "stage": "SanPetru"
+      },
+      {
+        "lat": 42.02803,
+        "lon": 9.194359,
+        "stage": "Usciolu"
+      },
+      {
+        "lat": 41.996556,
+        "lon": 9.217317,
+        "stage": "Usciolu"
+      },
+      {
+        "lat": 41.945004,
+        "lon": 9.219515,
+        "stage": "Usciolu"
+      },
+      {
+        "lat": 41.934961,
+        "lon": 9.205803,
+        "stage": "Usciolu"
+      },
+      {
+        "lat": 41.935083,
+        "lon": 9.205951,
+        "stage": "Croci"
+      },
+      {
+        "lat": 41.92106,
+        "lon": 9.188544,
+        "stage": "Croci"
+      },
+      {
+        "lat": 41.862422,
+        "lon": 9.158354,
+        "stage": "Croci"
+      },
+      {
+        "lat": 41.85538,
+        "lon": 9.166,
+        "stage": "Croci"
+      },
+      {
+        "lat": 41.85538,
+        "lon": 9.166,
+        "stage": "Paliri"
+      },
+      {
+        "lat": 41.844987,
+        "lon": 9.202013,
+        "stage": "Paliri"
+      }
+    ]
+  },
+  "209": {
+    "zone_name": "Zone à caractère méditerranéen",
+    "coordinates": [
+      {
+        "lat": 41.795895,
+        "lon": 9.225472,
+        "stage": "Paliri"
+      },
+      {
+        "lat": 41.794144,
+        "lon": 9.259867,
+        "stage": "Paliri"
+      },
+      {
+        "lat": 41.79418,
+        "lon": 9.259567,
+        "stage": "Conca"
+      },
+      {
+        "lat": 41.779629,
+        "lon": 9.28185,
+        "stage": "Conca"
+      },
+      {
+        "lat": 41.748197,
+        "lon": 9.325164,
+        "stage": "Conca"
+      }
+    ]
+  },
+  "208": {
+    "zone_name": "Zone à caractère méditerranéen",
+    "coordinates": [
+      {
+        "lat": 41.733006,
+        "lon": 9.337698,
+        "stage": "Conca"
+      }
+    ]
+  }
+}

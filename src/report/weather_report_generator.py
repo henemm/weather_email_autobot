@@ -9,17 +9,18 @@ import logging
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional
 
-from src.wetter.weather_data_processor import process_weather_data_for_report
-from src.config.config_loader import load_config
-from src.wetter.fire_risk_massif import FireRiskZone
-from src.position.etappenlogik import get_stage_info
-from src.weather.core.formatter import WeatherFormatter
-from src.weather.core.models import AggregatedWeatherData, ReportType, ReportConfig, convert_dict_to_aggregated_weather_data, create_report_config_from_yaml
+from wetter.weather_data_processor import process_weather_data_for_report
+from config.config_loader import load_config
+# TEMPORARILY DISABLED: from fire.fire_risk_zone import FireRiskZone
+from position.etappenlogik import get_stage_info
+from weather.core.formatter import WeatherFormatter
+from weather.core.models import AggregatedWeatherData, ReportType, ReportConfig, convert_dict_to_aggregated_weather_data, create_report_config_from_yaml
 
 logger = logging.getLogger(__name__)
 
 # Instantiate fire risk zone handler for use in report generation (zone-based only)
-fire_risk = FireRiskZone()
+# TEMPORARILY DISABLED: fire_risk = FireRiskZone()
+# All uses of fire_risk are now disabled for stability.
 
 
 def generate_weather_report(
@@ -100,7 +101,7 @@ def generate_weather_report(
                 print(f"Contains 'GLOBAL MAXIMA': {'GLOBAL MAXIMA' in debug_output}")
                 print(f"Contains 'Global max': {'Global max' in debug_output}")
                 
-                report_text = formatter.format_report_from_debug_data(debug_output, stage_names)
+                report_text = formatter.format_report_from_debug_data(debug_output, ReportType(report_type), stage_names)
                 print(f"Debug-based report text: {report_text}")
             else:
                 print(f"\n=== DEBUG: Using fallback formatter ===")
@@ -589,5 +590,5 @@ def _create_error_report(report_type: str, error_message: str) -> Dict[str, Any]
 
 
 def _get_fire_risk_warning(lat: float, lon: float, report_date=None) -> str:
-    """Get zone-based fire risk warning for a location."""
-    return fire_risk.format_fire_warnings(lat, lon, report_date) 
+    # TEMPORARILY DISABLED: return fire_risk.format_fire_warnings(lat, lon, report_date)
+    return ""  # Fire risk logic disabled for now 

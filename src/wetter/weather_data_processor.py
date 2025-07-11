@@ -12,7 +12,8 @@ from dataclasses import dataclass
 import pytz  # Am Anfang der Datei ergänzen
 
 from meteofrance_api.client import MeteoFranceClient
-from .fire_risk_massif import FireRiskZone
+# TEMPORARILY DISABLED: from src.fire.fire_risk_zone import FireRiskZone
+# TEMPORARILY DISABLED: from ..fire.fire_risk_zone import FireRiskZone
 
 logger = logging.getLogger(__name__)
 
@@ -124,65 +125,65 @@ class WeatherDataProcessor:
         min_temperature = 0.0
         if report_type == 'evening':
             min_temperature = self._calculate_min_temperature(latitude, longitude, location_name)
-        # Fire risk warning - calculate global maximum across all stage points
+        # TEMPORARILY DISABLED: Fire risk warning - calculate global maximum across all stage points
         fire_risk_warning = ""
-        try:
-            fire_risk = FireRiskZone()
-            
-            # For evening reports, we need to get the fire risk for tomorrow's stage
-            if report_type == 'evening':
-                # Dynamically get tomorrow's stage coordinates from etappen.json
-                import json
-                import yaml
-                
-                # Load etappen.json
-                with open('etappen.json', 'r', encoding='utf-8') as f:
-                    etappen = json.load(f)
-                
-                # Load config.yaml for startdatum
-                with open('config.yaml', 'r', encoding='utf-8') as f:
-                    config = yaml.safe_load(f)
-                startdatum = config.get('startdatum', '2025-06-21')
-                start_date = datetime.strptime(startdatum, '%Y-%m-%d').date()
-                
-                # Calculate tomorrow's stage index
-                base_date = datetime.now().date()
-                tomorrow_stage_index = (base_date - start_date).days + 1
-                
-                if 0 <= tomorrow_stage_index < len(etappen):
-                    tomorrow_stage = etappen[tomorrow_stage_index]
-                    tomorrow_coordinates = tomorrow_stage['punkte']
-                    
-                    # Check fire risk for all points of tomorrow's stage
-                    max_fire_level = 0
-                    for coord in tomorrow_coordinates:
-                        lat, lon = coord['lat'], coord['lon']
-                        try:
-                            warning = fire_risk.format_fire_warnings(lat, lon)
-                            if warning and "WARN" in warning:
-                                max_fire_level = max(max_fire_level, 3)  # WARN = Level 3
-                            elif warning and "HIGH" in warning:
-                                max_fire_level = max(max_fire_level, 4)  # HIGH = Level 4
-                            elif warning and "MAX" in warning:
-                                max_fire_level = max(max_fire_level, 5)  # MAX = Level 5
-                        except Exception as e:
-                            logger.warning(f"Failed to check fire risk for tomorrow stage point ({lat}, {lon}): {e}")
-                    
-                    # Set fire risk warning based on maximum level found
-                    if max_fire_level >= 3:
-                        fire_risk_warning = "WARN Waldbrand"
-                    elif max_fire_level >= 4:
-                        fire_risk_warning = "HIGH Waldbrand"
-                    elif max_fire_level >= 5:
-                        fire_risk_warning = "MAX Waldbrand"
-                else:
-                    logger.warning(f"Tomorrow stage index {tomorrow_stage_index} out of range (0-{len(etappen)-1})")
-            else:
-                # For morning/update reports, check current stage
-                fire_risk_warning = fire_risk.format_fire_warnings(latitude, longitude)
-                
-        except Exception as e:
-            logger.warning(f"Failed to fetch fire risk warning for {location_name} ({latitude}, {longitude}): {e}")
+        # try:
+        #     fire_risk = FireRiskZone()
+        #     
+        #     # For evening reports, we need to get the fire risk for tomorrow's stage
+        #     if report_type == 'evening':
+        #         # Dynamically get tomorrow's stage coordinates from etappen.json
+        #         import json
+        #         import yaml
+        #         
+        #         # Load etappen.json
+        #         with open('etappen.json', 'r', encoding='utf-8') as f:
+        #             etappen = json.load(f)
+        #         
+        #         # Load config.yaml for startdatum
+        #         with open('config.yaml', 'r', encoding='utf-8') as f:
+        #             config = yaml.safe_load(f)
+        #         startdatum = config.get('startdatum', '2025-06-21')
+        #         start_date = datetime.strptime(startdatum, '%Y-%m-%d').date()
+        #         
+        #         # Calculate tomorrow's stage index
+        #         base_date = datetime.now().date()
+        #         tomorrow_stage_index = (base_date - start_date).days + 1
+        #         
+        #         if 0 <= tomorrow_stage_index < len(etappen):
+        #             tomorrow_stage = etappen[tomorrow_stage_index]
+        #             tomorrow_coordinates = tomorrow_stage['punkte']
+        #             
+        #             # Check fire risk for all points of tomorrow's stage
+        #             max_fire_level = 0
+        #             for coord in tomorrow_coordinates:
+        #                 lat, lon = coord['lat'], coord['lon']
+        #                 try:
+        #                     warning = fire_risk.format_fire_warnings(lat, lon)
+        #                     if warning and "WARN" in warning:
+        #                             max_fire_level = max(max_fire_level, 3)  # WARN = Level 3
+        #                         elif warning and "HIGH" in warning:
+        #                             max_fire_level = max(max_fire_level, 4)  # HIGH = Level 4
+        #                         elif warning and "MAX" in warning:
+        #                             max_fire_level = max(max_fire_level, 5)  # MAX = Level 5
+        #                 except Exception as e:
+        #                     logger.warning(f"Failed to check fire risk for tomorrow stage point ({lat}, {lon}): {e}")
+        #             
+        #             # Set fire risk warning based on maximum level found
+        #             if max_fire_level >= 3:
+        #                 fire_risk_warning = "WARN Waldbrand"
+        #             elif max_fire_level >= 4:
+        #                 fire_risk_warning = "HIGH Waldbrand"
+        #             elif max_fire_level >= 5:
+        #                 fire_risk_warning = "MAX Waldbrand"
+        #         else:
+        #             logger.warning(f"Tomorrow stage index {tomorrow_stage_index} out of range (0-{len(etappen)-1})")
+        #     else:
+        #         # For morning/update reports, check current stage
+        #         fire_risk_warning = fire_risk.format_fire_warnings(latitude, longitude)
+        #         
+        # except Exception as e:
+        #     logger.warning(f"Failed to fetch fire risk warning for {location_name} ({latitude}, {longitude}): {e}")
         # Build report data using the correct data source
         # For evening reports: use main_weather_data (current stage) for main values, global_maxima only for stage-wide aggregation
         if report_type == 'evening':
