@@ -18,14 +18,14 @@ delta_thresholds:
   wind_speed: 1.0
 
 # Report frequency and timing settings
-max_daily_reports: 5  # Maximum number of reports per day
+max_daily_reports: 4  # Maximum number of reports per day
 min_interval_min: 90  # Minimum interval between reports in minutes
 
 # SMS notification settings
 sms:
   api_key: ${SEVEN_API_KEY}
-  enabled: true # true or false
-  mode: test # 'test' or 'production'
+  enabled: false # true or false
+  mode: production # 'test' or 'production'
   production_number: '+4917717816897'
   provider: seven  # 'seven' or 'twilio'
   # Seven.io configuration
@@ -34,7 +34,7 @@ sms:
     sender: '4916092170813'
 
   # Phone numbers for notifications
-  test_number: '+4915158450319' 
+  test_number: '+4915158450319'
 
   # Twilio configuration (alternative provider)
   twilio:
@@ -51,7 +51,7 @@ smtp:
   user: henning.emmrich@gmail.com
 
 # Start date for the weather monitoring (YYYY-MM-DD format)
-startdatum: '2025-07-11'
+startdatum: '2025-07-07'
 
 # Weather thresholds for triggering alerts
 thresholds:

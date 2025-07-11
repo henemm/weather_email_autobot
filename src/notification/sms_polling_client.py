@@ -8,6 +8,7 @@ from seven.io API and process configuration commands.
 import requests
 import logging
 import time
+import sys
 from datetime import datetime
 from typing import Dict, Any, List, Optional
 from ..config.sms_config_processor import SMSConfigProcessor
@@ -89,14 +90,15 @@ class SMSPollingClient:
             
             # Process each message
             commands_processed = 0
-            max_id = self.last_processed_id
+            max_id = None
             for message in filtered:
                 if self._process_message(message):
                     commands_processed += 1
-                # Track max ID
+                # Track max ID (only for numeric IDs)
                 msg_id = str(message.get("id", ""))
-                if msg_id > str(max_id):
-                    max_id = msg_id
+                if msg_id.isdigit():
+                    if max_id is None or int(msg_id) > int(max_id):
+                        max_id = msg_id
             # Save last processed ID
             if filtered and max_id:
                 self._save_last_processed_id(max_id)
@@ -154,10 +156,21 @@ class SMSPollingClient:
             return []
     
     def _filter_new_messages(self, messages):
-        # Only process messages with ID > last_processed_id
+        """
+        Filter messages to only those with ID greater than the last processed ID.
+        Handles both numeric and legacy string IDs.
+        If last_processed_id is not numeric, all messages are considered new.
+        Args:
+            messages: List of message dicts with 'id' field
+        Returns:
+            List of new message dicts
+        """
         if not self.last_processed_id:
             return messages
-        filtered = [m for m in messages if str(m.get("id", "")) > str(self.last_processed_id)]
+        # If last_processed_id is not numeric, treat as no last ID (process all)
+        if not str(self.last_processed_id).isdigit():
+            return messages
+        filtered = [m for m in messages if str(m.get("id", "")).isdigit() and int(m["id"]) > int(self.last_processed_id)]
         return filtered
 
     def _process_message(self, message: Dict[str, Any]) -> bool:
@@ -185,8 +198,22 @@ class SMSPollingClient:
             # Log message reception
             self._log_message_reception(sender, message_text)
             
+            # Check if it's a report mode command
+            if self._is_report_mode_command(message_text):
+                # Process report mode command
+                result = self._process_report_mode_command(message_text)
+                
+                if result["success"]:
+                    logger.info(f"Report mode command processed successfully: {result['mode']}")
+                else:
+                    logger.warning(f"Report mode command failed: {result['message']}")
+                
+                # Mark as processed
+                self.processed_messages.add(message_id)
+                return True
+            
             # Check if it's a configuration command
-            if self._is_configuration_command(message_text):
+            elif self._is_configuration_command(message_text):
                 # Process configuration command
                 result = self.config_processor.process_sms_command(message_text)
                 
@@ -219,6 +246,140 @@ class SMSPollingClient:
             True if the message is a configuration command
         """
         return message_text.strip().startswith("### ")
+    
+    def _is_report_mode_command(self, message_text: str) -> bool:
+        """
+        Check if a message is a report mode command.
+        
+        Args:
+            message_text: The message text to check
+            
+        Returns:
+            True if the message is a report mode command
+        """
+        return message_text.strip().startswith("### report.modus:")
+    
+    def _process_report_mode_command(self, message_text: str) -> Dict[str, Any]:
+        """
+        Process a report mode command and trigger the weather report.
+        
+        Args:
+            message_text: The message text to process
+            
+        Returns:
+            Dictionary containing:
+                - success: Boolean indicating if command was processed successfully
+                - mode: The report mode that was triggered (if successful)
+                - message: Human-readable message about the result
+        """
+        try:
+            # Extract mode from command
+            command_part = message_text[4:].strip()  # Remove "### "
+            
+            if ":" not in command_part:
+                return {
+                    "success": False,
+                    "mode": None,
+                    "message": "INVALID FORMAT: Missing colon separator"
+                }
+            
+            key, value = command_part.split(":", 1)
+            key = key.strip()
+            value = value.strip()
+            
+            if key != "report.modus":
+                return {
+                    "success": False,
+                    "mode": None,
+                    "message": f"INVALID COMMAND: Expected 'report.modus', got '{key}'"
+                }
+            
+            if not value:
+                return {
+                    "success": False,
+                    "mode": None,
+                    "message": "INVALID FORMAT: Empty mode value"
+                }
+            
+            # Validate mode
+            valid_modes = ["morning", "evening", "dynamic"]
+            if value not in valid_modes:
+                return {
+                    "success": False,
+                    "mode": None,
+                    "message": f"INVALID MODE: Must be one of {valid_modes}"
+                }
+            
+            # Trigger the weather report
+            logger.info(f"Triggering weather report in {value} mode")
+            success = self._trigger_weather_report(value)
+            
+            if success:
+                return {
+                    "success": True,
+                    "mode": value,
+                    "message": f"Weather report triggered in {value} mode"
+                }
+            else:
+                return {
+                    "success": False,
+                    "mode": None,
+                    "message": "Failed to trigger weather report"
+                }
+                
+        except Exception as e:
+            logger.error(f"Error processing report mode command '{message_text}': {e}")
+            return {
+                "success": False,
+                "mode": None,
+                "message": f"Error processing command: {str(e)}"
+            }
+    
+    def _trigger_weather_report(self, mode: str) -> bool:
+        """
+        Trigger the weather report script with the specified mode.
+        
+        Args:
+            mode: The report mode (morning, evening, dynamic)
+            
+        Returns:
+            True if the script was triggered successfully, False otherwise
+        """
+        try:
+            import subprocess
+            import os
+            
+            # Get the script path
+            script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'run_gr20_weather_monitor.py')
+            
+            # Build the command
+            cmd = [sys.executable, script_path, "--modus", mode]
+            
+            logger.info(f"Executing command: {' '.join(cmd)}")
+            
+            # Execute the script
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=300  # 5 minutes timeout
+            )
+            
+            if result.returncode == 0:
+                logger.info(f"Weather report in {mode} mode executed successfully")
+                logger.debug(f"Script output: {result.stdout}")
+                return True
+            else:
+                logger.error(f"Weather report script failed with return code {result.returncode}")
+                logger.error(f"Script stderr: {result.stderr}")
+                return False
+                
+        except subprocess.TimeoutExpired:
+            logger.error(f"Weather report script timed out after 5 minutes")
+            return False
+        except Exception as e:
+            logger.error(f"Error triggering weather report: {e}")
+            return False
     
     def _log_message_reception(self, sender: str, message_text: str):
         """
