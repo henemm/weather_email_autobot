@@ -1,5 +1,5 @@
 import pytest
-from src.utils.risk_block_formatter import format_risk_block
+from utils.risk_block_formatter import format_risk_block
 
 def test_only_high_zones():
     assert format_risk_block([204, 208], [], []) == "Z:HIGH204,208"
