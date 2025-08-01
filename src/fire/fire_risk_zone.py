@@ -23,7 +23,14 @@ class FireRiskZone:
     def __init__(self):
         """Initialize the fire risk zone handler."""
         self.zone_mapper = FireZoneMapper()
-        self.api_url = "https://www.risque-prevention-incendie.fr/static/20/data/zm.json"
+        # Try multiple possible API endpoints
+        self.api_urls = [
+            "https://www.risque-prevention-incendie.fr/static/20/data/zm.json",
+            "https://www.risque-prevention-incendie.fr/static/4/data/zm.json",
+            "https://www.risque-prevention-incendie.fr/static/data/zm.json",
+            "https://www.risque-prevention-incendie.fr/api/zones",
+            "https://www.risque-prevention-incendie.fr/data/zones.json"
+        ]
         
     def fetch_fire_risk_data(self, report_date: Optional[date] = None) -> Optional[Dict[str, Any]]:
         """
@@ -35,20 +42,25 @@ class FireRiskZone:
         Returns:
             Dictionary with fire risk data or None if fetch fails
         """
-        try:
-            response = requests.get(self.api_url, timeout=10)
-            response.raise_for_status()
-            
-            data = response.json()
-            logger.info(f"Successfully fetched fire risk data for {len(data.get('zm', {}))} zones")
-            return data
-            
-        except requests.RequestException as e:
-            logger.error(f"Failed to fetch fire risk data: {e}")
-            return None
-        except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse fire risk data: {e}")
-            return None
+        for url in self.api_urls:
+            try:
+                logger.info(f"Trying fire risk API URL: {url}")
+                response = requests.get(url, timeout=10)
+                response.raise_for_status()
+                
+                data = response.json()
+                logger.info(f"Successfully fetched fire risk data from {url} for {len(data.get('zm', {}))} zones")
+                return data
+                
+            except requests.RequestException as e:
+                logger.warning(f"Failed to fetch fire risk data from {url}: {e}")
+                continue
+            except json.JSONDecodeError as e:
+                logger.warning(f"Failed to parse fire risk data from {url}: {e}")
+                continue
+        
+        logger.error("All fire risk API endpoints failed")
+        return None
     
     def get_zone_fire_alert_for_location(self, lat: float, lon: float, report_date: Optional[date] = None) -> Optional[Dict[str, Any]]:
         """
@@ -99,65 +111,36 @@ class FireRiskZone:
             report_date: Date for the report (defaults to today)
             
         Returns:
-            Formatted warning string or empty string if no warning
+            Formatted warning string
         """
         alert = self.get_zone_fire_alert_for_location(lat, lon, report_date)
-        
         if not alert:
-            return ""
-            
-        level = alert['level']
+            return "Keine Waldbrand-Warnung verfügbar"
         
-        # Only show warnings for level 2 or higher (as per email_format.mdc)
-        if level < 2:
-            return ""
-            
-        # Map level to warning format
-        if level == 2:
-            return "WARN Waldbrand"
-        elif level == 3:
-            return "HIGH Waldbrand"
-        elif level >= 4:
-            return "MAX Waldbrand"
-        else:
-            return ""
+        level = alert['level']
+        zone_name = alert['zone_name']
+        
+        warning_text = self._level_to_warning(level)
+        return f"{warning_text} in Zone {alert['zone_number']} ({zone_name})"
     
     def _get_level_description(self, level: int) -> str:
-        """
-        Get human-readable description for fire risk level.
-        
-        Args:
-            level: Fire risk level (0-4)
-            
-        Returns:
-            Description string
-        """
+        """Get human-readable description for fire risk level."""
         descriptions = {
-            0: "Faible",
-            1: "Modéré", 
-            2: "Élevé",
-            3: "Très élevé",
-            4: "Exceptionnel"
+            1: "Niedrig",
+            2: "Mittel", 
+            3: "Hoch",
+            4: "Sehr hoch",
+            5: "Extrem"
         }
-        return descriptions.get(level, "Inconnu")
+        return descriptions.get(level, "Unbekannt")
     
     def _level_to_warning(self, level: int) -> str:
-        """
-        Convert fire risk level to warning string.
-        
-        Args:
-            level: Fire risk level (0-4)
-            
-        Returns:
-            Warning string
-        """
-        if level < 2:
-            return ""
-        elif level == 2:
-            return "WARN"
+        """Convert fire risk level to warning text."""
+        if level <= 2:
+            return f"Waldbrand-Risiko: {self._get_level_description(level)}"
         elif level == 3:
-            return "HIGH"
-        elif level >= 4:
-            return "MAX"
+            return f"⚠️ Waldbrand-Risiko: {self._get_level_description(level)}"
+        elif level == 4:
+            return f"🚨 Waldbrand-Risiko: {self._get_level_description(level)}"
         else:
-            return "" 
+            return f"🔥 Waldbrand-Risiko: {self._get_level_description(level)}" 
