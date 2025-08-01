@@ -123,11 +123,36 @@
     ]
   },
   "rain_percent": {
-    "threshold_value": null,
-    "threshold_time": null,
-    "max_value": null,
-    "max_time": null,
-    "geo_points": []
+    "threshold_value": 40,
+    "threshold_time": "14",
+    "max_value": 40,
+    "max_time": "14",
+    "geo_points": [
+      {
+        "G1": {
+          "02": 0,
+          "08": 0,
+          "14": 40,
+          "20": 0
+        }
+      },
+      {
+        "G2": {
+          "02": 0,
+          "08": 0,
+          "14": 40,
+          "20": 0
+        }
+      },
+      {
+        "G3": {
+          "02": 0,
+          "08": 0,
+          "14": 40,
+          "20": 0
+        }
+      }
+    ]
   },
   "wind": {
     "threshold_value": null,
@@ -408,6 +433,6 @@
     ]
   },
   "debug_info": {},
-  "generated_at": "2025-08-01T22:55:06.535543",
+  "generated_at": "2025-08-01T22:58:32.375100",
   "version": "morning-evening-refactor-v1"
 }

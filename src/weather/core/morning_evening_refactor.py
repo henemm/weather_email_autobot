@@ -449,31 +449,23 @@ class MorningEveningRefactor:
                 logger.error(f"No points found for stage {stage['name']}")
                 return WeatherThresholdData()
             
-            # Get probability forecast data for each geo point individually
+            # Get probability forecast data from weather_data
+            probability_forecast = weather_data.get('probability_forecast', [])
+            rain_prob_threshold = self.thresholds.get('rain_probability', 50)
+            
+            # Process probability forecast data
             geo_points = []
             global_max_prob = None
             global_max_time = None
             
-            # Fetch probability forecast for each geo point
-            from src.wetter.enhanced_meteofrance_api import EnhancedMeteoFranceAPI
-            api = EnhancedMeteoFranceAPI()
-            
-            # Process each geo point
+            # Process each geo point (using same probability data for all points)
             for i, point in enumerate(stage_points):
-                lat, lon = point['lat'], point['lon']
-                
-                # Get probability forecast for this specific geo point
-                point_data = api.get_complete_forecast_data(lat, lon, f"point_{i+1}")
-                prob_forecast = point_data.get('probability_forecast', [])
-                
                 point_max_prob = None
                 point_max_time = None
                 point_prob_data = {}
                 
                 # Process probability forecast data for this point
-                # Note: probability_forecast is global data, not per-point
-                # We'll use the same data for all points for now
-                for entry in prob_forecast:
+                for entry in probability_forecast:
                     if 'dt' in entry and 'rain' in entry:
                         entry_time = datetime.fromtimestamp(entry['dt'])
                         entry_date = entry_time.date()
