@@ -579,7 +579,7 @@ class MorningEveningRefactor:
             
             # Use unified processing with gust data extractor
             gust_threshold = self.thresholds.get('wind_gust_threshold', 5.0)
-            gust_extractor = lambda h: h.get('wind_gusts', 0)
+            gust_extractor = lambda h: h.get('wind', {}).get('gust', 0)
             
             result = self._process_unified_hourly_data(weather_data, stage_date, gust_extractor, gust_threshold)
             
