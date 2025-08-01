@@ -618,6 +618,17 @@ class MorningEveningRefactor:
         hourly_data = weather_data['hourly_data']
         threshold = self.thresholds.get('thunderstorm', 'med')
         
+        # Get the correct stage and date based on report type
+        start_date = datetime.strptime(self.config.get('startdatum', '2025-07-27'), '%Y-%m-%d').date()
+        days_since_start = (target_date - start_date).days
+        
+        # For Evening report: Thunderstorm = thunderstorm maximum of all points of tomorrow's stage for tomorrow
+        # For Morning report: Thunderstorm = thunderstorm maximum of all points of today's stage for today
+        if report_type == 'evening':
+            stage_date = target_date  # Use target_date (tomorrow) directly
+        else:  # morning
+            stage_date = target_date  # Today's date
+        
         # Thunderstorm level mapping
         thunderstorm_levels = {
             'Risque d\'orages': 'low',
@@ -649,8 +660,8 @@ class MorningEveningRefactor:
                     hour_time = datetime.fromtimestamp(hour_data['dt'])
                     hour_date = hour_time.date()
                     
-                    # Only process data for the target date
-                    if hour_date != target_date:
+                    # Only process data for the stage date
+                    if hour_date != stage_date:
                         continue
                     
                     # Extract weather condition
