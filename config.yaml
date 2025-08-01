@@ -51,16 +51,37 @@ smtp:
   user: henning.emmrich@gmail.com
 
 # Start date for the weather monitoring (YYYY-MM-DD format)
-startdatum: '2025-07-07'
+startdatum: '2025-07-27'
 
 # Weather thresholds for triggering alerts
 thresholds:
-  cloud_cover: 90.0  # Cloud cover percentage
   rain_amount: 0.5   # Rain amount in mm
   rain_probability: 15.0  # Rain probability percentage
   temperature: 25.0  # Temperature in Celsius
+  thunderstorm_warning_level: med 
   thunderstorm_probability: 10.0  # Thunderstorm probability percentage
-  wind_speed: 40.0   # Wind speed in km/h
+  wind_speed: 15.0   # Wind speed in km/h
+  wind_gust_threshold: 10.0  # Wind gust difference threshold in km/h (show gusts if difference >= this value)
+  wind_gust_percentage: 50.0  # Wind gust percentage threshold (show gusts if gusts >= wind_speed * (1 + this/100))
+
+# Fire risk level configuration for GR20 zones and massifs
+fire_risk_levels:
+  zone_risk_mapping:
+    1: "LOW"      # Low risk - ignored in output
+    2: "HIGH"     # Medium risk - shown as Z:HIGH208,217
+    3: "HIGH"     # High risk - shown as Z:HIGH208,217
+    4: "MAX"      # Very high risk - shown as Z:MAX209
+  minimum_display_level: 2  # Only show zones with risk level >= 2
+  massif_restriction_threshold: 1  # Massif restricted when procedure >= 1
 
 # Output file for warning messages
 warning_output_file: output/inreach_warnung.txt
+
+# Alternative risk analysis configuration
+alternative_risk_analysis:
+  enabled: true  # Enable alternative risk analysis in emails
+  thunderstorm_timing: true  # Show thunderstorm timing for hikers
+  geo_aggregation: true  # Aggregate data from multiple GEO-points
+
+# Compact formatter configuration
+use_compact_formatter: true  # Use new compact MorningEveningFormatter for reports
