@@ -732,8 +732,110 @@ class MorningEveningRefactor:
         # Calculate +1 day
         plus_one_date = target_date + timedelta(days=1)
         
-        # Use the same logic as thunderstorm but for +1 day
-        return self.process_thunderstorm_data(weather_data, stage_name, plus_one_date, report_type)
+        # For Evening report: Thunderstorm (+1) = thunderstorm maximum of all points of over-tomorrow's stage for over-tomorrow
+        # For Morning report: Thunderstorm (+1) = thunderstorm maximum of all points of tomorrow's stage for tomorrow
+        if report_type == 'evening':
+            stage_date = plus_one_date + timedelta(days=1)  # Over-tomorrow's date
+        else:  # morning
+            stage_date = plus_one_date  # Tomorrow's date
+        
+        # Use the same logic as thunderstorm but for the correct stage_date
+        result = WeatherThresholdData()
+        result.geo_points = []
+        
+        if not weather_data or 'hourly_data' not in weather_data:
+            logger.warning(f"No hourly data available for thunderstorm (+1) processing on {stage_date}")
+            return result
+        
+        hourly_data = weather_data['hourly_data']
+        threshold = self.thresholds.get('thunderstorm', 'med')
+        
+        # Thunderstorm level mapping
+        thunderstorm_levels = {
+            'Risque d\'orages': 'low',
+            'Averses orageuses': 'med', 
+            'Orages': 'high'
+        }
+        
+        # Level hierarchy for threshold comparison
+        level_hierarchy = {'low': 1, 'med': 2, 'high': 3}
+        threshold_level = level_hierarchy.get(threshold, 2)  # Default to 'med'
+        
+        # Process each geo point
+        for geo_index, geo_data in enumerate(hourly_data):
+            if not geo_data or 'data' not in geo_data:
+                continue
+                
+            geo_name = f"G{geo_index + 1}"
+            max_level = None
+            max_level_time = None
+            threshold_level_found = None
+            threshold_level_time = None
+            
+            # Process hourly data for this geo point
+            for hour_data in geo_data['data']:
+                if not hour_data or 'dt' not in hour_data:
+                    continue
+                    
+                try:
+                    hour_time = datetime.fromtimestamp(hour_data['dt'])
+                    hour_date = hour_time.date()
+                    
+                    # Only process data for the stage date
+                    if hour_date != stage_date:
+                        continue
+                    
+                    # Extract weather condition
+                    condition = hour_data.get('condition', '')
+                    if not condition and 'weather' in hour_data:
+                        weather_data = hour_data['weather']
+                        condition = weather_data.get('desc', '')
+                    thunderstorm_level = thunderstorm_levels.get(condition, 'none')
+                    
+                    if thunderstorm_level == 'none':
+                        continue
+                    
+                    hour_str = str(hour_time.hour)
+                    current_level_value = level_hierarchy.get(thunderstorm_level, 0)
+                    
+                    # Check for threshold (first occurrence meeting threshold)
+                    if (current_level_value >= threshold_level and 
+                        threshold_level_found is None):
+                        threshold_level_found = thunderstorm_level
+                        threshold_level_time = hour_str
+                    
+                    # Check for maximum (highest level)
+                    if (max_level is None or 
+                        current_level_value > level_hierarchy.get(max_level, 0)):
+                        max_level = thunderstorm_level
+                        max_level_time = hour_str
+                        
+                except (ValueError, TypeError) as e:
+                    logger.warning(f"Error processing thunderstorm (+1) data for {geo_name}: {e}")
+                    continue
+            
+            # Add geo point data
+            geo_point = {
+                'name': geo_name,
+                'threshold_value': threshold_level_found,
+                'threshold_time': threshold_level_time,
+                'max_value': max_level,
+                'max_time': max_level_time
+            }
+            result.geo_points.append(geo_point)
+            
+            # Update overall result
+            if threshold_level_found and (result.threshold_value is None or 
+                                        threshold_level_time < result.threshold_time):
+                result.threshold_value = threshold_level_found
+                result.threshold_time = threshold_level_time
+            
+            if max_level and (result.max_value is None or 
+                             level_hierarchy.get(max_level, 0) > level_hierarchy.get(result.max_value, 0)):
+                result.max_value = max_level
+                result.max_time = max_level_time
+        
+        return result
     
     def process_risks_data(self, weather_data: Dict[str, Any], stage_name: str, target_date: date, report_type: str) -> WeatherThresholdData:
         """
