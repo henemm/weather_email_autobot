@@ -559,14 +559,14 @@ class WeatherFormatter:
             try:
                 from src.risiko.alternative_risk_analysis import AlternativeRiskAnalyzer
                 
-                # Prepare weather data for alternative analysis using the extracted global maxima
+                # Prepare weather data for alternative analysis using the weather data
                 weather_data_for_analysis = {
-                    'max_temperature': global_maxima.get('temperature', 0.0),
-                    'min_temperature': global_maxima.get('min_temperature', 0.0),
-                    'max_rain_probability': global_maxima.get('rain_probability', 0.0),
-                    'max_precipitation': global_maxima.get('precipitation', 0.0),
-                    'max_wind_speed': global_maxima.get('wind_speed', 0.0),
-                    'max_wind_gusts': global_maxima.get('wind_gusts', 0.0),
+                    'max_temperature': weather_data.get('max_temperature', 0.0),
+                    'min_temperature': weather_data.get('min_temperature', 0.0),
+                    'max_rain_probability': weather_data.get('max_rain_probability', 0.0),
+                    'max_precipitation': weather_data.get('max_precipitation', 0.0),
+                    'max_wind_speed': weather_data.get('max_wind_speed', 0.0),
+                    'max_wind_gusts': weather_data.get('max_wind_gusts', 0.0),
                     'stage_name': stage_names.get('today', 'Unknown'),
                     'stage_date': datetime.now().strftime('%Y-%m-%d')
                 }
