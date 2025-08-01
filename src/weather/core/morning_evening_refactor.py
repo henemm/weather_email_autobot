@@ -1157,29 +1157,41 @@ class MorningEveningRefactor:
             
             # Thunderstorm
             if report_data.thunderstorm.threshold_value is not None:
-                threshold_part = f"{report_data.thunderstorm.threshold_value}@{report_data.thunderstorm.threshold_time}"
+                # Map level to single letter
+                level_mapping = {'low': 'L', 'med': 'M', 'high': 'H'}
+                threshold_level = level_mapping.get(report_data.thunderstorm.threshold_value, report_data.thunderstorm.threshold_value)
+                max_level = level_mapping.get(report_data.thunderstorm.max_value, report_data.thunderstorm.max_value)
+                
+                threshold_part = f"{threshold_level}@{report_data.thunderstorm.threshold_time}"
                 if report_data.thunderstorm.max_value != report_data.thunderstorm.threshold_value:
-                    max_part = f"{report_data.thunderstorm.max_value}@{report_data.thunderstorm.max_time}"
+                    max_part = f"{max_level}@{report_data.thunderstorm.max_time}"
                     parts.append(f"TH:{threshold_part}({max_part})")
                 else:
                     parts.append(f"TH:{threshold_part}")
             elif report_data.thunderstorm.max_value is not None:
                 # Show maximum even if threshold not reached
-                max_part = f"{report_data.thunderstorm.max_value}@{report_data.thunderstorm.max_time}"
+                level_mapping = {'low': 'L', 'med': 'M', 'high': 'H'}
+                max_level = level_mapping.get(report_data.thunderstorm.max_value, report_data.thunderstorm.max_value)
+                max_part = f"{max_level}@{report_data.thunderstorm.max_time}"
                 parts.append(f"TH:{max_part}")
             else:
                 parts.append("TH-")
             
             # Thunderstorm (+1)
             if report_data.thunderstorm_plus_one.threshold_value is not None:
-                threshold_part = f"{report_data.thunderstorm_plus_one.threshold_value}@{report_data.thunderstorm_plus_one.threshold_time}"
+                # Map level to single letter
+                level_mapping = {'low': 'L', 'med': 'M', 'high': 'H'}
+                threshold_level = level_mapping.get(report_data.thunderstorm_plus_one.threshold_value, report_data.thunderstorm_plus_one.threshold_value)
+                max_level = level_mapping.get(report_data.thunderstorm_plus_one.max_value, report_data.thunderstorm_plus_one.max_value)
+                
+                threshold_part = f"{threshold_level}@{report_data.thunderstorm_plus_one.threshold_time}"
                 if report_data.thunderstorm_plus_one.max_value != report_data.thunderstorm_plus_one.threshold_value:
-                    max_part = f"{report_data.thunderstorm_plus_one.max_value}@{report_data.thunderstorm_plus_one.max_time}"
-                    parts.append(f"TH+1:{threshold_part}({max_part})")
+                    max_part = f"{max_level}@{report_data.thunderstorm_plus_one.max_time}"
+                    parts.append(f"S+1:{threshold_part}({max_part})")
                 else:
-                    parts.append(f"TH+1:{threshold_part}")
+                    parts.append(f"S+1:{threshold_part}")
             else:
-                parts.append("TH+1:-")
+                parts.append("S+1:-")
             
             # Risks (Warnungen) - EXAKT wie spezifiziert
             if report_data.risks.threshold_value is not None:
