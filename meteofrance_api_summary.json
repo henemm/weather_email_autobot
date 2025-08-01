@@ -1,0 +1,16 @@
+{
+  "total_tests": 2,
+  "meteofrance_success_rate": 100.0,
+  "openmeteo_fallback_rate": 0.0,
+  "meteofrance_error_rate": 0.0,
+  "openmeteo_error_rate": 0.0,
+  "missing_fields_analysis": {
+    "precipitation_probability": 2,
+    "thunderstorm_probability": 2
+  },
+  "error_patterns": {},
+  "data_source_distribution": {
+    "meteofrance-api": 2,
+    "open-meteo": 0
+  }
+}

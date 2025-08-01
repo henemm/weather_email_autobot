@@ -1,0 +1,355 @@
+{
+  "analysis_timestamp": "2025-07-28T20:52:52.026969",
+  "log_analysis": {
+    "patterns": {
+      "meteofrance_usage": 2899,
+      "openmeteo_fallbacks": 0,
+      "meteofrance_errors": 2,
+      "openmeteo_errors": 4,
+      "temperature_issues": 1250,
+      "alerts_parsing_errors": 25,
+      "api_timeouts": 5,
+      "authentication_errors": 11,
+      "data_quality_issues": 0
+    },
+    "daily_patterns": {
+      "2025-06-24": {
+        "meteofrance_success": 596,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 0,
+        "alerts_errors": 0
+      },
+      "2025-06-25": {
+        "meteofrance_success": 87,
+        "meteofrance_failure": 2,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 0,
+        "alerts_errors": 18
+      },
+      "2025-06-26": {
+        "meteofrance_success": 362,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 0,
+        "alerts_errors": 0
+      },
+      "2025-06-27": {
+        "meteofrance_success": 5,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 0,
+        "alerts_errors": 0
+      },
+      "2025-06-28": {
+        "meteofrance_success": 3,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 0,
+        "alerts_errors": 0
+      },
+      "2025-06-29": {
+        "meteofrance_success": 3,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 0,
+        "alerts_errors": 0
+      },
+      "2025-06-30": {
+        "meteofrance_success": 4,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 0,
+        "alerts_errors": 0
+      },
+      "2025-07-02": {
+        "meteofrance_success": 6,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 0,
+        "alerts_errors": 0
+      },
+      "2025-07-03": {
+        "meteofrance_success": 3,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 0,
+        "alerts_errors": 0
+      },
+      "2025-07-04": {
+        "meteofrance_success": 3,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 0,
+        "alerts_errors": 0
+      },
+      "2025-07-05": {
+        "meteofrance_success": 14,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 0,
+        "alerts_errors": 7
+      },
+      "2025-07-06": {
+        "meteofrance_success": 89,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 0,
+        "alerts_errors": 0
+      },
+      "2025-07-07": {
+        "meteofrance_success": 351,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 4,
+        "alerts_errors": 0
+      },
+      "2025-07-08": {
+        "meteofrance_success": 8,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 2,
+        "alerts_errors": 0
+      },
+      "2025-07-09": {
+        "meteofrance_success": 26,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 2,
+        "alerts_errors": 0
+      },
+      "2025-07-10": {
+        "meteofrance_success": 93,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 70,
+        "alerts_errors": 0
+      },
+      "2025-07-11": {
+        "meteofrance_success": 65,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 58,
+        "alerts_errors": 0
+      },
+      "2025-07-12": {
+        "meteofrance_success": 65,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-13": {
+        "meteofrance_success": 65,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-14": {
+        "meteofrance_success": 65,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-15": {
+        "meteofrance_success": 65,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-16": {
+        "meteofrance_success": 65,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-17": {
+        "meteofrance_success": 66,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-18": {
+        "meteofrance_success": 69,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 66,
+        "alerts_errors": 0
+      },
+      "2025-07-19": {
+        "meteofrance_success": 65,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-20": {
+        "meteofrance_success": 65,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-21": {
+        "meteofrance_success": 70,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 66,
+        "alerts_errors": 0
+      },
+      "2025-07-22": {
+        "meteofrance_success": 65,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-23": {
+        "meteofrance_success": 65,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-24": {
+        "meteofrance_success": 65,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-25": {
+        "meteofrance_success": 63,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 60,
+        "alerts_errors": 0
+      },
+      "2025-07-26": {
+        "meteofrance_success": 65,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-27": {
+        "meteofrance_success": 66,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 62,
+        "alerts_errors": 0
+      },
+      "2025-07-28": {
+        "meteofrance_success": 132,
+        "meteofrance_failure": 0,
+        "openmeteo_fallback": 0,
+        "temperature_issues": 116,
+        "alerts_errors": 0
+      }
+    },
+    "error_messages": {
+      "even without explicit height_level": 17,
+      "'Alert' object has no attribute 'get'": 5,
+      "generating evening report: convert_dict_to_aggregated_weather_data() missing 3 required positional a": 5,
+      "fetching massif restrictions: HTTPSConnectionPool(host='www.risque-prevention-incendie.fr', port=443": 3,
+      "formatting report text: 'list' object has no attribute 'get'": 2,
+      "fetching zone risk levels: HTTPSConnectionPool(host='www.risque-prevention-incendie.fr', port=443): ": 2,
+      "502: <html>": 2,
+      "- invalid username\",\"more_info\":\"https://www.twilio.com/docs/errors/20003\",\"status\":401}": 1,
+      "generating evening report: WeatherFormatter.format_report_from_debug_data() missing 1 required posit": 1,
+      "determining current stage: strptime() argument 1 must be str, not datetime.date": 1
+    },
+    "api_responses": {
+      "successful_forecasts": 0,
+      "failed_forecasts": 58,
+      "successful_thunderstorm": 0,
+      "failed_thunderstorm": 0,
+      "successful_alerts": 0,
+      "failed_alerts": 25
+    },
+    "fallback_rate": 0.0,
+    "error_rate": 0.0689893066574681
+  },
+  "quality_analysis": {
+    "total_tests": 5,
+    "meteofrance_success": 5,
+    "openmeteo_fallback": 0,
+    "missing_fields": {
+      "precipitation_probability": 5,
+      "thunderstorm_probability": 5
+    },
+    "data_completeness": {
+      "Tarbes": {
+        "temperature": true,
+        "precipitation_probability": false,
+        "wind_speed": true,
+        "wind_gusts": true,
+        "thunderstorm_probability": false,
+        "precipitation": true
+      },
+      "Paris": {
+        "temperature": true,
+        "precipitation_probability": false,
+        "wind_speed": true,
+        "wind_gusts": true,
+        "thunderstorm_probability": false,
+        "precipitation": true
+      },
+      "Marseille": {
+        "temperature": true,
+        "precipitation_probability": false,
+        "wind_speed": true,
+        "wind_gusts": true,
+        "thunderstorm_probability": false,
+        "precipitation": true
+      },
+      "Lyon": {
+        "temperature": true,
+        "precipitation_probability": false,
+        "wind_speed": true,
+        "wind_gusts": true,
+        "thunderstorm_probability": false,
+        "precipitation": true
+      },
+      "Toulouse": {
+        "temperature": true,
+        "precipitation_probability": false,
+        "wind_speed": true,
+        "wind_gusts": true,
+        "thunderstorm_probability": false,
+        "precipitation": true
+      }
+    },
+    "response_times": [
+      0.122524,
+      0.121407,
+      0.12296,
+      0.122667,
+      0.138059
+    ],
+    "error_types": {},
+    "avg_response_time": 0.1255234,
+    "max_response_time": 0.138059,
+    "min_response_time": 0.121407
+  },
+  "summary": {
+    "overall_meteofrance_success_rate": 100.0,
+    "overall_fallback_rate": 0.0,
+    "most_common_missing_field": [
+      "precipitation_probability",
+      5
+    ],
+    "most_common_error": null,
+    "average_response_time": 0.1255234
+  },
+  "recommendations": [
+    "Frequent missing field: precipitation_probability (5 times) - Consider data validation",
+    "Many temperature validation issues (1250) - Review temperature thresholds",
+    "Frequent alerts parsing errors (25) - Fix alerts data structure handling"
+  ]
+}

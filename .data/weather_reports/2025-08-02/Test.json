@@ -1,0 +1,413 @@
+{
+  "stage_name": "Test",
+  "report_date": "2025-08-02",
+  "report_type": "evening",
+  "night": {
+    "threshold_value": 22,
+    "threshold_time": null,
+    "max_value": 22,
+    "max_time": null,
+    "geo_points": [
+      {
+        "G1": 21.5
+      }
+    ]
+  },
+  "day": {
+    "threshold_value": 25,
+    "threshold_time": null,
+    "max_value": 25,
+    "max_time": null,
+    "geo_points": [
+      {
+        "G1": 25.4
+      },
+      {
+        "G2": 24.6
+      },
+      {
+        "G3": 24.6
+      }
+    ]
+  },
+  "rain_mm": {
+    "threshold_value": 0.4,
+    "threshold_time": "03",
+    "max_value": 1.3,
+    "max_time": "04",
+    "geo_points": [
+      {
+        "G1": {
+          "00": 0,
+          "01": 0.1,
+          "02": 0,
+          "03": 0.4,
+          "04": 1.3,
+          "05": 0.3,
+          "06": 0,
+          "07": 1.3,
+          "08": 1,
+          "09": 0.5,
+          "10": 0.2,
+          "11": 0.3,
+          "12": 0.1,
+          "13": 0.1,
+          "14": 0,
+          "15": 0,
+          "16": 0,
+          "17": 0,
+          "18": 0,
+          "19": 0,
+          "20": 0,
+          "21": 0,
+          "22": 0,
+          "23": 0
+        }
+      },
+      {
+        "G2": {
+          "00": 0,
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "05": 0,
+          "06": 0,
+          "07": 0,
+          "08": 0,
+          "09": 0,
+          "10": 0,
+          "11": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "15": 0,
+          "16": 0,
+          "17": 0,
+          "18": 0,
+          "19": 0,
+          "20": 0,
+          "21": 0,
+          "22": 0,
+          "23": 0
+        }
+      },
+      {
+        "G3": {
+          "00": 0,
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "05": 0,
+          "06": 0,
+          "07": 0,
+          "08": 0,
+          "09": 0,
+          "10": 0,
+          "11": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "15": 0,
+          "16": 0,
+          "17": 0,
+          "18": 0,
+          "19": 0,
+          "20": 0,
+          "21": 0,
+          "22": 0,
+          "23": 0
+        }
+      }
+    ]
+  },
+  "rain_percent": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
+    "geo_points": []
+  },
+  "wind": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": 0,
+    "max_time": "00",
+    "geo_points": [
+      {
+        "G1": {
+          "00": 0,
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "05": 0,
+          "06": 0,
+          "07": 0,
+          "08": 0,
+          "09": 0,
+          "10": 0,
+          "11": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "15": 0,
+          "16": 0,
+          "17": 0,
+          "18": 0,
+          "19": 0,
+          "20": 0,
+          "21": 0,
+          "22": 0,
+          "23": 0
+        }
+      },
+      {
+        "G2": {
+          "00": 0,
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "05": 0,
+          "06": 0,
+          "07": 0,
+          "08": 0,
+          "09": 0,
+          "10": 0,
+          "11": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "15": 0,
+          "16": 0,
+          "17": 0,
+          "18": 0,
+          "19": 0,
+          "20": 0,
+          "21": 0,
+          "22": 0,
+          "23": 0
+        }
+      },
+      {
+        "G3": {
+          "00": 0,
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "05": 0,
+          "06": 0,
+          "07": 0,
+          "08": 0,
+          "09": 0,
+          "10": 0,
+          "11": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "15": 0,
+          "16": 0,
+          "17": 0,
+          "18": 0,
+          "19": 0,
+          "20": 0,
+          "21": 0,
+          "22": 0,
+          "23": 0
+        }
+      }
+    ]
+  },
+  "gust": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": 0,
+    "max_time": "00",
+    "geo_points": [
+      {
+        "G1": {
+          "00": 0,
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "05": 0,
+          "06": 0,
+          "07": 0,
+          "08": 0,
+          "09": 0,
+          "10": 0,
+          "11": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "15": 0,
+          "16": 0,
+          "17": 0,
+          "18": 0,
+          "19": 0,
+          "20": 0,
+          "21": 0,
+          "22": 0,
+          "23": 0
+        }
+      },
+      {
+        "G2": {
+          "00": 0,
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "05": 0,
+          "06": 0,
+          "07": 0,
+          "08": 0,
+          "09": 0,
+          "10": 0,
+          "11": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "15": 0,
+          "16": 0,
+          "17": 0,
+          "18": 0,
+          "19": 0,
+          "20": 0,
+          "21": 0,
+          "22": 0,
+          "23": 0
+        }
+      },
+      {
+        "G3": {
+          "00": 0,
+          "01": 0,
+          "02": 0,
+          "03": 0,
+          "04": 0,
+          "05": 0,
+          "06": 0,
+          "07": 0,
+          "08": 0,
+          "09": 0,
+          "10": 0,
+          "11": 0,
+          "12": 0,
+          "13": 0,
+          "14": 0,
+          "15": 0,
+          "16": 0,
+          "17": 0,
+          "18": 0,
+          "19": 0,
+          "20": 0,
+          "21": 0,
+          "22": 0,
+          "23": 0
+        }
+      }
+    ]
+  },
+  "thunderstorm": {
+    "threshold_value": "med",
+    "threshold_time": "1",
+    "max_value": "med",
+    "max_time": "1",
+    "geo_points": [
+      {
+        "name": "G1",
+        "threshold_value": "med",
+        "threshold_time": "1",
+        "max_value": "med",
+        "max_time": "1"
+      },
+      {
+        "name": "G2",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      },
+      {
+        "name": "G3",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      }
+    ]
+  },
+  "thunderstorm_plus_one": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
+    "geo_points": [
+      {
+        "name": "G1",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      },
+      {
+        "name": "G2",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      },
+      {
+        "name": "G3",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      }
+    ]
+  },
+  "risks": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
+    "geo_points": []
+  },
+  "risk_zonal": {
+    "threshold_value": "M",
+    "threshold_time": "0",
+    "max_value": "M",
+    "max_time": "0",
+    "geo_points": [
+      {
+        "name": "G1",
+        "threshold_value": "M",
+        "threshold_time": "0",
+        "max_value": "M",
+        "max_time": "0"
+      },
+      {
+        "name": "G2",
+        "threshold_value": "M",
+        "threshold_time": "0",
+        "max_value": "M",
+        "max_time": "0"
+      },
+      {
+        "name": "G3",
+        "threshold_value": "M",
+        "threshold_time": "0",
+        "max_value": "M",
+        "max_time": "0"
+      }
+    ]
+  },
+  "debug_info": {},
+  "generated_at": "2025-08-01T22:55:06.535543",
+  "version": "morning-evening-refactor-v1"
+}

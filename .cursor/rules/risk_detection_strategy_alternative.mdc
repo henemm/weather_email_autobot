@@ -1,0 +1,82 @@
+---
+alwaysApply: true
+---
+# 🌤️ Alternative Risikoanalyse (aktiv, mit Bericht)
+
+## 🧪 Testziel
+
+Diese Regel definiert eine alternative Risikoanalyse, die ohne klassische Schwellwerte auskommt (außer bei Regen) und auf direkten, robusten Datenfeldern basiert. Sie erzeugt einen eigenen **Zusatzbericht** innerhalb der E-Mail, um die Resultate mit der Standardlogik zu vergleichen.
+
+---
+
+## 🔍 Risiken & Analyse
+
+### 🔥 Hitze
+- **Primär**: `daily.temperature_2m_max` (API liefert direkt das Tagesmaximum)
+- **Fallback**: `hourly.temperature_2m` (Maximum über 24h: 00:00-23:59)
+- Bewertung: Reiner Info-Wert mit Höchsttemperatur
+
+### ❄️ Kälte (Nacht)
+- **Primär**: `daily.temperature_2m_min` (API liefert direkt das Tagesminimum)
+- **Fallback**: `hourly.temperature_2m` (Minimum über Nacht: 22:00-06:00)
+- Bewertung: Reiner Info-Wert mit Tiefsttemperatur
+
+### 🌧️ Regen
+- Primär: `hourly.precipitation_probability`, `hourly.precipitation`
+- Alternativ: `daily.precipitation_sum`, `showers_sum`, `precipitation_hours`
+- Bewertung: Meldung bei **≥ 50 % Regenwahrscheinlichkeit** UND **> 2 mm/h Regenmenge**
+- **Einheiten**: mm/h (pro Stunde), beide Bedingungen unabhängig prüfen
+
+### ⛈️ Gewitter
+- Primär: `hourly.weathercode` (Codes für Thunderstorm)
+- Optional: `hourly.cape > 800` als Risikoindikator
+- Bewertung: Warnung bei expliziten Gewitter-Codes
+- **WMO-Codes für Gewitter**: 95, 96, 97, 98, 99
+  - 95: Thunderstorm, slight or moderate
+  - 96: Thunderstorm with slight hail
+  - 97: Thunderstorm with heavy hail
+  - 98: Thunderstorm, slight or moderate, with rain and/or snow
+  - 99: Thunderstorm with heavy rain and/or snow
+
+### 🌬️ Wind / Böen
+- Primär: `hourly.wind_speed_10m`, `gusts_10m`
+- Alternativ: `daily.wind_speed_10m_max`, `gusts_10m_max`
+- Bewertung: Anzeige bei Windspitzen > 30 km/h
+- **Einheiten**: API-Ausgabe verwenden (meist km/h oder m/s)
+
+---
+
+## 📨 E-Mail-Ausgabe
+
+- Der alternative Risikobericht wird in **Plaintext** erzeugt
+- Ausgabe erfolgt **nach dem Standard-Risikobericht**, getrennt durch:
+  
+```
+---
+
+## 🔍 Alternative Risikoanalyse
+```
+
+---
+
+## ⚙️ Implementierungsdetails
+
+### Zeitfenster
+- **Hitze**: API liefert direkt `daily.temperature_2m_max` (Tagesmaximum)
+- **Kälte**: API liefert direkt `daily.temperature_2m_min` (Tagesminimum)
+- **Fallback**: Nur bei fehlenden daily-Werten → stündliche Aggregation
+
+### Regen-Bedingungen
+- Beide Bedingungen werden **unabhängig** geprüft:
+  - ≥ 50% Regenwahrscheinlichkeit
+  - > 2 mm/h Regenmenge
+- Meldung erfolgt bei Erfüllung beider Kriterien
+
+### Fehlerbehandlung
+- Bei fehlenden Datenfeldern: Fehler ausgeben
+- Kein Fallback auf Standardlogik
+
+### Modul-Architektur
+- Separate Implementierung ohne Beeinflussung bestehenden Codes
+- Neues Modul: `src/risiko/alternative_risk_analysis.py`
+  

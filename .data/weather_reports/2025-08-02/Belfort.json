@@ -1,0 +1,235 @@
+{
+  "stage_name": "Belfort",
+  "report_date": "2025-08-02",
+  "report_type": "evening",
+  "night": {
+    "threshold_value": 19,
+    "threshold_time": null,
+    "max_value": 19,
+    "max_time": null,
+    "geo_points": [
+      {
+        "G1": 19
+      }
+    ]
+  },
+  "day": {
+    "threshold_value": 28,
+    "threshold_time": null,
+    "max_value": 28,
+    "max_time": null,
+    "geo_points": [
+      {
+        "G1": 28.2
+      },
+      {
+        "G2": 28.2
+      },
+      {
+        "G3": 9.5
+      }
+    ]
+  },
+  "rain_mm": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": 0,
+    "max_time": "00",
+    "geo_points": [
+      {
+        "G1": {
+          "00": 0,
+          "01": 0,
+          "02": 0,
+          "05": 0.0,
+          "08": 0.0,
+          "11": 0.0,
+          "14": 0.0,
+          "17": 0.0,
+          "20": 0.0,
+          "23": 0.0
+        }
+      },
+      {
+        "G2": {
+          "00": 0,
+          "01": 0,
+          "02": 0,
+          "05": 0.0,
+          "08": 0.0,
+          "11": 0.0,
+          "14": 0.0,
+          "17": 0.0,
+          "20": 0.0,
+          "23": 0.0
+        }
+      },
+      {
+        "G3": {
+          "00": 0,
+          "01": 0,
+          "02": 0,
+          "05": 0.0,
+          "08": 0.0,
+          "11": 0.0,
+          "14": 0.0,
+          "17": 0.0,
+          "20": 0.0,
+          "23": 0.0
+        }
+      }
+    ]
+  },
+  "rain_percent": {
+    "threshold_value": 50,
+    "threshold_time": "20",
+    "max_value": 50,
+    "max_time": "20",
+    "geo_points": [
+      {
+        "G1": {
+          "02": 0,
+          "08": 0,
+          "14": 30,
+          "20": 0
+        }
+      },
+      {
+        "G2": {
+          "02": 0,
+          "08": 0,
+          "14": 30,
+          "20": 0
+        }
+      },
+      {
+        "G3": {
+          "02": 0,
+          "08": 0,
+          "14": 30,
+          "20": 50
+        }
+      }
+    ]
+  },
+  "wind": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": 7,
+    "max_time": "00",
+    "geo_points": [
+      {
+        "G1": {
+          "00": 5,
+          "01": 5,
+          "02": 4,
+          "05": 4,
+          "08": 3,
+          "11": 3,
+          "14": 4,
+          "17": 3,
+          "20": 2,
+          "23": 1
+        }
+      },
+      {
+        "G2": {
+          "00": 5,
+          "01": 5,
+          "02": 4,
+          "05": 4,
+          "08": 3,
+          "11": 3,
+          "14": 4,
+          "17": 3,
+          "20": 2,
+          "23": 1
+        }
+      },
+      {
+        "G3": {
+          "00": 7,
+          "01": 7,
+          "02": 6,
+          "05": 3,
+          "08": 2,
+          "11": 1,
+          "14": 3,
+          "17": 2,
+          "20": 1,
+          "23": 0
+        }
+      }
+    ]
+  },
+  "gust": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
+    "geo_points": [
+      {
+        "name": "G1",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      }
+    ]
+  },
+  "thunderstorm": {
+    "threshold_value": "med",
+    "threshold_time": "3",
+    "max_value": "med",
+    "max_time": "3",
+    "geo_points": [
+      {
+        "name": "G1",
+        "threshold_value": "med",
+        "threshold_time": "3",
+        "max_value": "med",
+        "max_time": "3"
+      }
+    ]
+  },
+  "thunderstorm_plus_one": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
+    "geo_points": [
+      {
+        "name": "G1",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      }
+    ]
+  },
+  "risks": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
+    "geo_points": []
+  },
+  "risk_zonal": {
+    "threshold_value": "M",
+    "threshold_time": "0",
+    "max_value": "M",
+    "max_time": "0",
+    "geo_points": [
+      {
+        "name": "G1",
+        "threshold_value": "M",
+        "threshold_time": "0",
+        "max_value": "M",
+        "max_time": "0"
+      }
+    ]
+  },
+  "debug_info": {},
+  "generated_at": "2025-08-01T21:28:27.384741",
+  "version": "morning-evening-refactor-v1"
+}

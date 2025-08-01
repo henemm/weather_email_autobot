@@ -24,18 +24,18 @@ class MorningEveningFormatter:
     def __init__(self, config: ReportConfig):
         self.config = config
     
-    def format_morning_report(self, weather_data: AggregatedWeatherData, stage_names: Dict[str, str]) -> str:
+    def format_morning_report(self, stage_name: str, weather_data: AggregatedWeatherData) -> str:
         """
         Format morning report according to specification.
         
         Args:
+            stage_name: Name of the stage (e.g., 'Paliri')
             weather_data: Aggregated weather data
-            stage_names: Dictionary with stage names (e.g., {'today': 'Paliri', 'tomorrow': 'Vizzavona'})
             
         Returns:
             Formatted morning report (max 160 characters)
         """
-        stage_name = self._shorten_stage_name(stage_names.get('today', 'Unknown'))
+        stage_name = self._shorten_stage_name(stage_name)
         
         # Format each component
         night = self._format_night_field(weather_data)
@@ -58,20 +58,20 @@ class MorningEveningFormatter:
         
         return report
     
-    def format_evening_report(self, weather_data: AggregatedWeatherData, stage_names: Dict[str, str]) -> str:
+    def format_evening_report(self, stage_name: str, weather_data: AggregatedWeatherData) -> str:
         """
         Format evening report according to specification.
         
         Args:
+            stage_name: Name of the stage (e.g., 'Paliri')
             weather_data: Aggregated weather data
-            stage_names: Dictionary with stage names (e.g., {'today': 'Paliri', 'tomorrow': 'Vizzavona', 'day_after_tomorrow': 'Corte'})
             
         Returns:
             Formatted evening report (max 160 characters)
         """
         # Evening report uses same format as morning for now
         # Future enhancement: could include day_after_tomorrow data
-        return self.format_morning_report(weather_data, stage_names)
+        return self.format_morning_report(stage_name, weather_data)
     
     def _format_night_field(self, weather_data: AggregatedWeatherData) -> str:
         """Format night temperature field (N8)."""

@@ -10,7 +10,7 @@ import sys
 import os
 import yaml
 import argparse
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Dict, Any, Optional, Tuple
 
@@ -22,8 +22,9 @@ from notification.email_client import EmailClient
 from notification.modular_sms_client import ModularSmsClient
 from logic.analyse_weather import analyze_weather_data, compute_risk
 from wetter.fetch_meteofrance import get_forecast, get_thunderstorm, get_alerts, ForecastResult, get_tomorrow_forecast
-from wetter.fetch_openmeteo import fetch_openmeteo_forecast, fetch_tomorrow_openmeteo_forecast
-from wetter.weather_data_processor import process_weather_data_for_report
+# REMOVED: Open-Meteo imports - api_usage_policy.mdc requires MeteoFrance-only usage
+# from wetter.fetch_openmeteo import fetch_openmeteo_forecast, fetch_tomorrow_openmeteo_forecast
+from wetter.weather_data_processor import process_stage_weather_data
 from position.etappenlogik import get_stage_info, get_stage_coordinates, get_next_stage, get_day_after_tomorrow_stage
 from utils.env_loader import get_env_var
 from config.config_loader import load_config as load_config_with_env
@@ -177,19 +178,20 @@ def get_current_weather_data(config: dict, latitude: float, longitude: float) ->
     except Exception as e:
         print(f"Failed to fetch MeteoFrance data: {e}")
     
-    try:
-        # Fetch OpenMeteo data as fallback
-        print("Fetching OpenMeteo weather data...")
-        openmeteo_dict = fetch_openmeteo_forecast(
-            latitude,
-            longitude
-        )
-        if openmeteo_dict:
-            openmeteo_data = convert_openmeteo_to_weather_data(openmeteo_dict)
-            weather_data_list.append(openmeteo_data)
-            print("OpenMeteo data fetched successfully")
-    except Exception as e:
-        print(f"Failed to fetch OpenMeteo data: {e}")
+    # REMOVED: Open-Meteo fallback - api_usage_policy.mdc requires MeteoFrance-only usage
+    # try:
+    #     # Fetch OpenMeteo data as fallback
+    #     print("Fetching OpenMeteo weather data...")
+    #     openmeteo_dict = fetch_openmeteo_forecast(
+    #         latitude,
+    #         longitude
+    #     )
+    #     if openmeteo_dict:
+    #         openmeteo_data = convert_openmeteo_to_weather_data(openmeteo_dict)
+    #         weather_data_list.append(openmeteo_data)
+    #         print("OpenMeteo data fetched successfully")
+    # except Exception as e:
+    #     print(f"Failed to fetch OpenMeteo data: {e}")
     
     return weather_data_list
 
@@ -322,15 +324,16 @@ def get_day_after_tomorrow_thunderstorm_data(config: dict) -> list:
             except Exception as e:
                 print(f"Failed to fetch MeteoFrance thunderstorm data for point {i+1}: {e}")
             
-            try:
-                # Fetch OpenMeteo thunderstorm data as fallback
-                openmeteo_dict = fetch_openmeteo_forecast(latitude, longitude)
-                if openmeteo_dict:
-                    openmeteo_data = convert_openmeteo_to_weather_data(openmeteo_dict)
-                    weather_data_list.append(openmeteo_data)
-                    print(f"OpenMeteo thunderstorm data fetched for point {i+1}")
-            except Exception as e:
-                print(f"Failed to fetch OpenMeteo thunderstorm data for point {i+1}: {e}")
+            # REMOVED: Open-Meteo fallback - api_usage_policy.mdc requires MeteoFrance-only usage
+            # try:
+            #     # Fetch OpenMeteo thunderstorm data as fallback
+            #     openmeteo_dict = fetch_openmeteo_forecast(latitude, longitude)
+            #     if openmeteo_dict:
+            #         openmeteo_data = convert_openmeteo_to_weather_data(openmeteo_dict)
+            #         weather_data_list.append(openmeteo_data)
+            #         print(f"OpenMeteo thunderstorm data fetched for point {i+1}")
+            # except Exception as e:
+            #     print(f"Failed to fetch OpenMeteo thunderstorm data for point {i+1}: {e}")
         
         print(f"Total thunderstorm data sources for day after tomorrow: {len(weather_data_list)}")
         
@@ -494,7 +497,37 @@ def main():
         weather_analysis = analyze_weather_data(weather_data_list, config)
         
         # Compute risk score PER STAGE (not globally)
-        processed_weather_data = process_weather_data_for_report(latitude, longitude, location_name, config, "dynamic")
+        # Use the new enhanced API for weather data processing
+        from wetter.weather_data_processor import WeatherDataProcessor
+        from position.etappenlogik import get_stage_coordinates
+        
+        # Get stage coordinates
+        current_stage = get_stage_info(config)
+        if current_stage:
+            stage_coordinates = current_stage["coordinates"]
+            processor = WeatherDataProcessor()
+            
+            # Get unified weather data
+            unified_data = processor.get_stage_weather_data(stage_coordinates, location_name)
+            
+            # Define time range (04:00-22:00)
+            now = datetime.now()
+            start_time = now.replace(hour=4, minute=0, second=0, microsecond=0)
+            end_time = now.replace(hour=22, minute=0, second=0, microsecond=0)
+            
+            # Get weather summary
+            summary = processor.get_weather_summary(unified_data, start_time, end_time)
+            processed_weather_data = summary
+        else:
+            # Fallback to old method if stage info not available
+            processed_weather_data = {
+                "max_thunderstorm_probability": 0.0,
+                "max_wind_speed": 0.0,
+                "max_precipitation": 0.0,
+                "max_temperature": 0.0,
+                "max_cape_shear": 0.0
+            }
+        
         risk_metrics = {
             "thunderstorm_probability": processed_weather_data.get("max_thunderstorm_probability", 0.0),
             "wind_speed": processed_weather_data.get("max_wind_speed", 0.0),
@@ -506,36 +539,7 @@ def main():
         print(f"Current risk score for {location_name}: {current_risk:.2f}")
         current_time = datetime.now()
         
-        # --- OPTIMIZED DEBUG OUTPUT FOR ALL GEO-POINTS ---
-        # Call the debug aggregation to show all geo-points clearly
-        from wetter.weather_data_processor import WeatherDataProcessor
-        processor = WeatherDataProcessor(config)
-        
-        if args.modus == "evening":
-            # Show debug output for evening report (all 7 geo-points)
-            processor._debug_evening_report_aggregation(
-                location_name=location_name,
-                latitude=latitude,
-                longitude=longitude,
-                target_date=current_time.date()
-            )
-        elif args.modus == "morning":
-            # Show debug output for morning report (all 6 geo-points)
-            processor._debug_morning_report_aggregation(
-                location_name=location_name,
-                latitude=latitude,
-                longitude=longitude,
-                target_date=current_time.date()
-            )
-        elif args.modus == "dynamic":
-            # Show debug output for update report (all 6 geo-points)
-            processor._debug_update_report_aggregation(
-                location_name=location_name,
-                latitude=latitude,
-                longitude=longitude,
-                target_date=current_time.date()
-            )
-        # --- END OPTIMIZED DEBUG OUTPUT ---
+        # --- DEBUG OUTPUT REMOVED - Using enhanced API instead ---
 
         # Handle manual mode vs automatic mode
         if args.modus:
@@ -612,8 +616,17 @@ def main():
                     if next_stage:
                         coords = get_stage_coordinates(next_stage)
                         next_lat, next_lon = coords[0]
-                        # Verwende die gleiche Funktion wie für heute
-                        tomorrow_processed_data = process_weather_data_for_report(next_lat, next_lon, next_stage["name"], config)
+                        # Use the new enhanced API for tomorrow's data
+                        next_stage_coordinates = get_stage_coordinates(next_stage)
+                        tomorrow_processor = WeatherDataProcessor()
+                        tomorrow_unified_data = tomorrow_processor.get_stage_weather_data(next_stage_coordinates, next_stage["name"])
+                        
+                        # Define time range for tomorrow (04:00-22:00)
+                        tomorrow_start = (now + timedelta(days=1)).replace(hour=4, minute=0, second=0, microsecond=0)
+                        tomorrow_end = (now + timedelta(days=1)).replace(hour=22, minute=0, second=0, microsecond=0)
+                        
+                        tomorrow_summary = tomorrow_processor.get_weather_summary(tomorrow_unified_data, tomorrow_start, tomorrow_end)
+                        tomorrow_processed_data = tomorrow_summary
                         # Übernehme die Gewitterdaten für morgen
                         processed_weather_data["thunderstorm_next_day"] = tomorrow_processed_data.get("max_thunderstorm_probability", 0)
                         processed_weather_data["thunderstorm_next_day_threshold_time"] = tomorrow_processed_data.get("thunderstorm_threshold_time", "")

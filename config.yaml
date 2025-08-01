@@ -58,10 +58,10 @@ thresholds:
   rain_amount: 0.5   # Rain amount in mm
   rain_probability: 15.0  # Rain probability percentage
   temperature: 25.0  # Temperature in Celsius
-  thunderstorm_warning_level: med 
+  thunderstorm_warning_level: low 
   thunderstorm_probability: 10.0  # Thunderstorm probability percentage
-  wind_speed: 15.0   # Wind speed in km/h
-  wind_gust_threshold: 10.0  # Wind gust difference threshold in km/h (show gusts if difference >= this value)
+  wind_speed: 1.0   # Wind speed in km/h
+  wind_gust_threshold: 5.0  # Wind gust difference threshold in km/h (show gusts if difference >= this value)
   wind_gust_percentage: 50.0  # Wind gust percentage threshold (show gusts if gusts >= wind_speed * (1 + this/100))
 
 # Fire risk level configuration for GR20 zones and massifs

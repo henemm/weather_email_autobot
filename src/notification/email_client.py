@@ -1,27 +1,94 @@
 """
-Email client for sending GR20 weather reports.
+Email client for sending weather reports.
 
-This module provides functionality to send weather reports via email
-with proper formatting and character limits for mobile devices.
+This module provides functionality for sending weather reports via email.
 """
 
 import smtplib
-import os
 import ssl
+import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from datetime import datetime
 from typing import Dict, Any, Optional, List
+from datetime import datetime
 import logging
 
-from weather.core.formatter import WeatherFormatter
-from weather.core.models import AggregatedWeatherData, ReportType, ReportConfig, convert_dict_to_aggregated_weather_data, create_report_config_from_yaml
-from fire.risk_block_formatter import format_risk_block
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # dotenv not available, continue without it
+try:
+    from src.fire.risk_block_formatter import format_risk_block
+except ImportError:
+    try:
+        from fire.risk_block_formatter import format_risk_block
+    except ImportError:
+        def format_risk_block(latitude, longitude):
+            return ""
+
+# Remove problematic import
+# from weather.core.formatter import WeatherFormatter
+
+# Import the missing functions
+try:
+    from weather.core.models import convert_dict_to_aggregated_weather_data, create_report_config_from_yaml
+    from weather.core.formatter import WeatherFormatter
+    from weather.core.models import ReportType
+except ImportError:
+    # Fallback if the modules are not available
+    def convert_dict_to_aggregated_weather_data(data, location_name, latitude, longitude):
+        return data  # Return data as-is if conversion not available
+    
+    def create_report_config_from_yaml(config):
+        return config  # Return config as-is if conversion not available
+    
+    class WeatherFormatter:
+        def __init__(self, config):
+            self.config = config
+        
+        def format_report_text(self, data, report_type, stage_names):
+            return f"Standard report for {stage_names.get('today', 'Unknown')}"
+    
+    class ReportType:
+        def __init__(self, report_type):
+            self.type = report_type
 
 logger = logging.getLogger(__name__)
 
 # Remove all the old formatting functions (_format_thunderstorm_field, etc.)
 # as they are now handled by the central WeatherFormatter
+
+def generate_debug_email_append(report_data: Dict[str, Any], config: Dict[str, Any]) -> str:
+    """
+    Generate debug information to append to email when debug is enabled.
+    
+    Args:
+        report_data: Dictionary containing report information
+        config: Configuration dictionary
+        
+    Returns:
+        Debug information as formatted string, or empty string if debug is disabled
+    """
+    try:
+        # Import the new debug module
+        from src.debug.weather_debug import generate_weather_debug_output
+        return generate_weather_debug_output(report_data, config)
+    except ImportError:
+        try:
+            from debug.weather_debug import generate_weather_debug_output
+            return generate_weather_debug_output(report_data, config)
+        except ImportError:
+            logger.error("Weather debug module not available")
+            return "\n--- DEBUG INFO ---\nWeather debug module not available\n"
+    except Exception as e:
+        logger.error(f"Failed to generate debug email append: {e}")
+        return f"\n--- DEBUG INFO ---\nError generating debug info: {str(e)}\n"
+
+
+
+
 
 class EmailClient:
     """
@@ -244,7 +311,7 @@ def generate_gr20_report_text(report_data: Dict[str, Any], config: Dict[str, Any
         config: Configuration dictionary
         
     Returns:
-        Formatted report text (max 160 characters, no links)
+        Formatted report text (max 160 characters, no links) with optional debug info
     """
     report_type = report_data.get("report_type", "morning")
     
@@ -273,22 +340,121 @@ def generate_gr20_report_text(report_data: Dict[str, Any], config: Dict[str, Any
                 
                 # Ensure total length doesn't exceed 160 characters
                 if len(combined_text) <= 160:
-                    return combined_text
+                    final_text = combined_text
                 else:
                     # If too long, truncate the base text to make room for risk block
                     available_space = 160 - len(risk_block) - 1  # -1 for space
                     if available_space > 0:
                         truncated_base = base_text[:available_space]
-                        return f"{truncated_base} {risk_block}"
+                        final_text = f"{truncated_base} {risk_block}"
                     else:
                         # If risk block is too long, return base text only
                         logger.warning(f"Risk block too long ({len(risk_block)} chars), using base text only")
-                        return base_text
+                        final_text = base_text
+            else:
+                final_text = base_text
+        else:
+            final_text = base_text
     except Exception as e:
         logger.error(f"Error adding risk block to report: {e}")
         # Return base text if risk block fails
+        final_text = base_text
     
-    return base_text
+    # Add enhanced alternative risk analysis if enabled
+    if config.get('alternative_risk_analysis', {}).get('enabled', False):
+        try:
+            import sys
+            import os
+            # Add the src directory to the Python path
+            src_path = os.path.join(os.path.dirname(__file__), '..')
+            if src_path not in sys.path:
+                sys.path.insert(0, src_path)
+            from risiko.alternative_risk_analysis import AlternativeRiskAnalyzer
+            
+            # Extract weather data for alternative analysis
+            weather_data = report_data.get("weather_data", {})
+            
+            # Check if we have MeteoFrance data available
+            if weather_data and isinstance(weather_data, dict):
+                # Add report_type to the weather_data so the analyzer knows which dates to use
+                report_type = report_data.get("report_type", "morning")
+                logger.info(f"Setting report_type to: {report_type}")
+                weather_data['report_type'] = report_type
+                weather_data['stage_date'] = weather_data.get('stage_date', datetime.now().strftime('%Y-%m-%d'))
+                
+                logger.info(f"Weather data report_type after setting: {weather_data.get('report_type', 'unknown')}")
+                logger.info(f"Weather data keys: {list(weather_data.keys())}")
+                logger.info(f"Weather data has forecast: {'forecast' in weather_data}")
+                logger.info(f"Weather data has enhanced_data: {'enhanced_data' in weather_data}")
+                
+                # Use the alternative risk analyzer with debug data
+                analyzer = AlternativeRiskAnalyzer()
+                
+                # Pass the original weather_data to the analyzer
+                # The debug_data only contains formatted text, not raw data
+                alternative_result = analyzer.analyze_from_debug_data(weather_data)
+                
+                if alternative_result:
+                    alternative_report = analyzer.generate_report_text(alternative_result, weather_data)
+                    if alternative_report:
+                        final_text += "\n\n---\n\n## Alternative Risikoanalyse\n\n"
+                        final_text += alternative_report
+            else:
+                logger.warning("No MeteoFrance data available for alternative risk analysis")
+                
+        except ImportError as e:
+            logger.warning(f"Alternative risk analysis modules not available: {e}")
+        except Exception as e:
+            logger.error(f"Error in alternative risk analysis: {e}")
+    
+    # Add debug information if enabled
+    debug_info = generate_debug_email_append(report_data, config)
+    if debug_info:
+        final_text += debug_info
+    
+    return final_text
+
+
+def _prepare_weather_data_by_point(report_data: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    """
+    Prepare weather data by point for alternative risk analysis.
+    
+    Args:
+        report_data: Report data containing weather information
+        
+    Returns:
+        Dictionary mapping point IDs to weather data
+    """
+    try:
+        weather_data = report_data.get("weather_data", {})
+        if not weather_data:
+            return {}
+        
+        # Extract forecast data from weather_data
+        forecast_entries = weather_data.get("forecast", [])
+        if not forecast_entries:
+            return {}
+        
+        # Get stage information
+        stage_names = report_data.get("stage_names", ["Unknown"])
+        stage_name = stage_names[0] if stage_names else "Unknown"
+        stage_date = datetime.now().strftime("%Y-%m-%d")
+        
+        # Create a single point with aggregated data
+        # In a real implementation, this would be split by actual GEO-points
+        weather_data_by_point = {
+            f"{stage_name}_aggregated": {
+                'forecast': forecast_entries,
+                'stage_name': stage_name,
+                'stage_date': stage_date
+            }
+        }
+        
+        return weather_data_by_point
+        
+    except Exception as e:
+        logger.error(f"Error preparing weather data by point: {e}")
+        return {}
 
 
 def _format_value_or_dash(value, *args):

@@ -1,0 +1,6 @@
+Location,Coordinates,Timestamp,MeteoFrance_Available,MeteoFrance_Error,Fallback_Used,Fallback_Reason,Final_Data_Source
+Asco,"42.4542, 8.7389",2025-07-28T21:19:03.012555,True,,False,,meteofrance-api
+Conca,"41.7, 9.3",2025-07-28T21:19:03.670063,True,,False,,meteofrance-api
+Ascu,"42.426238, 8.900291",2025-07-28T21:19:04.369038,True,,False,,meteofrance-api
+Corte,"42.307, 9.15",2025-07-28T21:19:05.285568,True,,False,,meteofrance-api
+Paris,"48.8566, 2.3522",2025-07-28T21:19:05.973762,True,,False,,meteofrance-api
