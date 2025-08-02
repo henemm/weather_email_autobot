@@ -101,17 +101,29 @@
   "rain_percent": {
     "threshold_value": null,
     "threshold_time": null,
-    "max_value": null,
-    "max_time": null,
+    "max_value": 10,
+    "max_time": "08",
     "geo_points": [
       {
-        "T2G1": {}
+        "T2G1": {
+          "08": 10,
+          "14": 0,
+          "20": 0
+        }
       },
       {
-        "T2G2": {}
+        "T2G2": {
+          "08": 0,
+          "14": 0,
+          "20": 0
+        }
       },
       {
-        "T2G3": {}
+        "T2G3": {
+          "08": 0,
+          "14": 0,
+          "20": 0
+        }
       }
     ]
   },
@@ -346,6 +358,6 @@
     ]
   },
   "debug_info": {},
-  "generated_at": "2025-08-02T11:05:07.411566",
+  "generated_at": "2025-08-02T11:11:53.866172",
   "version": "morning-evening-refactor-v1"
 }
