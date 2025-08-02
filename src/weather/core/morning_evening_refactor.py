@@ -1455,10 +1455,46 @@ class MorningEveningRefactor:
                     
                     # Add threshold and maximum for this point from processed data
                     debug_lines.append("=========")
-                    if report_data.rain_mm.threshold_time is not None:
-                        debug_lines.append(f"{report_data.rain_mm.threshold_time}:00 | {report_data.rain_mm.threshold_value} (Threshold)")
-                    if report_data.rain_mm.max_time is not None:
-                        debug_lines.append(f"{report_data.rain_mm.max_time}:00 | {report_data.rain_mm.max_value} (Max)")
+                    # Calculate threshold and maximum for this specific point
+                    point_threshold_time = None
+                    point_threshold_value = None
+                    point_max_time = None
+                    point_max_value = None
+                    
+                    if hasattr(self, '_last_weather_data') and self._last_weather_data:
+                        hourly_data = self._last_weather_data.get('hourly_data', [])
+                        if i < len(hourly_data) and 'data' in hourly_data[i]:
+                            for hour_data in hourly_data[i]['data']:
+                                if 'dt' in hour_data:
+                                    hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                    hour_date = hour_time.date()
+                                    if report_data.report_type == 'evening':
+                                        target_date = report_data.report_date
+                                    else:
+                                        target_date = report_data.report_date
+                                    if hour_date == target_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
+                                        rain_value = hour_data.get('rain', {}).get('1h', 0)
+                                        
+                                        # Track maximum
+                                        if point_max_value is None or rain_value > point_max_value:
+                                            point_max_value = rain_value
+                                            point_max_time = str(hour_time.hour)
+                                        
+                                        # Track threshold (earliest time when rain >= threshold)
+                                        if rain_value >= self.thresholds['rain_amount'] and point_threshold_time is None:
+                                            point_threshold_time = str(hour_time.hour)
+                                            point_threshold_value = rain_value
+                    
+                    # Add threshold and maximum for this point
+                    if point_threshold_time is not None:
+                        debug_lines.append(f"{point_threshold_time}:00 | {point_threshold_value} (Threshold)")
+                    if point_max_time is not None:
+                        debug_lines.append(f"{point_max_time}:00 | {point_max_value} (Max)")
                     debug_lines.append("")
                 
                 # Add threshold and maximum tables as per specification
