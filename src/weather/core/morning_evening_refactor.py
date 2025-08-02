@@ -78,11 +78,14 @@ class MorningEveningRefactor:
         """
         self.config = config
         self.thresholds = {
-            'rain_amount': config.get('rain_amount_threshold', 0.2),
-            'rain_probability': config.get('rain_probability_threshold', 20.0),
-            'wind_speed': config.get('wind_speed_threshold', 10.0),
-            'wind_gust': config.get('wind_gust_threshold', 20.0),
-            'thunderstorm': config.get('thunderstorm_threshold', 'med')
+            'rain_amount': config.get('thresholds', {}).get('rain_amount', 0.2),
+            'rain_probability': config.get('thresholds', {}).get('rain_probability', 20.0),
+            'wind_speed': config.get('thresholds', {}).get('wind_speed', 10.0),
+            'wind_gust_threshold': config.get('thresholds', {}).get('wind_gust_threshold', 20.0),
+            'wind_gust_percentage': config.get('thresholds', {}).get('wind_gust_percentage', 50.0),
+            'temperature': config.get('thresholds', {}).get('temperature', 25.0),
+            'thunderstorm_probability': config.get('thresholds', {}).get('thunderstorm_probability', 10.0),
+            'thunderstorm_warning_level': config.get('thresholds', {}).get('thunderstorm_warning_level', 'low')
         }
         
         # Ensure data directory exists
@@ -541,10 +544,13 @@ class MorningEveningRefactor:
                 stage_date = target_date  # Today's date
             
             # Use unified processing with wind data extractor
-            wind_threshold = self.thresholds.get('wind_speed', 10)
-            wind_extractor = lambda h: h.get('wind_speed', 0)
+            wind_threshold = self.thresholds.get('wind_speed', 1.0)
+            wind_extractor = lambda h: h.get('wind', {}).get('speed', 0)
             
             result = self._process_unified_hourly_data(weather_data, stage_date, wind_extractor, wind_threshold, report_type, 'wind')
+            
+            # Debug output
+            logger.info(f"Wind processing result: threshold_time={result.threshold_time}, threshold_value={result.threshold_value}, max_time={result.max_time}, max_value={result.max_value}")
             
             # Round values for wind
             if result.threshold_value is not None:
@@ -552,10 +558,14 @@ class MorningEveningRefactor:
             if result.max_value is not None:
                 result.max_value = round(result.max_value, 1)
             
+            logger.info(f"Wind processing final result: threshold_time={result.threshold_time}, threshold_value={result.threshold_value}, max_time={result.max_time}, max_value={result.max_value}")
+            
             return result
             
         except Exception as e:
             logger.error(f"Failed to process wind data: {e}")
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
             return WeatherThresholdData()
     
     def process_gust_data(self, weather_data: Dict[str, Any], stage_name: str, target_date: date, report_type: str) -> WeatherThresholdData:
@@ -1798,9 +1808,10 @@ class MorningEveningRefactor:
                 # Always show threshold table, even if no threshold reached
                 debug_lines.append("Threshold")
                 debug_lines.append("GEO | Time | km/h")
+                wind_threshold = self.thresholds.get('wind_speed', 1.0)
                 for i, point in enumerate(report_data.wind.geo_points):
                     tg_ref = self._get_tg_reference(report_data.report_type, 'wind', i)
-                    # Calculate threshold for this point
+                    # Calculate threshold for this point using the same logic as processing
                     point_threshold_time = None
                     point_threshold_value = None
                     if hasattr(self, '_last_weather_data') and self._last_weather_data:
@@ -1811,13 +1822,14 @@ class MorningEveningRefactor:
                                     hour_time = datetime.fromtimestamp(hour_data['dt'])
                                     hour_date = hour_time.date()
                                     if hour_date == report_data.report_date:
+                                        # Use the same extractor as in processing
                                         wind_speed = hour_data.get('wind', {}).get('speed', 0)
-                                        if wind_speed >= self.thresholds.get('wind_speed', 10) and point_threshold_time is None:
+                                        if wind_speed >= wind_threshold and point_threshold_time is None:
                                             point_threshold_time = str(hour_time.hour)
                                             point_threshold_value = wind_speed
                                             break
                     if point_threshold_time is not None:
-                        debug_lines.append(f"{tg_ref} | {point_threshold_time}:00 | {point_threshold_value}")
+                        debug_lines.append(f"{tg_ref} | {int(point_threshold_time)}:00 | {point_threshold_value}")
                     else:
                         debug_lines.append(f"{tg_ref} | - | -")
                 debug_lines.append("=========")
