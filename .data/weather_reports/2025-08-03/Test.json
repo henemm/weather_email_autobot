@@ -20,7 +20,7 @@
     "max_time": null,
     "geo_points": [
       {
-        "T2G1": 24
+        "T2G1": 23.6
       },
       {
         "T2G2": 26.6
@@ -99,34 +99,19 @@
     ]
   },
   "rain_percent": {
-    "threshold_value": 10,
-    "threshold_time": "08",
-    "max_value": 10,
-    "max_time": "08",
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
     "geo_points": [
       {
-        "G1": {
-          "02": 0,
-          "08": 10,
-          "14": 0,
-          "20": 0
-        }
+        "T2G1": {}
       },
       {
-        "G2": {
-          "02": 0,
-          "08": 10,
-          "14": 0,
-          "20": 0
-        }
+        "T2G2": {}
       },
       {
-        "G3": {
-          "02": 0,
-          "08": 10,
-          "14": 0,
-          "20": 0
-        }
+        "T2G3": {}
       }
     ]
   },
@@ -147,7 +132,7 @@
           "10": 1,
           "11": 1,
           "12": 2,
-          "13": 3,
+          "13": 2,
           "14": 3,
           "15": 3,
           "16": 3,
@@ -361,6 +346,6 @@
     ]
   },
   "debug_info": {},
-  "generated_at": "2025-08-02T10:44:46.255842",
+  "generated_at": "2025-08-02T10:53:14.813914",
   "version": "morning-evening-refactor-v1"
 }
