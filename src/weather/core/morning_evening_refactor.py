@@ -1437,8 +1437,8 @@ class MorningEveningRefactor:
                                     rain_value = hour_data.get('rain', {}).get('1h', 0)
                                     all_hours[time_str] = rain_value
                             
-                            # Display all 24 hours
-                            for hour in range(24):
+                            # Display only hours 4:00 - 19:00 (as per specification)
+                            for hour in range(4, 20):  # 4 to 19 inclusive
                                 time_str = str(hour)
                                 rain_value = all_hours[time_str]
                                 debug_lines.append(f"{time_str}:00 | {rain_value}")
@@ -1463,6 +1463,11 @@ class MorningEveningRefactor:
                                     else:
                                         target_date = report_data.report_date  # Today's date
                                     if hour_date == target_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
                                         time_str = str(hour_time.hour)
                                         rain_value = hour_data.get('rain', {}).get('1h', 0)
                                         
@@ -1501,6 +1506,11 @@ class MorningEveningRefactor:
                                     else:
                                         target_date = report_data.report_date  # Today's date
                                     if hour_date == target_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
                                         rain_value = hour_data.get('rain', {}).get('1h', 0)
                                         if global_max_value is None or rain_value > global_max_value:
                                             global_max_value = rain_value
@@ -1527,6 +1537,11 @@ class MorningEveningRefactor:
                                         else:
                                             target_date = report_data.report_date
                                         if hour_date == target_date:
+                                            # Apply time filter: only 4:00 - 19:00 Uhr
+                                            hour = hour_time.hour
+                                            if hour < 4 or hour > 19:
+                                                continue
+                                            
                                             rain_value = hour_data.get('rain', {}).get('1h', 0)
                                             if rain_value >= self.thresholds['rain_amount'] and point_threshold_time is None:
                                                 point_threshold_time = str(hour_time.hour)
@@ -1558,6 +1573,11 @@ class MorningEveningRefactor:
                                         else:
                                             target_date = report_data.report_date
                                         if hour_date == target_date:
+                                            # Apply time filter: only 4:00 - 19:00 Uhr
+                                            hour = hour_time.hour
+                                            if hour < 4 or hour > 19:
+                                                continue
+                                            
                                             rain_value = hour_data.get('rain', {}).get('1h', 0)
                                             if point_max_value is None or rain_value > point_max_value:
                                                 point_max_value = rain_value
@@ -1585,6 +1605,11 @@ class MorningEveningRefactor:
                                     hour_time = datetime.fromtimestamp(hour_data['dt'])
                                     hour_date = hour_time.date()
                                     if hour_date == report_data.report_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
                                         time_str = str(hour_time.hour)
                                         # Get rain probability from probability_forecast
                                         rain_prob = 0
@@ -1612,6 +1637,11 @@ class MorningEveningRefactor:
                                     hour_time = datetime.fromtimestamp(hour_data['dt'])
                                     hour_date = hour_time.date()
                                     if hour_date == report_data.report_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
                                         time_str = str(hour_time.hour)
                                         # Get rain probability from probability_forecast
                                         rain_prob = 0
@@ -2163,6 +2193,11 @@ class MorningEveningRefactor:
                                     hour_time = datetime.fromtimestamp(hour_data['dt'])
                                     hour_date = hour_time.date()
                                     if hour_date == stage_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
                                         # Extract weather condition
                                         condition = hour_data.get('condition', '')
                                         if not condition and 'weather' in hour_data:
