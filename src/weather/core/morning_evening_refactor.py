@@ -506,9 +506,9 @@ class MorningEveningRefactor:
                                 # Get 3h rain probability
                                 rain_prob = entry.get('rain', {}).get('3h', 0)
                                 
-                                # Only use 3-hour intervals: 05:00, 08:00, 11:00, 14:00, 17:00, 20:00
+                                # Only use 3-hour intervals: 05:00, 08:00, 11:00, 14:00, 17:00
                                 hour = entry_time.hour
-                                if hour in [5, 8, 11, 14, 17, 20]:
+                                if hour in [5, 8, 11, 14, 17]:
                                     hour_str = entry_time.strftime('%H')
                                     point_prob_data[hour_str] = rain_prob
                                     
@@ -1612,9 +1612,9 @@ class MorningEveningRefactor:
                                         # Get 3h rain probability
                                         rain_prob = entry.get('rain', {}).get('3h', 0)
                                         
-                                        # Only use 3-hour intervals: 05:00, 08:00, 11:00, 14:00, 17:00, 20:00
+                                        # Only use 3-hour intervals: 05:00, 08:00, 11:00, 14:00, 17:00
                                         hour = entry_time.hour
-                                        if hour in [5, 8, 11, 14, 17, 20]:
+                                        if hour in [5, 8, 11, 14, 17]:
                                             hour_str = entry_time.strftime('%H')
                                             debug_lines.append(f"{hour_str}:00 | {rain_prob}")
                     
@@ -1654,7 +1654,7 @@ class MorningEveningRefactor:
                                         if entry_date == stage_date:
                                             rain_prob = entry.get('rain', {}).get('3h', 0)
                                             hour = entry_time.hour
-                                            if hour in [5, 8, 11, 14, 17, 20]:
+                                            if hour in [5, 8, 11, 14, 17]:
                                                 if rain_prob >= rain_prob_threshold and point_threshold_time is None:
                                                     point_threshold_time = str(entry_time.hour)
                                                     point_threshold_value = rain_prob
@@ -1692,7 +1692,7 @@ class MorningEveningRefactor:
                                         if entry_date == stage_date:
                                             rain_prob = entry.get('rain', {}).get('3h', 0)
                                             hour = entry_time.hour
-                                            if hour in [5, 8, 11, 14, 17, 20]:
+                                            if hour in [5, 8, 11, 14, 17]:
                                                 if point_max_value is None or rain_prob > point_max_value:
                                                     point_max_value = rain_prob
                                                     point_max_time = str(entry_time.hour)
