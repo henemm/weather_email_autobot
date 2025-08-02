@@ -20,10 +20,10 @@
     "max_time": null,
     "geo_points": [
       {
-        "T2G1": 24.1
+        "T2G1": 24
       },
       {
-        "T2G2": 26.7
+        "T2G2": 26.6
       },
       {
         "T2G3": 29
@@ -361,6 +361,6 @@
     ]
   },
   "debug_info": {},
-  "generated_at": "2025-08-02T10:36:33.848006",
+  "generated_at": "2025-08-02T10:44:46.255842",
   "version": "morning-evening-refactor-v1"
 }

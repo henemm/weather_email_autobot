@@ -9,6 +9,7 @@ import sys
 import os
 from datetime import date, datetime, timedelta
 from src.weather.core.morning_evening_refactor import MorningEveningRefactor
+from src.weather.core.debug_validator import validate_debug_output_quick, validate_debug_output_detailed
 from src.notification.email_client import EmailClient
 
 def main():
@@ -43,6 +44,18 @@ def main():
         
         print("🔍 DEBUG OUTPUT:")
         print(debug_output)
+        print()
+        
+        # Validate debug output
+        print("🔍 VALIDATING DEBUG OUTPUT:")
+        is_valid, validation_errors = validate_debug_output_detailed(debug_output, report_type)
+        
+        if is_valid:
+            print("✅ Debug Output Validation: PASSED")
+        else:
+            print("❌ Debug Output Validation: FAILED")
+            for error in validation_errors:
+                print(f"  - {error}")
         print()
         
         # Check if all weather elements are present
