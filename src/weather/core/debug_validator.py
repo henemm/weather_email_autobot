@@ -94,10 +94,10 @@ class DebugOutputValidator:
             allowed_references = ["T1G1", "T1G2", "T1G3", "T2G1", "T2G2", "T2G3"]  # All valid for evening
             invalid_references = []  # No invalid references for evening
         else:  # morning
-            # Morning report: Night uses T1G (today), Day/Rain/Wind/Gust use T1G (today)
+            # Morning report: Night uses T1G (today), Day/Rain/Wind/Gust use T1G (today), Thunderstorm+1 uses T2G (tomorrow)
             expected_references = ["T1G1", "T1G2", "T1G3"]
-            allowed_references = ["T1G1", "T1G2", "T1G3"]
-            invalid_references = ["T2G1", "T2G2", "T2G3"]
+            allowed_references = ["T1G1", "T1G2", "T1G3", "T2G1", "T2G2", "T2G3"]  # T2G for Thunderstorm+1
+            invalid_references = []  # No invalid references for morning
         
         # Check for missing expected references
         for expected in expected_references:

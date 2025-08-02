@@ -7,10 +7,35 @@ Sends a real email with all weather elements results.
 import yaml
 import sys
 import os
+import json
 from datetime import date, datetime, timedelta
 from src.weather.core.morning_evening_refactor import MorningEveningRefactor
 from src.weather.core.debug_validator import validate_debug_output_quick, validate_debug_output_detailed
 from src.notification.email_client import EmailClient
+
+def get_stage_for_date(target_date: date, config: dict) -> str:
+    """
+    Get the correct stage name for a given date.
+    
+    Args:
+        target_date: Target date
+        config: Configuration with startdatum
+        
+    Returns:
+        Stage name for the given date
+    """
+    start_date = datetime.strptime(config.get('startdatum', '2025-07-27'), '%Y-%m-%d').date()
+    days_since_start = (target_date - start_date).days
+    
+    # Load etappen.json
+    with open("etappen.json", "r") as f:
+        etappen_data = json.load(f)
+    
+    if days_since_start < len(etappen_data):
+        stage = etappen_data[days_since_start]
+        return stage['name']
+    else:
+        return "Unknown"
 
 def main():
     print("🌤️ LIVE TEST: Complete Morning/Evening Refactor Implementation")
@@ -25,9 +50,11 @@ def main():
         refactor = MorningEveningRefactor(config)
         
         # Test parameters
-        stage_name = "Test"  # Use Test stage
         report_type = "evening"  # Evening report
-        target_date = date.today() + timedelta(days=1)  # Tomorrow
+        target_date = date.today()  # Today
+        
+        # Get correct stage for the date
+        stage_name = get_stage_for_date(target_date, config)
         
         print(f"📍 Stage: {stage_name}")
         print(f"📅 Date: {target_date}")
@@ -103,7 +130,11 @@ def main():
 {debug_output}
 ```
 
-## Weather Elements Analysis
+## Validation Results
+- **Debug Output Valid**: {'✅ PASSED' if is_valid else '❌ FAILED'}
+- **Validation Errors**: {len(validation_errors) if validation_errors else 0}
+
+## Weather Elements Status
 """
         
         for element, present in weather_elements.items():
@@ -112,38 +143,12 @@ def main():
         
         email_content += f"""
 
-## Implementation Status
-- ✅ **Night**: Temperature minimum processing
-- ✅ **Day**: Temperature maximum processing  
-- ✅ **Rain (mm)**: Precipitation amount processing
-- ✅ **Rain (%)**: Precipitation probability processing
-- ✅ **Wind**: Wind speed processing
-- ✅ **Gust**: Wind gusts processing
-- ✅ **Thunderstorm**: Thunderstorm condition processing
-- ✅ **Thunderstorm (+1)**: Thunderstorm +1 day processing
-- ✅ **Risks**: Warning level processing (API may have issues)
-- ✅ **Risk Zonal**: Zonal risk processing
-
-## Expected Format
-- Night: N[value] or N-
-- Day: D[value] or D-
-- Rain (mm): R[value]@[time]([max]@[max_time]) or R-
-- Rain (%): PR[value]%@[time]([max]%@[max_time]) or PR-
-- Wind: W[value]@[time]([max]@[max_time]) or W-
-- Gust: G[value]@[time]([max]@[max_time]) or G-
-- Thunderstorm: TH:[level]@[time]([max_level]@[max_time]) or TH-
-- Thunderstorm (+1): TH+1:[level]@[time]([max_level]@[max_time]) or TH+1:-
-- Risks: HR:[level]@[time]TH:[level]@[time] or HR:-TH:-
-- Risk Zonal: Z:[level] or Z:-
-
-Generated at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+---
+Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
         
         # Send email
-        success = email_client.send_email(
-            message_text=email_content,
-            subject=subject
-        )
+        success = email_client.send_email(email_content, subject)
         
         if success:
             print("✅ Email sent successfully!")
@@ -153,7 +158,7 @@ Generated at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
         print("\n🎯 Live test completed!")
         
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"❌ Error during live test: {e}")
         import traceback
         traceback.print_exc()
 

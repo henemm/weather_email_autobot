@@ -91,7 +91,7 @@ class EnhancedMeteoFranceAPI:
                 'latitude': latitude,
                 'longitude': longitude,
                 'hourly_data': self._extract_hourly_data(forecast.forecast),
-                'daily_data': self._extract_daily_data(forecast.daily_forecast) if hasattr(forecast, 'daily_forecast') else [],
+                'daily_forecast': {'daily': self._extract_daily_data(forecast.daily_forecast)} if hasattr(forecast, 'daily_forecast') else {'daily': []},
                 'probability_data': self._extract_probability_data(forecast.probability_forecast) if hasattr(forecast, 'probability_forecast') else [],
                 'current_data': self._extract_current_data(forecast.current_forecast) if hasattr(forecast, 'current_forecast') else None,
                 'position_data': self._extract_position_data(forecast.position) if hasattr(forecast, 'position') else None,
@@ -130,8 +130,14 @@ class EnhancedMeteoFranceAPI:
         for entry in daily_forecast:
             try:
                 daily_entry = {
+                    'dt': entry['dt'],  # Keep original dt for Night function
                     'date': datetime.fromtimestamp(entry['dt']).date(),
                     'timestamp': datetime.fromtimestamp(entry['dt']),
+                    'T': {  # Keep original T structure for Night function
+                        'min': entry.get('T', {}).get('min'),
+                        'max': entry.get('T', {}).get('max'),
+                        'sea': entry.get('T', {}).get('sea')
+                    },
                     'temperature': {
                         'min': entry.get('T', {}).get('min'),
                         'max': entry.get('T', {}).get('max'),

@@ -173,11 +173,16 @@ class MorningEveningRefactor:
                 'probability_forecast': []  # Will be populated for all coordinates
             }
             
-            # Add daily forecast from first coordinate if available
-            if hourly_data and hourly_data[0]['data']:
-                first_forecast = client.get_forecast(coordinates[0][0], coordinates[0][1])
-                if hasattr(first_forecast, 'daily_forecast'):
-                    weather_data['daily_forecast'] = {'daily': first_forecast.daily_forecast}
+            # Add daily forecast from ALL coordinates
+            daily_forecast_data = []
+            for i, (lat, lon) in enumerate(coordinates):
+                forecast = client.get_forecast(lat, lon)
+                if hasattr(forecast, 'daily_forecast') and forecast.daily_forecast:
+                    daily_forecast_data.extend(forecast.daily_forecast)
+                else:
+                    logger.warning(f"No daily forecast data available for coordinate {i+1} ({lat}, {lon})")
+            
+            weather_data['daily_forecast'] = {'daily': daily_forecast_data}
             
             # Add probability forecast for all coordinates
             probability_forecast = []
@@ -204,7 +209,7 @@ class MorningEveningRefactor:
     
     def process_night_data(self, weather_data: Dict[str, Any], stage_name: str, target_date: date, report_type: str) -> WeatherThresholdData:
         """
-        Process night data (temp_min from DAILY_FORECAST).
+        Process night data (temp_min from DAILY_FORECAST) using unified processing.
         
         Args:
             weather_data: Weather data from API
@@ -216,21 +221,15 @@ class MorningEveningRefactor:
             WeatherThresholdData for night temperature
         """
         try:
-            # For Evening report: Night = temp_min of last point of today's stage for today
-            # For Morning report: Night = temp_min of last point of today's stage for today
-            
-            # Get the correct stage and date based on report type
-            start_date = datetime.strptime(self.config.get('startdatum', '2025-07-27'), '%Y-%m-%d').date()
-            days_since_start = (target_date - start_date).days
-            
-            # For both morning and evening, night is from today's stage for today
-            stage_idx = days_since_start
-            stage_date = target_date
-            
-            # Get stage coordinates
+            # Get stage coordinates to find the last point (T1G3)
             import json
             with open("etappen.json", "r") as f:
                 etappen_data = json.load(f)
+            
+            # Find current stage
+            start_date = datetime.strptime(self.config.get('startdatum', '2025-07-27'), '%Y-%m-%d').date()
+            days_since_start = (target_date - start_date).days
+            stage_idx = days_since_start  # Today's stage for Night
             
             if stage_idx >= len(etappen_data):
                 logger.error(f"Stage index {stage_idx} out of range")
@@ -243,43 +242,60 @@ class MorningEveningRefactor:
                 logger.error(f"No points found for stage {stage['name']}")
                 return WeatherThresholdData()
             
-            # Get the last point (for Night, we use the last point)
+            # Get the last point's coordinates (T1G3)
             last_point = stage_points[-1]
-            lat, lon = last_point['lat'], last_point['lon']
+            last_lat, last_lon = last_point['lat'], last_point['lon']
             
-            # Fetch weather data for this specific point
+            # Fetch weather data for the last point using EnhancedMeteoFranceAPI
             from src.wetter.enhanced_meteofrance_api import EnhancedMeteoFranceAPI
             api = EnhancedMeteoFranceAPI()
-            point_data = api.get_complete_forecast_data(lat, lon, f"{stage['name']}_last_point")
+            last_point_name = f"{stage['name']}_point_{len(stage_points)}"
             
-            # Get temp_min from daily forecast
-            daily_data = point_data.get('daily_data', [])
-            stage_date_str = stage_date.strftime('%Y-%m-%d')
+            # Fetch weather data for the last point (T1G3 - Marseille)
+            last_point_data = api.get_complete_forecast_data(last_lat, last_lon, last_point_name)
             
-            for entry in daily_data:
-                entry_date = entry.get('date')
-                # Handle both string and date objects
-                if isinstance(entry_date, str):
-                    entry_date_str = entry_date
-                else:
-                    entry_date_str = entry_date.strftime('%Y-%m-%d') if entry_date else None
-                
-                if entry_date_str == stage_date_str:
-                    # Get temp_min from temperature object
-                    temperature = entry.get('temperature', {})
-                    temp_min = temperature.get('min') if temperature else None
+            # Extract daily forecast data
+            daily_forecast = last_point_data.get('daily_forecast', {})
+            if 'daily' not in daily_forecast:
+                logger.error(f"No daily forecast data for {last_point_name}")
+                return WeatherThresholdData()
+            
+            daily_data = daily_forecast['daily']
+            
+            # Find the entry for the target date
+            target_date_str = target_date.strftime('%Y-%m-%d')
+            point_value = None
+            
+            for day_data in daily_data:
+                entry_dt = day_data.get('dt')
+                if entry_dt:
+                    entry_date = datetime.fromtimestamp(entry_dt).date()
+                    entry_date_str = entry_date.strftime('%Y-%m-%d')
                     
-                    if temp_min is not None:
-                        # Night always uses today's stage (T1), last point (G3)
-                        return WeatherThresholdData(
-                            threshold_value=round(temp_min),
-                            threshold_time=None,  # Night is daily min, no specific time
-                            max_value=round(temp_min),
-                            max_time=None,
-                            geo_points=[{'T1G3': temp_min}]
-                        )
+                    if entry_date_str == target_date_str:
+                        # Extract temp_min value
+                        point_value = day_data.get('T', {}).get('min')
+                        break
             
-            return WeatherThresholdData()
+            if point_value is None:
+                logger.error(f"No temperature data found for {target_date_str}")
+                return WeatherThresholdData()
+            
+            # Create result with T1G3 reference (last point of today's stage - Marseille)
+            geo_points = [{"T1G3": point_value}]
+            
+            # Round values for temperature display
+            rounded_value = round(point_value)
+            
+            result = WeatherThresholdData(
+                threshold_value=rounded_value,  # For night (temp_min)
+                threshold_time=None,  # Daily data has no specific time
+                max_value=rounded_value,  # For night (temp_min)
+                max_time=None,  # Daily data has no specific time
+                geo_points=geo_points
+            )
+            
+            return result
             
         except Exception as e:
             logger.error(f"Failed to process night data: {e}")
@@ -2397,4 +2413,132 @@ class MorningEveningRefactor:
             
         except Exception as e:
             logger.error(f"Failed to process unified hourly data: {e}")
+            return WeatherThresholdData()
+
+    def _process_unified_daily_data(self, weather_data: Dict[str, Any], target_date: date, 
+                                  data_extractor: callable, report_type: str = None, data_type: str = None) -> WeatherThresholdData:
+        """
+        Unified method to process daily weather data with consistent logic.
+        
+        Args:
+            weather_data: Weather data from API
+            target_date: Target date for processing
+            data_extractor: Function to extract value from daily_data (e.g., lambda d: d.get('temperature', {}).get('min'))
+            report_type: 'morning' or 'evening' for T-G reference generation
+            data_type: Data type for T-G reference generation
+            
+        Returns:
+            WeatherThresholdData with consistent processing
+        """
+        try:
+            # Get daily forecast data (it's a dict with one entry, not a list)
+            daily_forecast = weather_data.get('daily_forecast', {})
+            geo_points = []
+            global_min_value = None
+            global_max_value = None
+            
+            # Get the single daily forecast entry
+            if 'daily' in daily_forecast:
+                daily_data = daily_forecast['daily']
+                
+                # Find the entry for the target date
+                target_date_str = target_date.strftime('%Y-%m-%d')
+                point_value = None
+                
+                for day_data in daily_data:
+                    # Use dt (timestamp) instead of date
+                    entry_dt = day_data.get('dt')
+                    if entry_dt:
+                        # Convert timestamp to date
+                        from datetime import datetime
+                        entry_date = datetime.fromtimestamp(entry_dt).date()
+                        entry_date_str = entry_date.strftime('%Y-%m-%d')
+                        
+                        if entry_date_str == target_date_str:
+                            # Extract value using the provided extractor function
+                            point_value = data_extractor(day_data)
+                            break
+                
+                # For Night data, we need the value from the LAST point of today's stage (T1G3)
+                # Find the last coordinate's data
+                if report_type and data_type:
+                    # Get stage coordinates to find the last point
+                    import json
+                    with open("etappen.json", "r") as f:
+                        etappen_data = json.load(f)
+                    
+                    # Find current stage
+                    start_date = datetime.strptime(self.config.get('startdatum', '2025-07-27'), '%Y-%m-%d').date()
+                    days_since_start = (target_date - start_date).days
+                    stage_idx = days_since_start  # Today's stage for Night
+                    
+                    if stage_idx < len(etappen_data):
+                        stage = etappen_data[stage_idx]
+                        stage_points = stage.get('punkte', [])
+                        
+                        if stage_points:
+                            # Get the last point's coordinates
+                            last_point = stage_points[-1]
+                            last_lat, last_lon = last_point['lat'], last_point['lon']
+                            
+                            # Find the data for this specific coordinate
+                            from src.wetter.enhanced_meteofrance_api import EnhancedMeteoFranceAPI
+                            api = EnhancedMeteoFranceAPI()
+                            last_point_name = f"{stage['name']}_point_{len(stage_points)}"
+                            
+                            # Fetch weather data for the last point
+                            last_point_data = api.get_complete_forecast_data(last_lat, last_lon, last_point_name)
+                            last_daily_forecast = last_point_data.get('daily_forecast', {})
+                            
+                            if 'daily' in last_daily_forecast:
+                                last_daily_data = last_daily_forecast['daily']
+                                
+                                # Find the entry for the target date
+                                target_date_str = target_date.strftime('%Y-%m-%d')
+                                last_point_value = None
+                                
+                                for day_data in last_daily_data:
+                                    entry_dt = day_data.get('dt')
+                                    if entry_dt:
+                                        entry_date = datetime.fromtimestamp(entry_dt).date()
+                                        entry_date_str = entry_date.strftime('%Y-%m-%d')
+                                        
+                                        if entry_date_str == target_date_str:
+                                            last_point_value = data_extractor(day_data)
+                                            break
+                                
+                                # Use the last point's value
+                                point_value = last_point_value
+                                tg_ref = "T1G3"
+                                geo_points.append({tg_ref: point_value})
+                            else:
+                                # Fallback to original value
+                                tg_ref = "T1G3"
+                                geo_points.append({tg_ref: point_value})
+                        else:
+                            # Fallback
+                            geo_points.append({'G3': point_value})
+                    else:
+                        # Fallback
+                        geo_points.append({'G3': point_value})
+                else:
+                    # Fallback
+                    geo_points.append({'G3': point_value})
+                
+                # Update global min/max
+                if point_value is not None:
+                    global_min_value = point_value
+                    global_max_value = point_value
+            
+            # Return result with consistent logic
+            return WeatherThresholdData(
+                threshold_value=global_min_value,  # For night (temp_min)
+                threshold_time=None,  # Daily data has no specific time
+                max_value=global_max_value,  # For day (temp_max)
+                max_time=None,  # Daily data has no specific time
+                geo_points=geo_points
+            )
+            
+        except Exception as e:
+            logger.error(f"Failed to process unified daily data: {e}")
             return WeatherThresholdData()
