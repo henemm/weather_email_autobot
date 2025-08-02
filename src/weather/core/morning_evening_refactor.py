@@ -1795,32 +1795,37 @@ class MorningEveningRefactor:
                                             global_max_time = str(hour_time.hour)
                 
                 # Add threshold and maximum tables as per specification
+                # Always show threshold table, even if no threshold reached
+                debug_lines.append("Threshold")
+                debug_lines.append("GEO | Time | km/h")
+                for i, point in enumerate(report_data.wind.geo_points):
+                    tg_ref = self._get_tg_reference(report_data.report_type, 'wind', i)
+                    # Calculate threshold for this point
+                    point_threshold_time = None
+                    point_threshold_value = None
+                    if hasattr(self, '_last_weather_data') and self._last_weather_data:
+                        hourly_data = self._last_weather_data.get('hourly_data', [])
+                        if i < len(hourly_data) and 'data' in hourly_data[i]:
+                            for hour_data in hourly_data[i]['data']:
+                                if 'dt' in hour_data:
+                                    hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                    hour_date = hour_time.date()
+                                    if hour_date == report_data.report_date:
+                                        wind_speed = hour_data.get('wind', {}).get('speed', 0)
+                                        if wind_speed >= self.thresholds.get('wind_speed', 10) and point_threshold_time is None:
+                                            point_threshold_time = str(hour_time.hour)
+                                            point_threshold_value = wind_speed
+                                            break
+                    if point_threshold_time is not None:
+                        debug_lines.append(f"{tg_ref} | {point_threshold_time}:00 | {point_threshold_value}")
+                    else:
+                        debug_lines.append(f"{tg_ref} | - | -")
+                debug_lines.append("=========")
                 if report_data.wind.threshold_time is not None:
-                    debug_lines.append("Threshold")
-                    debug_lines.append("GEO | Time | km/h")
-                    for i, point in enumerate(report_data.wind.geo_points):
-                        tg_ref = self._get_tg_reference(report_data.report_type, 'wind', i)
-                        # Calculate threshold for this point
-                        point_threshold_time = None
-                        point_threshold_value = None
-                        if hasattr(self, '_last_weather_data') and self._last_weather_data:
-                            hourly_data = self._last_weather_data.get('hourly_data', [])
-                            if i < len(hourly_data) and 'data' in hourly_data[i]:
-                                for hour_data in hourly_data[i]['data']:
-                                    if 'dt' in hour_data:
-                                        hour_time = datetime.fromtimestamp(hour_data['dt'])
-                                        hour_date = hour_time.date()
-                                        if hour_date == report_data.report_date:
-                                            wind_speed = hour_data.get('wind', {}).get('speed', 0)
-                                            if wind_speed >= self.thresholds.get('wind_speed', 10) and point_threshold_time is None:
-                                                point_threshold_time = str(hour_time.hour)
-                                                point_threshold_value = wind_speed
-                                                break
-                        if point_threshold_time is not None:
-                            debug_lines.append(f"{tg_ref} | {point_threshold_time}:00 | {point_threshold_value}")
-                    debug_lines.append("=========")
                     debug_lines.append(f"Threshold | {report_data.wind.threshold_time}:00 | {report_data.wind.threshold_value}")
-                    debug_lines.append("")
+                else:
+                    debug_lines.append("Threshold | - | -")
+                debug_lines.append("")
                 
                 if global_max_time is not None:
                     debug_lines.append("Maximum:")
