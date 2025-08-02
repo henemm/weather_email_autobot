@@ -1344,7 +1344,9 @@ class MorningEveningRefactor:
                 debug_lines.append("Night (N) - temp_min:")
                 for i, point in enumerate(report_data.night.geo_points):
                     for geo, value in point.items():
-                        debug_lines.append(f"{geo} | {value}")
+                        # Night always uses today's stage (T1)
+                        tg_ref = f"T1G{i+1}"
+                        debug_lines.append(f"{tg_ref} | {value}")
                 debug_lines.append("=========")
                 debug_lines.append(f"MIN | {report_data.night.max_value}")
                 debug_lines.append("")
@@ -1354,7 +1356,12 @@ class MorningEveningRefactor:
                 debug_lines.append("Day (D) - temp_max:")
                 for i, point in enumerate(report_data.day.geo_points):
                     for geo, value in point.items():
-                        debug_lines.append(f"{geo} | {value}")
+                        # Day uses today's stage for morning, tomorrow's stage for evening
+                        if report_data.report_type == 'morning':
+                            tg_ref = f"T1G{i+1}"
+                        else:  # evening
+                            tg_ref = f"T2G{i+1}"
+                        debug_lines.append(f"{tg_ref} | {value}")
                 debug_lines.append("=========")
                 debug_lines.append(f"MAX | {report_data.day.max_value}")
                 debug_lines.append("")
