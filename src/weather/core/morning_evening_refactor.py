@@ -1422,20 +1422,20 @@ class MorningEveningRefactor:
                             # Create a dictionary of all hours with default value 0
                             all_hours = {str(hour): 0 for hour in range(24)}
                             
-                                                    # Fill in actual data
-                        for hour_data in hourly_data[i]['data']:
-                            if 'dt' in hour_data:
-                                hour_time = datetime.fromtimestamp(hour_data['dt'])
-                                hour_date = hour_time.date()
-                                # Use the SAME date logic as the processing functions
-                                if report_data.report_type == 'evening':
-                                    target_date = report_data.report_date  # Use target_date (tomorrow) directly
-                                else:
-                                    target_date = report_data.report_date  # Today's date
-                                if hour_date == target_date:
-                                    time_str = str(hour_time.hour)
-                                    rain_value = hour_data.get('rain', {}).get('1h', 0)
-                                    all_hours[time_str] = rain_value
+                            # Fill in actual data
+                            for hour_data in hourly_data[i]['data']:
+                                if 'dt' in hour_data:
+                                    hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                    hour_date = hour_time.date()
+                                    # Use the SAME date logic as the processing functions
+                                    if report_data.report_type == 'evening':
+                                        target_date = report_data.report_date  # Use target_date (tomorrow) directly
+                                    else:
+                                        target_date = report_data.report_date  # Today's date
+                                    if hour_date == target_date:
+                                        time_str = str(hour_time.hour)
+                                        rain_value = hour_data.get('rain', {}).get('1h', 0)
+                                        all_hours[time_str] = rain_value
                             
                             # Display only hours 4:00 - 19:00 (as per specification)
                             for hour in range(4, 20):  # 4 to 19 inclusive
