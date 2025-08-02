@@ -252,12 +252,13 @@ class MorningEveningRefactor:
                     temp_min = temperature.get('min') if temperature else None
                     
                     if temp_min is not None:
+                        # Night always uses today's stage (T1), last point (G3)
                         return WeatherThresholdData(
                             threshold_value=round(temp_min),
                             threshold_time=None,  # Night is daily min, no specific time
                             max_value=round(temp_min),
                             max_time=None,
-                            geo_points=[{'G1': temp_min}]
+                            geo_points=[{'T1G3': temp_min}]
                         )
             
             return WeatherThresholdData()
@@ -341,7 +342,12 @@ class MorningEveningRefactor:
                         temp_max = temperature.get('max') if temperature else None
                         
                         if temp_max is not None:
-                            geo_points.append({f'G{i+1}': temp_max})
+                            # Day uses today's stage for morning, tomorrow's stage for evening
+                            if report_type == 'morning':
+                                tg_ref = f"T1G{i+1}"
+                            else:  # evening
+                                tg_ref = f"T2G{i+1}"
+                            geo_points.append({tg_ref: temp_max})
                             
                             # Track the maximum temperature
                             if max_temp is None or temp_max > max_temp:
@@ -392,7 +398,7 @@ class MorningEveningRefactor:
             rain_threshold = self.thresholds.get('rain_amount', 0.2)
             rain_extractor = lambda h: h.get('rain', {}).get('1h', 0)
             
-            result = self._process_unified_hourly_data(weather_data, stage_date, rain_extractor, rain_threshold)
+            result = self._process_unified_hourly_data(weather_data, stage_date, rain_extractor, rain_threshold, report_type, 'rain_mm')
             
             # Round values for rain (mm)
             if result.threshold_value is not None:
@@ -538,7 +544,7 @@ class MorningEveningRefactor:
             wind_threshold = self.thresholds.get('wind_speed', 10)
             wind_extractor = lambda h: h.get('wind_speed', 0)
             
-            result = self._process_unified_hourly_data(weather_data, stage_date, wind_extractor, wind_threshold)
+            result = self._process_unified_hourly_data(weather_data, stage_date, wind_extractor, wind_threshold, report_type, 'wind')
             
             # Round values for wind
             if result.threshold_value is not None:
@@ -581,7 +587,7 @@ class MorningEveningRefactor:
             gust_threshold = self.thresholds.get('wind_gust_threshold', 5.0)
             gust_extractor = lambda h: h.get('wind', {}).get('gust', 0)
             
-            result = self._process_unified_hourly_data(weather_data, stage_date, gust_extractor, gust_threshold)
+            result = self._process_unified_hourly_data(weather_data, stage_date, gust_extractor, gust_threshold, report_type, 'gust')
             
             # Round values for gust
             if result.threshold_value is not None:
@@ -2061,7 +2067,8 @@ class MorningEveningRefactor:
             return f"{stage_name}: ERROR", f"# DEBUG DATENEXPORT\nError: {str(e)}" 
 
     def _process_unified_hourly_data(self, weather_data: Dict[str, Any], target_date: date, 
-                                   data_extractor: callable, threshold_value: float) -> WeatherThresholdData:
+                                   data_extractor: callable, threshold_value: float, 
+                                   report_type: str = None, data_type: str = None) -> WeatherThresholdData:
         """
         Unified method to process hourly weather data with consistent threshold and maximum logic.
         
@@ -2070,6 +2077,8 @@ class MorningEveningRefactor:
             target_date: Target date for processing
             data_extractor: Function to extract value from hour_data (e.g., lambda h: h.get('rain', {}).get('1h', 0))
             threshold_value: Threshold value to check against
+            report_type: 'morning' or 'evening' for T-G reference generation
+            data_type: Data type for T-G reference generation
             
         Returns:
             WeatherThresholdData with consistent processing
@@ -2113,8 +2122,13 @@ class MorningEveningRefactor:
                                     point_max_value = value
                                     point_max_time = hour_str
                     
-                    # Store point data
-                    geo_points.append({f'G{i+1}': point_hourly_data})
+                    # Store point data with T-G reference if available
+                    if report_type and data_type:
+                        tg_ref = self._get_tg_reference(report_type, data_type, i)
+                        geo_points.append({tg_ref: point_hourly_data})
+                    else:
+                        # Fallback to G reference if T-G reference not available
+                        geo_points.append({f'G{i+1}': point_hourly_data})
                     
                     # Update global maximum
                     if point_max_value is not None:
