@@ -503,8 +503,13 @@ class MorningEveningRefactor:
                             entry_date = entry_time.date()
                             
                             if entry_date == stage_date:
-                                # Get 3h rain probability
-                                rain_prob = entry.get('rain', {}).get('3h', 0)
+                                # Get 3h rain probability (handle None values)
+                                rain_prob_raw = entry.get('rain', {}).get('3h', 0)
+                                rain_prob = rain_prob_raw if rain_prob_raw is not None else 0
+                                
+                                # Ensure we have a valid numeric value
+                                if rain_prob is None:
+                                    rain_prob = 0
                                 
                                 # Only use 3-hour intervals: 05:00, 08:00, 11:00, 14:00, 17:00
                                 hour = entry_time.hour
@@ -887,7 +892,7 @@ class MorningEveningRefactor:
     
     def process_risks_data(self, weather_data: Dict[str, Any], stage_name: str, target_date: date, report_type: str) -> WeatherThresholdData:
         """
-        Process risks/warnings data from get_warning_full().
+        Process risks/warnings data - DISABLED: Vigilance API not in current specification.
         
         Args:
             weather_data: Weather data from API
@@ -901,117 +906,10 @@ class MorningEveningRefactor:
         result = WeatherThresholdData()
         result.geo_points = []
         
-        try:
-            from meteofrance_api import MeteoFranceClient
-            
-            client = MeteoFranceClient()
-            coordinates = self.get_stage_coordinates(stage_name)
-            
-            if not coordinates:
-                logger.warning(f"No coordinates found for stage {stage_name}")
-                return result
-            
-            # Use first coordinate for now
-            lat, lon = coordinates[0]
-            
-            # Get warnings
-            warnings = client.get_warning_full(lat, lon)
-            
-            if not warnings or not hasattr(warnings, 'warnings') or not warnings.warnings:
-                logger.info(f"No warnings available for {stage_name} on {target_date}")
-                return result
-            
-            # Process warnings for target date
-            threshold = self.thresholds.get('risks', 2)  # Default to level 2 (Orange)
-            
-            # Warning level mapping
-            warning_levels = {
-                1: 'L',  # Gelb
-                2: 'M',  # Orange  
-                3: 'H',  # Rot
-                4: 'R'   # Violett
-            }
-            
-            # Level hierarchy for threshold comparison
-            level_hierarchy = {'L': 1, 'M': 2, 'H': 3, 'R': 4}
-            threshold_level = threshold
-            
-            max_level = None
-            max_level_time = None
-            threshold_level_found = None
-            threshold_level_time = None
-            
-            # Process each warning
-            for warning in warnings.warnings:
-                if not hasattr(warning, 'start_time') or not hasattr(warning, 'end_time'):
-                    continue
-                
-                try:
-                    # Check if warning overlaps with target date
-                    start_time = datetime.fromtimestamp(warning.start_time)
-                    end_time = datetime.fromtimestamp(warning.end_time)
-                    
-                    # Check if warning is active on target date
-                    if start_time.date() <= target_date <= end_time.date():
-                        # Get warning level
-                        level_value = getattr(warning, 'level', 1)
-                        level = warning_levels.get(level_value, 'L')
-                        
-                        # Get warning type
-                        warning_type = getattr(warning, 'type', 'unknown')
-                        
-                        # Map warning type to event
-                        if 'pluie' in warning_type.lower() or 'inondation' in warning_type.lower():
-                            event = 'HRain'
-                        elif 'orage' in warning_type.lower():
-                            event = 'Storm'
-                        else:
-                            event = 'Unknown'
-                        
-                        # Use start time as reference
-                        time_str = str(start_time.hour)
-                        current_level_value = level_hierarchy.get(level, 0)
-                        
-                        # Check for threshold (first occurrence meeting threshold)
-                        if (current_level_value >= threshold_level and 
-                            threshold_level_found is None):
-                            threshold_level_found = f"{event}:{level}"
-                            threshold_level_time = time_str
-                        
-                        # Check for maximum (highest level)
-                        if (max_level is None or 
-                            current_level_value > level_hierarchy.get(max_level.split(':')[1], 0)):
-                            max_level = f"{event}:{level}"
-                            max_level_time = time_str
-                            
-                except (ValueError, TypeError) as e:
-                    logger.warning(f"Error processing warning data for {stage_name}: {e}")
-                    continue
-            
-            # Add geo point data
-            geo_point = {
-                'name': 'G1',
-                'threshold_value': threshold_level_found,
-                'threshold_time': threshold_level_time,
-                'max_value': max_level,
-                'max_time': max_level_time
-            }
-            result.geo_points.append(geo_point)
-            
-            # Update overall result
-            if threshold_level_found:
-                result.threshold_value = threshold_level_found
-                result.threshold_time = threshold_level_time
-            
-            if max_level:
-                result.max_value = max_level
-                result.max_time = max_level_time
-            
-            return result
-            
-        except Exception as e:
-            logger.error(f"Failed to process risks data for {stage_name}: {e}")
-            return result
+        # DISABLED: Vigilance API is not part of current specification
+        # This function previously called MeteoFrance Vigilance API which is not allowed
+        logger.info(f"Risks data processing disabled - Vigilance API not in current specification")
+        return result
     
     def process_risk_zonal_data(self, weather_data: Dict[str, Any], stage_name: str, target_date: date, report_type: str) -> WeatherThresholdData:
         """
@@ -1407,7 +1305,7 @@ class MorningEveningRefactor:
             
             # Night data debug (temp_min)
             if report_data.night.geo_points:
-                debug_lines.append("Night (N) - temp_min:")
+                debug_lines.append("NIGHT (N) - temp_min:")
                 for i, point in enumerate(report_data.night.geo_points):
                     for geo, value in point.items():
                         # Night always uses today's stage (T1)
@@ -1419,7 +1317,7 @@ class MorningEveningRefactor:
             
             # Day data debug (temp_max)
             if report_data.day.geo_points:
-                debug_lines.append("Day (D) - temp_max:")
+                debug_lines.append("DAY (D) - temp_max:")
                 for i, point in enumerate(report_data.day.geo_points):
                     for geo, value in point.items():
                         # Day uses today's stage for morning, tomorrow's stage for evening
@@ -1434,7 +1332,7 @@ class MorningEveningRefactor:
             
             # Rain mm data debug
             if report_data.rain_mm.geo_points:
-                debug_lines.append("Rain (mm) Data:")
+                debug_lines.append("RAIN(MM)")
                 for i, point in enumerate(report_data.rain_mm.geo_points):
                     tg_ref = self._get_tg_reference(report_data.report_type, 'rain_mm', i)
                     debug_lines.append(f"{tg_ref}")
@@ -1586,7 +1484,7 @@ class MorningEveningRefactor:
             
             # Rain percent data debug
             if report_data.rain_percent.geo_points:
-                debug_lines.append("Rain (%) Data:")
+                debug_lines.append("RAIN(%)")
                 for i, point in enumerate(report_data.rain_percent.geo_points):
                     tg_ref = self._get_tg_reference(report_data.report_type, 'rain_percent', i)
                     debug_lines.append(f"{tg_ref}")
@@ -1610,7 +1508,8 @@ class MorningEveningRefactor:
                                     
                                     if entry_date == stage_date:
                                         # Get 3h rain probability
-                                        rain_prob = entry.get('rain', {}).get('3h', 0)
+                                        rain_prob_raw = entry.get('rain', {}).get('3h', 0)
+                                        rain_prob = rain_prob_raw if rain_prob_raw is not None else 0
                                         
                                         # Only use 3-hour intervals: 05:00, 08:00, 11:00, 14:00, 17:00
                                         hour = entry_time.hour
@@ -1707,7 +1606,7 @@ class MorningEveningRefactor:
             
             # Wind data debug
             if report_data.wind.geo_points:
-                debug_lines.append("Wind Data:")
+                debug_lines.append("WIND")
                 for i, point in enumerate(report_data.wind.geo_points):
                     tg_ref = self._get_tg_reference(report_data.report_type, 'wind', i)
                     debug_lines.append(f"{tg_ref}")
@@ -1849,7 +1748,7 @@ class MorningEveningRefactor:
             
             # Gust data debug
             if report_data.gust.geo_points:
-                debug_lines.append("Gust Data:")
+                debug_lines.append("GUST")
                 for i, point in enumerate(report_data.gust.geo_points):
                     tg_ref = self._get_tg_reference(report_data.report_type, 'gust', i)
                     debug_lines.append(f"{tg_ref}")
@@ -1957,7 +1856,7 @@ class MorningEveningRefactor:
             
             # Thunderstorm data debug
             if report_data.thunderstorm.geo_points:
-                debug_lines.append("Thunderstorm Data:")
+                debug_lines.append("THUNDERSTORM")
                 for i, point in enumerate(report_data.thunderstorm.geo_points):
                     tg_ref = self._get_tg_reference(report_data.report_type, 'thunderstorm', i)
                     debug_lines.append(f"{tg_ref}")
@@ -2121,7 +2020,7 @@ class MorningEveningRefactor:
             
             # Thunderstorm (+1) data debug
             if report_data.thunderstorm_plus_one.geo_points:
-                debug_lines.append("Thunderstorm (+1) Data:")
+                debug_lines.append("THUNDERSTORM (+1)")
                 
                 # Calculate stage date for thunderstorm (+1)
                 plus_one_date = report_data.report_date + timedelta(days=1)
@@ -2332,23 +2231,29 @@ class MorningEveningRefactor:
             logger.error(f"Failed to save persistence data: {e}")
             return False
     
-    def generate_report(self, stage_name: str, report_type: str, target_date: date) -> Tuple[str, str]:
+    def generate_report(self, stage_name: str, report_type: str, target_date: str) -> Tuple[str, str]:
         """
         Generate complete weather report with result and debug output.
         
         Args:
             stage_name: Name of the stage
             report_type: 'morning' or 'evening'
-            target_date: Target date for the report
+            target_date: Target date for the report (string format YYYY-MM-DD)
             
         Returns:
             Tuple of (result_output, debug_output)
         """
         try:
-            logger.info(f"Generating {report_type} report for {stage_name} on {target_date}")
+            # Convert target_date string to date object
+            if isinstance(target_date, str):
+                target_date_obj = datetime.strptime(target_date, '%Y-%m-%d').date()
+            else:
+                target_date_obj = target_date
+            
+            logger.info(f"Generating {report_type} report for {stage_name} on {target_date_obj}")
             
             # Fetch weather data
-            weather_data = self.fetch_weather_data(stage_name, target_date)
+            weather_data = self.fetch_weather_data(stage_name, target_date_obj)
             
             # Store weather data for debug output
             self._last_weather_data = weather_data
@@ -2358,21 +2263,21 @@ class MorningEveningRefactor:
                 return f"{stage_name}: NO DATA", "# DEBUG DATENEXPORT\nNo weather data available"
             
             # Process weather elements
-            night_data = self.process_night_data(weather_data, stage_name, target_date, report_type)
-            day_data = self.process_day_data(weather_data, stage_name, target_date, report_type)
-            rain_mm_data = self.process_rain_mm_data(weather_data, stage_name, target_date, report_type)
-            rain_percent_data = self.process_rain_percent_data(weather_data, stage_name, target_date, report_type)
-            wind_data = self.process_wind_data(weather_data, stage_name, target_date, report_type)
-            gust_data = self.process_gust_data(weather_data, stage_name, target_date, report_type)
-            thunderstorm_data = self.process_thunderstorm_data(weather_data, stage_name, target_date, report_type)
-            thunderstorm_plus_one_data = self.process_thunderstorm_plus_one_data(weather_data, stage_name, target_date, report_type)
-            risks_data = self.process_risks_data(weather_data, stage_name, target_date, report_type)
-            risk_zonal_data = self.process_risk_zonal_data(weather_data, stage_name, target_date, report_type)
+            night_data = self.process_night_data(weather_data, stage_name, target_date_obj, report_type)
+            day_data = self.process_day_data(weather_data, stage_name, target_date_obj, report_type)
+            rain_mm_data = self.process_rain_mm_data(weather_data, stage_name, target_date_obj, report_type)
+            rain_percent_data = self.process_rain_percent_data(weather_data, stage_name, target_date_obj, report_type)
+            wind_data = self.process_wind_data(weather_data, stage_name, target_date_obj, report_type)
+            gust_data = self.process_gust_data(weather_data, stage_name, target_date_obj, report_type)
+            thunderstorm_data = self.process_thunderstorm_data(weather_data, stage_name, target_date_obj, report_type)
+            thunderstorm_plus_one_data = self.process_thunderstorm_plus_one_data(weather_data, stage_name, target_date_obj, report_type)
+            risks_data = self.process_risks_data(weather_data, stage_name, target_date_obj, report_type)
+            risk_zonal_data = self.process_risk_zonal_data(weather_data, stage_name, target_date_obj, report_type)
             
             # Create report data structure
             report_data = WeatherReportData(
                 stage_name=stage_name,
-                report_date=target_date,
+                report_date=target_date_obj,
                 report_type=report_type,
                 night=night_data,
                 day=day_data,
