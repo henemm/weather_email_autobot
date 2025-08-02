@@ -266,25 +266,63 @@ Events:
 - Pluie-inondation → HRain
 - Orages → Storm
 
-G1  
-16:00 | HRain: M  
-17:00 | Storm: M
+G1
+Time | HRain | Storm
+04:00 | none | none
+05:00 | none | none
+06:00 | none | none
+07:00 | none | none
+…
+16:00 | M | none
+17:00 | M | M
+18:00 | none | none
+=========HRain | 16:00 | M
+Storm | 17:00 | M
 
-G2  
-17:00 | HRain: H  
-17:00 | Storm: H
+G2
+Time | HRain | Storm
+04:00 | none | none
+05:00 | none | none
+06:00 | none | none
+07:00 | none | none
+…
+16:00 | none | none
+17:00 | H | H
+18:00 | none | none
+=========HRain | 17:00 | H
+Storm | 17:00 | H
 
-G3  
-16:00 | HRain: M  
-17:00 | Storm: M
+G3
+Time | HRain | Storm
+04:00 | none | none
+05:00 | none | none
+06:00 | none | none
+07:00 | none | none
+…
+16:00 | M | none
+17:00 | M | M
+18:00 | none | none
+=========HRain | 16:00 | M
+Storm | 17:00 | M
 
-MAX HRain  
+Maximum HRain:
+GEO | Time | Max
+G1 | 16:00 | M
 G2 | 17:00 | H
+G3 | 16:00 | M
+=========
+MAX | 17:00 | M
 
-MAX Storm  
+Maximum Storm:
+GEO | Time | Max
+G1 | 17:00 | M
 G2 | 17:00 | H
+G3 | 17:00 | M
+=========
+MAX | 17:00 | H
 
-Result-Output:  
+Result-Output:
+Beispiel
 HR:M@17TH:H@17
 
 ### Risk (Zonale Sperrungen)
