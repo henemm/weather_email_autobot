@@ -1794,12 +1794,59 @@ class MorningEveningRefactor:
                                             global_max_value = wind_speed
                                             global_max_time = str(hour_time.hour)
                 
-                # Add global maximum info
+                # Add threshold and maximum tables as per specification
+                if report_data.wind.threshold_time is not None:
+                    debug_lines.append("Threshold")
+                    debug_lines.append("GEO | Time | km/h")
+                    for i, point in enumerate(report_data.wind.geo_points):
+                        tg_ref = self._get_tg_reference(report_data.report_type, 'wind', i)
+                        # Calculate threshold for this point
+                        point_threshold_time = None
+                        point_threshold_value = None
+                        if hasattr(self, '_last_weather_data') and self._last_weather_data:
+                            hourly_data = self._last_weather_data.get('hourly_data', [])
+                            if i < len(hourly_data) and 'data' in hourly_data[i]:
+                                for hour_data in hourly_data[i]['data']:
+                                    if 'dt' in hour_data:
+                                        hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                        hour_date = hour_time.date()
+                                        if hour_date == report_data.report_date:
+                                            wind_speed = hour_data.get('wind', {}).get('speed', 0)
+                                            if wind_speed >= self.thresholds.get('wind_speed', 10) and point_threshold_time is None:
+                                                point_threshold_time = str(hour_time.hour)
+                                                point_threshold_value = wind_speed
+                                                break
+                        if point_threshold_time is not None:
+                            debug_lines.append(f"{tg_ref} | {point_threshold_time}:00 | {point_threshold_value}")
+                    debug_lines.append("=========")
+                    debug_lines.append(f"Threshold | {report_data.wind.threshold_time}:00 | {report_data.wind.threshold_value}")
+                    debug_lines.append("")
+                
                 if global_max_time is not None:
-                    debug_lines.append(f"Global Maximum: {global_max_time}:00 | {global_max_value}")
-                else:
-                    debug_lines.append("Global Maximum: No data")
-                debug_lines.append("")
+                    debug_lines.append("Maximum:")
+                    debug_lines.append("GEO | Time | Max")
+                    for i, point in enumerate(report_data.wind.geo_points):
+                        tg_ref = self._get_tg_reference(report_data.report_type, 'wind', i)
+                        # Calculate maximum for this point
+                        point_max_time = None
+                        point_max_value = None
+                        if hasattr(self, '_last_weather_data') and self._last_weather_data:
+                            hourly_data = self._last_weather_data.get('hourly_data', [])
+                            if i < len(hourly_data) and 'data' in hourly_data[i]:
+                                for hour_data in hourly_data[i]['data']:
+                                    if 'dt' in hour_data:
+                                        hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                        hour_date = hour_time.date()
+                                        if hour_date == report_data.report_date:
+                                            wind_speed = hour_data.get('wind', {}).get('speed', 0)
+                                            if point_max_value is None or wind_speed > point_max_value:
+                                                point_max_value = wind_speed
+                                                point_max_time = str(hour_time.hour)
+                        if point_max_time is not None:
+                            debug_lines.append(f"{tg_ref} | {point_max_time}:00 | {point_max_value}")
+                    debug_lines.append("=========")
+                    debug_lines.append(f"MAX | {global_max_time}:00 | {global_max_value}")
+                    debug_lines.append("")
             
             # Gust data debug
             if report_data.gust.geo_points:
@@ -1850,12 +1897,59 @@ class MorningEveningRefactor:
                         debug_lines.append(f"{point_max_time}:00 | {point_max_value} (Max)")
                     debug_lines.append("")
                 
-                # Add global threshold and maximum info
+                # Add threshold and maximum tables as per specification
                 if report_data.gust.threshold_time is not None:
-                    debug_lines.append(f"Global Threshold: {report_data.gust.threshold_time}:00 | {report_data.gust.threshold_value}")
+                    debug_lines.append("Threshold")
+                    debug_lines.append("GEO | Time | km/h")
+                    for i, point in enumerate(report_data.gust.geo_points):
+                        tg_ref = self._get_tg_reference(report_data.report_type, 'gust', i)
+                        # Calculate threshold for this point
+                        point_threshold_time = None
+                        point_threshold_value = None
+                        if hasattr(self, '_last_weather_data') and self._last_weather_data:
+                            hourly_data = self._last_weather_data.get('hourly_data', [])
+                            if i < len(hourly_data) and 'data' in hourly_data[i]:
+                                for hour_data in hourly_data[i]['data']:
+                                    if 'dt' in hour_data:
+                                        hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                        hour_date = hour_time.date()
+                                        if hour_date == report_data.report_date:
+                                            gust_value = hour_data.get('wind', {}).get('gust', 0)
+                                            if gust_value >= self.thresholds.get('wind_gust_threshold', 5.0) and point_threshold_time is None:
+                                                point_threshold_time = str(hour_time.hour)
+                                                point_threshold_value = gust_value
+                                                break
+                        if point_threshold_time is not None:
+                            debug_lines.append(f"{tg_ref} | {point_threshold_time}:00 | {point_threshold_value}")
+                    debug_lines.append("=========")
+                    debug_lines.append(f"Threshold | {report_data.gust.threshold_time}:00 | {report_data.gust.threshold_value}")
+                    debug_lines.append("")
+                
                 if report_data.gust.max_time is not None:
-                    debug_lines.append(f"Global Maximum: {report_data.gust.max_time}:00 | {report_data.gust.max_value}")
-                debug_lines.append("")
+                    debug_lines.append("Maximum:")
+                    debug_lines.append("GEO | Time | Max")
+                    for i, point in enumerate(report_data.gust.geo_points):
+                        tg_ref = self._get_tg_reference(report_data.report_type, 'gust', i)
+                        # Calculate maximum for this point
+                        point_max_time = None
+                        point_max_value = None
+                        if hasattr(self, '_last_weather_data') and self._last_weather_data:
+                            hourly_data = self._last_weather_data.get('hourly_data', [])
+                            if i < len(hourly_data) and 'data' in hourly_data[i]:
+                                for hour_data in hourly_data[i]['data']:
+                                    if 'dt' in hour_data:
+                                        hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                        hour_date = hour_time.date()
+                                        if hour_date == report_data.report_date:
+                                            gust_value = hour_data.get('wind', {}).get('gust', 0)
+                                            if point_max_value is None or gust_value > point_max_value:
+                                                point_max_value = gust_value
+                                                point_max_time = str(hour_time.hour)
+                        if point_max_time is not None:
+                            debug_lines.append(f"{tg_ref} | {point_max_time}:00 | {point_max_value}")
+                    debug_lines.append("=========")
+                    debug_lines.append(f"MAX | {report_data.gust.max_time}:00 | {report_data.gust.max_value}")
+                    debug_lines.append("")
             
             # Thunderstorm data debug
             if report_data.thunderstorm.geo_points:
@@ -1940,19 +2034,74 @@ class MorningEveningRefactor:
                         debug_lines.append(f"{point_max_time}:00 | {point_max_value} (Max)")
                     debug_lines.append("")
                 
-                # Add global threshold and maximum info
+                # Add threshold and maximum tables as per specification
                 if report_data.thunderstorm.threshold_time is not None:
                     debug_lines.append("Threshold")
                     debug_lines.append("GEO | Time | level")
-                    for point in report_data.thunderstorm.geo_points:
-                        if point['threshold_time'] is not None:
-                            debug_lines.append(f"{point['name']} | {point['threshold_time']} | {point['threshold_value']}")
+                    for i, point in enumerate(report_data.thunderstorm.geo_points):
+                        tg_ref = self._get_tg_reference(report_data.report_type, 'thunderstorm', i)
+                        # Calculate threshold for this point
+                        point_threshold_time = None
+                        point_threshold_value = None
+                        if hasattr(self, '_last_weather_data') and self._last_weather_data:
+                            hourly_data = self._last_weather_data.get('hourly_data', [])
+                            if i < len(hourly_data) and 'data' in hourly_data[i]:
+                                for hour_data in hourly_data[i]['data']:
+                                    if 'dt' in hour_data:
+                                        hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                        hour_date = hour_time.date()
+                                        if hour_date == report_data.report_date:
+                                            weather_data = hour_data.get('weather', {})
+                                            condition = weather_data.get('desc', '')
+                                            thunderstorm_levels = {
+                                                'Risque d\'orages': 'low',
+                                                'Averses orageuses': 'med', 
+                                                'Orages': 'high'
+                                            }
+                                            thunderstorm_level = thunderstorm_levels.get(condition, 'none')
+                                            if thunderstorm_level >= self.thresholds['thunderstorm'] and point_threshold_time is None:
+                                                point_threshold_time = str(hour_time.hour)
+                                                point_threshold_value = thunderstorm_level
+                                                break
+                        if point_threshold_time is not None:
+                            debug_lines.append(f"{tg_ref} | {point_threshold_time}:00 | {point_threshold_value}")
                     debug_lines.append("=========")
-                    debug_lines.append(f"Threshold | {report_data.thunderstorm.threshold_time} | {report_data.thunderstorm.threshold_value}")
+                    debug_lines.append(f"Threshold | {report_data.thunderstorm.threshold_time}:00 | {report_data.thunderstorm.threshold_value}")
                     debug_lines.append("")
                 
                 if report_data.thunderstorm.max_time is not None:
-                    debug_lines.append("Maximum")
+                    debug_lines.append("Maximum:")
+                    debug_lines.append("GEO | Time | Max")
+                    for i, point in enumerate(report_data.thunderstorm.geo_points):
+                        tg_ref = self._get_tg_reference(report_data.report_type, 'thunderstorm', i)
+                        # Calculate maximum for this point
+                        point_max_time = None
+                        point_max_value = None
+                        if hasattr(self, '_last_weather_data') and self._last_weather_data:
+                            hourly_data = self._last_weather_data.get('hourly_data', [])
+                            if i < len(hourly_data) and 'data' in hourly_data[i]:
+                                for hour_data in hourly_data[i]['data']:
+                                    if 'dt' in hour_data:
+                                        hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                        hour_date = hour_time.date()
+                                        if hour_date == report_data.report_date:
+                                            weather_data = hour_data.get('weather', {})
+                                            condition = weather_data.get('desc', '')
+                                            thunderstorm_levels = {
+                                                'Risque d\'orages': 'low',
+                                                'Averses orageuses': 'med', 
+                                                'Orages': 'high'
+                                            }
+                                            thunderstorm_level = thunderstorm_levels.get(condition, 'none')
+                                            if thunderstorm_level != 'none':
+                                                if point_max_value is None or thunderstorm_level > point_max_value:
+                                                    point_max_value = thunderstorm_level
+                                                    point_max_time = str(hour_time.hour)
+                        if point_max_time is not None:
+                            debug_lines.append(f"{tg_ref} | {point_max_time}:00 | {point_max_value}")
+                    debug_lines.append("=========")
+                    debug_lines.append(f"MAX | {report_data.thunderstorm.max_time}:00 | {report_data.thunderstorm.max_value}")
+                    debug_lines.append("")
                     debug_lines.append("GEO | Time | Max")
                     for point in report_data.thunderstorm.geo_points:
                         if point['max_time'] is not None:
@@ -2051,8 +2200,13 @@ class MorningEveningRefactor:
             # Risk Zonal data debug
             if report_data.risk_zonal.geo_points:
                 debug_lines.append("Risk Zonal Data:")
-                for point in report_data.risk_zonal.geo_points:
-                    debug_lines.append(f"{point['name']}")
+                for i, point in enumerate(report_data.risk_zonal.geo_points):
+                    # Risk Zonal uses today's stage (T1) for morning, tomorrow's stage (T2) for evening
+                    if report_data.report_type == 'morning':
+                        tg_ref = f"T1G{i+1}"
+                    else:  # evening
+                        tg_ref = f"T2G{i+1}"
+                    debug_lines.append(f"{tg_ref}")
                     debug_lines.append("Time | Risiko")
                     if point['threshold_time'] is not None:
                         debug_lines.append(f"{point['threshold_time']}:00 | {point['threshold_value']}")
@@ -2075,11 +2229,16 @@ class MorningEveningRefactor:
                     debug_lines.append("")
                 
                 if report_data.risk_zonal.max_time is not None:
-                    debug_lines.append("Maximum (Risiko)")
-                    debug_lines.append("GEO | Time | Max")
-                    for point in report_data.risk_zonal.geo_points:
-                        if point['max_time'] is not None:
-                            debug_lines.append(f"{point['name']} | {point['max_time']} | {point['max_value']}")
+                                    debug_lines.append("Maximum (Risiko)")
+                debug_lines.append("GEO | Time | Max")
+                for i, point in enumerate(report_data.risk_zonal.geo_points):
+                    if point['max_time'] is not None:
+                        # Risk Zonal uses today's stage (T1) for morning, tomorrow's stage (T2) for evening
+                        if report_data.report_type == 'morning':
+                            tg_ref = f"T1G{i+1}"
+                        else:  # evening
+                            tg_ref = f"T2G{i+1}"
+                        debug_lines.append(f"{tg_ref} | {point['max_time']} | {point['max_value']}")
                     debug_lines.append("=========")
                     debug_lines.append(f"MAX | {report_data.risk_zonal.max_time} | {report_data.risk_zonal.max_value}")
                     debug_lines.append("")
