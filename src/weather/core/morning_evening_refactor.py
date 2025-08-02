@@ -2080,6 +2080,11 @@ class MorningEveningRefactor:
                                     hour_time = datetime.fromtimestamp(hour_data['dt'])
                                     hour_date = hour_time.date()
                                     if hour_date == report_data.report_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
                                         time_str = str(hour_time.hour)
                                         weather_data = hour_data.get('weather', {})
                                         condition = weather_data.get('desc', '')
@@ -2509,6 +2514,11 @@ class MorningEveningRefactor:
                             hour_date = hour_time.date()
                             
                             if hour_date == target_date:
+                                # Apply time filter: only 4:00 - 19:00 Uhr (as per specification)
+                                hour = hour_time.hour
+                                if hour < 4 or hour > 19:
+                                    continue
+                                
                                 # Extract value using the provided extractor function
                                 value = data_extractor(hour_data)
                                 hour_str = hour_time.strftime('%H')
