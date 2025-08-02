@@ -1826,27 +1826,9 @@ class MorningEveningRefactor:
                         debug_lines.append(f"{point_max_time}:00 | {point_max_value} (Max)")
                     debug_lines.append("")
                 
-                # Calculate and display correct global maximum
-                global_max_value = None
-                global_max_time = None
-                for i, point in enumerate(report_data.wind.geo_points):
-                    if hasattr(self, '_last_weather_data') and self._last_weather_data:
-                        hourly_data = self._last_weather_data.get('hourly_data', [])
-                        if i < len(hourly_data) and 'data' in hourly_data[i]:
-                            for hour_data in hourly_data[i]['data']:
-                                if 'dt' in hour_data:
-                                    hour_time = datetime.fromtimestamp(hour_data['dt'])
-                                    hour_date = hour_time.date()
-                                    if hour_date == report_data.report_date:
-                                        # Apply time filter: only 4:00 - 19:00 Uhr
-                                        hour = hour_time.hour
-                                        if hour < 4 or hour > 19:
-                                            continue
-                                        
-                                        wind_speed = hour_data.get('wind', {}).get('speed', 0)
-                                        if global_max_value is None or wind_speed > global_max_value:
-                                            global_max_value = wind_speed
-                                            global_max_time = str(hour_time.hour)
+                # Use processed data from report_data.wind
+                global_max_value = report_data.wind.max_value
+                global_max_time = report_data.wind.max_time
                 
                 # Add threshold and maximum tables as per specification
                 # Always show threshold table, even if no threshold reached
@@ -1878,7 +1860,7 @@ class MorningEveningRefactor:
                                             point_threshold_value = wind_speed
                                             break
                     if point_threshold_time is not None:
-                        debug_lines.append(f"{tg_ref} | {int(point_threshold_time)}:00 | {point_threshold_value}")
+                        debug_lines.append(f"{tg_ref} | {point_threshold_time}:00 | {point_threshold_value}")
                     else:
                         debug_lines.append(f"{tg_ref} | - | -")
                 debug_lines.append("=========")
