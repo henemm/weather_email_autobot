@@ -2130,6 +2130,21 @@ class MorningEveningRefactor:
             # Thunderstorm (+1) data debug
             if report_data.thunderstorm_plus_one.geo_points:
                 debug_lines.append("Thunderstorm (+1) Data:")
+                
+                # Calculate stage date for thunderstorm (+1)
+                plus_one_date = report_data.report_date + timedelta(days=1)
+                if report_data.report_type == 'evening':
+                    stage_date = plus_one_date + timedelta(days=1)  # Over-tomorrow's date
+                else:  # morning
+                    stage_date = plus_one_date  # Tomorrow's date
+                
+                # Thunderstorm level mapping
+                thunderstorm_levels = {
+                    'Risque d\'orages': 'low',
+                    'Averses orageuses': 'med', 
+                    'Orages': 'high'
+                }
+                
                 for i, point in enumerate(report_data.thunderstorm_plus_one.geo_points):
                     # Thunderstorm (+1): tomorrow's stage for morning, day after tomorrow for evening
                     if report_data.report_type == 'morning':
@@ -2138,8 +2153,24 @@ class MorningEveningRefactor:
                         tg_ref = f"T3G{i+1}"
                     debug_lines.append(f"{tg_ref}")
                     debug_lines.append("Time | Storm")
-                    if point['threshold_time'] is not None:
-                        debug_lines.append(f"{point['threshold_time']}:00 | {point['threshold_value']}")
+                    
+                    # Generate hourly data from API data
+                    if hasattr(self, '_last_weather_data') and self._last_weather_data:
+                        hourly_data = self._last_weather_data.get('hourly_data', [])
+                        if i < len(hourly_data) and 'data' in hourly_data[i]:
+                            for hour_data in hourly_data[i]['data']:
+                                if 'dt' in hour_data:
+                                    hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                    hour_date = hour_time.date()
+                                    if hour_date == stage_date:
+                                        # Extract weather condition
+                                        condition = hour_data.get('condition', '')
+                                        if not condition and 'weather' in hour_data:
+                                            weather_data = hour_data['weather']
+                                            condition = weather_data.get('desc', '')
+                                        thunderstorm_level = thunderstorm_levels.get(condition, 'none')
+                                        debug_lines.append(f"{hour_time.strftime('%H')}:00 | {thunderstorm_level}")
+                    
                     debug_lines.append("=========")
                     if point['threshold_time'] is not None:
                         debug_lines.append(f"{point['threshold_time']}:00 | {point['threshold_value']} (Threshold)")
