@@ -1495,8 +1495,8 @@ class MorningEveningRefactor:
                                         
                                         rain_value = hour_data.get('rain', {}).get('1h', 0)
                                         
-                                        # Track maximum
-                                        if point_max_value is None or rain_value > point_max_value:
+                                        # Track maximum (only if value > 0)
+                                        if rain_value > 0 and (point_max_value is None or rain_value > point_max_value):
                                             point_max_value = rain_value
                                             point_max_time = str(hour_time.hour)
                                         
@@ -2456,8 +2456,8 @@ class MorningEveningRefactor:
                                     point_threshold_time = hour_str
                                     point_threshold_value = value
                                 
-                                # Track maximum for this point
-                                if point_max_value is None or value > point_max_value:
+                                # Track maximum for this point (only if value > 0)
+                                if value > 0 and (point_max_value is None or value > point_max_value):
                                     point_max_value = value
                                     point_max_time = hour_str
                     
