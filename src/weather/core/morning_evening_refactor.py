@@ -1224,6 +1224,43 @@ class MorningEveningRefactor:
             logger.error(f"Failed to format result output: {e}")
             return f"{report_data.stage_name}: ERROR"
     
+    def _get_tg_reference(self, report_type: str, data_type: str, point_index: int) -> str:
+        """
+        Get T-G reference based on report type and data type.
+        
+        Args:
+            report_type: 'morning' or 'evening'
+            data_type: 'night', 'day', 'rain_mm', 'rain_percent', 'wind', 'gust', 'thunderstorm', 'thunderstorm_plus_one'
+            point_index: 0-based point index
+            
+        Returns:
+            T-G reference string (e.g., 'T1G1', 'T2G2')
+        """
+        if data_type == 'night':
+            # Night: always today's stage (T1)
+            return f"T1G{point_index + 1}"
+        elif data_type == 'day':
+            # Day: today's stage for morning, tomorrow's stage for evening
+            if report_type == 'morning':
+                return f"T1G{point_index + 1}"
+            else:  # evening
+                return f"T2G{point_index + 1}"
+        elif data_type in ['rain_mm', 'rain_percent', 'wind', 'gust', 'thunderstorm']:
+            # These use the same logic as 'day'
+            if report_type == 'morning':
+                return f"T1G{point_index + 1}"
+            else:  # evening
+                return f"T2G{point_index + 1}"
+        elif data_type == 'thunderstorm_plus_one':
+            # Thunderstorm (+1): tomorrow's stage for morning, day after tomorrow for evening
+            if report_type == 'morning':
+                return f"T2G{point_index + 1}"
+            else:  # evening
+                return f"T3G{point_index + 1}"
+        else:
+            # Default fallback
+            return f"G{point_index + 1}"
+
     def generate_debug_output(self, report_data: WeatherReportData) -> str:
         """
         Generate debug output with # DEBUG DATENEXPORT marker.
@@ -1271,6 +1308,9 @@ class MorningEveningRefactor:
             if today_stage:
                 today_points_count = len(today_stage.get('punkte', []))
                 debug_lines.append(f"heute: {today.strftime('%Y-%m-%d')}, {today_stage['name']}, {today_points_count} Punkte")
+                # Add T1G coordinates
+                for i, point in enumerate(today_stage.get('punkte', [])):
+                    debug_lines.append(f"  T1G{i+1} \"lat\": {point['lat']}, \"lon\": {point['lon']}")
             else:
                 debug_lines.append(f"heute: {today.strftime('%Y-%m-%d')}, keine Etappe verfügbar, 0 Punkte")
             
@@ -1279,6 +1319,9 @@ class MorningEveningRefactor:
             if tomorrow_stage:
                 tomorrow_points_count = len(tomorrow_stage.get('punkte', []))
                 debug_lines.append(f"morgen: {tomorrow.strftime('%Y-%m-%d')}, {tomorrow_stage['name']}, {tomorrow_points_count} Punkte")
+                # Add T2G coordinates
+                for i, point in enumerate(tomorrow_stage.get('punkte', [])):
+                    debug_lines.append(f"  T2G{i+1} \"lat\": {point['lat']}, \"lon\": {point['lon']}")
             else:
                 debug_lines.append(f"morgen: {tomorrow.strftime('%Y-%m-%d')}, keine Etappe verfügbar, 0 Punkte")
             
@@ -1288,6 +1331,9 @@ class MorningEveningRefactor:
                 if day_after_tomorrow_stage:
                     day_after_tomorrow_points_count = len(day_after_tomorrow_stage.get('punkte', []))
                     debug_lines.append(f"übermorgen: {day_after_tomorrow.strftime('%Y-%m-%d')}, {day_after_tomorrow_stage['name']}, {day_after_tomorrow_points_count} Punkte")
+                    # Add T3G coordinates
+                    for i, point in enumerate(day_after_tomorrow_stage.get('punkte', [])):
+                        debug_lines.append(f"  T3G{i+1} \"lat\": {point['lat']}, \"lon\": {point['lon']}")
                 else:
                     debug_lines.append(f"übermorgen: {day_after_tomorrow.strftime('%Y-%m-%d')}, keine Etappe verfügbar, 0 Punkte")
             
@@ -1316,8 +1362,16 @@ class MorningEveningRefactor:
             # Rain mm data debug
             if report_data.rain_mm.geo_points:
                 debug_lines.append("Rain (mm) Data:")
+                # Determine which T-G reference to use based on report type
+                if report_data.report_type == 'evening':
+                    # Evening: Rain = tomorrow's stage (T2)
+                    t_prefix = "T2"
+                else:
+                    # Morning: Rain = today's stage (T1)
+                    t_prefix = "T1"
+                
                 for i, point in enumerate(report_data.rain_mm.geo_points):
-                    debug_lines.append(f"G{i+1}")
+                    debug_lines.append(f"{t_prefix}G{i+1}")
                     debug_lines.append("Time | Rain (mm)")
                     
                     # Get raw hourly data for this geo point - show all 24 hours
@@ -1424,7 +1478,8 @@ class MorningEveningRefactor:
             if report_data.rain_percent.geo_points:
                 debug_lines.append("Rain (%) Data:")
                 for i, point in enumerate(report_data.rain_percent.geo_points):
-                    debug_lines.append(f"G{i+1}")
+                    tg_ref = self._get_tg_reference(report_data.report_type, 'rain_percent', i)
+                    debug_lines.append(f"{tg_ref}")
                     debug_lines.append("Time | Rain (%)")
                     
                     # Get raw hourly data for this geo point
@@ -1526,7 +1581,8 @@ class MorningEveningRefactor:
             if report_data.wind.geo_points:
                 debug_lines.append("Wind Data:")
                 for i, point in enumerate(report_data.wind.geo_points):
-                    debug_lines.append(f"G{i+1}")
+                    tg_ref = self._get_tg_reference(report_data.report_type, 'wind', i)
+                    debug_lines.append(f"{tg_ref}")
                     debug_lines.append("Time | Wind (km/h)")
                     
                     # Get raw hourly data for this geo point
@@ -1606,7 +1662,8 @@ class MorningEveningRefactor:
             if report_data.gust.geo_points:
                 debug_lines.append("Gust Data:")
                 for i, point in enumerate(report_data.gust.geo_points):
-                    debug_lines.append(f"G{i+1}")
+                    tg_ref = self._get_tg_reference(report_data.report_type, 'gust', i)
+                    debug_lines.append(f"{tg_ref}")
                     debug_lines.append("Time | Gust (km/h)")
                     
                     # Get raw hourly data for this geo point
@@ -1661,7 +1718,8 @@ class MorningEveningRefactor:
             if report_data.thunderstorm.geo_points:
                 debug_lines.append("Thunderstorm Data:")
                 for i, point in enumerate(report_data.thunderstorm.geo_points):
-                    debug_lines.append(f"G{i+1}")
+                    tg_ref = self._get_tg_reference(report_data.report_type, 'thunderstorm', i)
+                    debug_lines.append(f"{tg_ref}")
                     debug_lines.append("Time | Storm")
                     
                     # Get raw hourly data for this geo point
