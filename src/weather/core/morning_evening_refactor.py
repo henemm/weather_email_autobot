@@ -1777,6 +1777,11 @@ class MorningEveningRefactor:
                                     hour_time = datetime.fromtimestamp(hour_data['dt'])
                                     hour_date = hour_time.date()
                                     if hour_date == report_data.report_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
                                         time_str = str(hour_time.hour)
                                         wind_speed = hour_data.get('wind', {}).get('speed', 0)
                                         debug_lines.append(f"{time_str}:00 | {wind_speed}")
@@ -1796,6 +1801,11 @@ class MorningEveningRefactor:
                                     hour_time = datetime.fromtimestamp(hour_data['dt'])
                                     hour_date = hour_time.date()
                                     if hour_date == report_data.report_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
                                         time_str = str(hour_time.hour)
                                         wind_speed = hour_data.get('wind', {}).get('speed', 0)
                                         
@@ -1829,6 +1839,11 @@ class MorningEveningRefactor:
                                     hour_time = datetime.fromtimestamp(hour_data['dt'])
                                     hour_date = hour_time.date()
                                     if hour_date == report_data.report_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
                                         wind_speed = hour_data.get('wind', {}).get('speed', 0)
                                         if global_max_value is None or wind_speed > global_max_value:
                                             global_max_value = wind_speed
@@ -1852,6 +1867,11 @@ class MorningEveningRefactor:
                                     hour_time = datetime.fromtimestamp(hour_data['dt'])
                                     hour_date = hour_time.date()
                                     if hour_date == report_data.report_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
                                         # Use the same extractor as in processing
                                         wind_speed = hour_data.get('wind', {}).get('speed', 0)
                                         if wind_speed >= wind_threshold and point_threshold_time is None:
@@ -1885,6 +1905,11 @@ class MorningEveningRefactor:
                                         hour_time = datetime.fromtimestamp(hour_data['dt'])
                                         hour_date = hour_time.date()
                                         if hour_date == report_data.report_date:
+                                            # Apply time filter: only 4:00 - 19:00 Uhr
+                                            hour = hour_time.hour
+                                            if hour < 4 or hour > 19:
+                                                continue
+                                            
                                             wind_speed = hour_data.get('wind', {}).get('speed', 0)
                                             if point_max_value is None or wind_speed > point_max_value:
                                                 point_max_value = wind_speed
@@ -1912,6 +1937,11 @@ class MorningEveningRefactor:
                                     hour_time = datetime.fromtimestamp(hour_data['dt'])
                                     hour_date = hour_time.date()
                                     if hour_date == report_data.report_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
                                         time_str = str(hour_time.hour)
                                         gust_value = hour_data.get('wind', {}).get('gust', 0)
                                         debug_lines.append(f"{time_str}:00 | {gust_value}")
@@ -2010,8 +2040,8 @@ class MorningEveningRefactor:
                     if hasattr(self, '_last_weather_data') and self._last_weather_data:
                         hourly_data = self._last_weather_data.get('hourly_data', [])
                         if i < len(hourly_data) and 'data' in hourly_data[i]:
-                            # Show all 24 hours (00:00 to 23:00)
-                            for hour in range(24):
+                            # Show only 4:00 - 19:00 Uhr (as per specification)
+                            for hour in range(4, 20):  # 4 to 19 inclusive
                                 time_str = str(hour)
                                 thunderstorm_level = 'none'
                                 

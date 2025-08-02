@@ -3,30 +3,30 @@
   "report_date": "2025-08-03",
   "report_type": "evening",
   "night": {
-    "threshold_value": 13,
+    "threshold_value": 11,
     "threshold_time": null,
-    "max_value": 13,
+    "max_value": 11,
     "max_time": null,
     "geo_points": [
       {
-        "T1G3": 13.2
+        "T1G3": 10.9
       }
     ]
   },
   "day": {
-    "threshold_value": 25,
+    "threshold_value": 29,
     "threshold_time": null,
-    "max_value": 25,
+    "max_value": 29,
     "max_time": null,
     "geo_points": [
       {
-        "T2G1": 25.4
+        "T2G1": 24.1
       },
       {
-        "T2G2": 25.4
+        "T2G2": 26.7
       },
       {
-        "T2G3": 22.7
+        "T2G3": 29
       }
     ]
   },
@@ -433,6 +433,6 @@
     ]
   },
   "debug_info": {},
-  "generated_at": "2025-08-02T10:12:36.929489",
+  "generated_at": "2025-08-02T10:27:51.463975",
   "version": "morning-evening-refactor-v1"
 }
