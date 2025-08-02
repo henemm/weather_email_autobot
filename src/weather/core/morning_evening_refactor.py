@@ -1828,8 +1828,13 @@ class MorningEveningRefactor:
             # Thunderstorm (+1) data debug
             if report_data.thunderstorm_plus_one.geo_points:
                 debug_lines.append("Thunderstorm (+1) Data:")
-                for point in report_data.thunderstorm_plus_one.geo_points:
-                    debug_lines.append(f"{point['name']}")
+                for i, point in enumerate(report_data.thunderstorm_plus_one.geo_points):
+                    # Thunderstorm (+1): tomorrow's stage for morning, day after tomorrow for evening
+                    if report_data.report_type == 'morning':
+                        tg_ref = f"T2G{i+1}"
+                    else:  # evening
+                        tg_ref = f"T3G{i+1}"
+                    debug_lines.append(f"{tg_ref}")
                     debug_lines.append("Time | Storm")
                     if point['threshold_time'] is not None:
                         debug_lines.append(f"{point['threshold_time']}:00 | {point['threshold_value']}")
@@ -1844,9 +1849,14 @@ class MorningEveningRefactor:
                 if report_data.thunderstorm_plus_one.threshold_time is not None:
                     debug_lines.append("Threshold (+1)")
                     debug_lines.append("GEO | Time | level")
-                    for point in report_data.thunderstorm_plus_one.geo_points:
+                    for i, point in enumerate(report_data.thunderstorm_plus_one.geo_points):
                         if point['threshold_time'] is not None:
-                            debug_lines.append(f"{point['name']} | {point['threshold_time']} | {point['threshold_value']}")
+                            # Thunderstorm (+1): tomorrow's stage for morning, day after tomorrow for evening
+                            if report_data.report_type == 'morning':
+                                tg_ref = f"T2G{i+1}"
+                            else:  # evening
+                                tg_ref = f"T3G{i+1}"
+                            debug_lines.append(f"{tg_ref} | {point['threshold_time']} | {point['threshold_value']}")
                     debug_lines.append("=========")
                     debug_lines.append(f"Threshold | {report_data.thunderstorm_plus_one.threshold_time} | {report_data.thunderstorm_plus_one.threshold_value}")
                     debug_lines.append("")
@@ -1854,9 +1864,14 @@ class MorningEveningRefactor:
                 if report_data.thunderstorm_plus_one.max_time is not None:
                     debug_lines.append("Maximum (+1)")
                     debug_lines.append("GEO | Time | Max")
-                    for point in report_data.thunderstorm_plus_one.geo_points:
+                    for i, point in enumerate(report_data.thunderstorm_plus_one.geo_points):
                         if point['max_time'] is not None:
-                            debug_lines.append(f"{point['name']} | {point['max_time']} | {point['max_value']}")
+                            # Thunderstorm (+1): tomorrow's stage for morning, day after tomorrow for evening
+                            if report_data.report_type == 'morning':
+                                tg_ref = f"T2G{i+1}"
+                            else:  # evening
+                                tg_ref = f"T3G{i+1}"
+                            debug_lines.append(f"{tg_ref} | {point['max_time']} | {point['max_value']}")
                     debug_lines.append("=========")
                     debug_lines.append(f"MAX | {report_data.thunderstorm_plus_one.max_time} | {report_data.thunderstorm_plus_one.max_value}")
                     debug_lines.append("")
