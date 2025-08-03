@@ -535,7 +535,7 @@ class MorningEveningRefactor:
                                         point_max_time = hour_str
                                     
                                     # Track threshold (earliest time when rain >= threshold)
-                                    if rain_prob >= rain_prob_threshold and point_threshold_time is None:
+                                    if rain_prob is not None and rain_prob >= rain_prob_threshold and point_threshold_time is None:
                                         point_threshold_prob = rain_prob
                                         point_threshold_time = hour_str
                 
@@ -1317,7 +1317,7 @@ class MorningEveningRefactor:
             
             # Night data debug (temp_min)
             if report_data.night.geo_points:
-                debug_lines.append("NIGHT (N) - temp_min:")
+                debug_lines.append("####### NIGHT (N) #######")
                 for i, point in enumerate(report_data.night.geo_points):
                     for geo, value in point.items():
                         # Night always uses today's stage (T1)
@@ -1329,7 +1329,7 @@ class MorningEveningRefactor:
             
             # Day data debug (temp_max)
             if report_data.day.geo_points:
-                debug_lines.append("DAY (D) - temp_max:")
+                debug_lines.append("####### DAY (D) #######")
                 for i, point in enumerate(report_data.day.geo_points):
                     for geo, value in point.items():
                         # Day uses today's stage for morning, tomorrow's stage for evening
@@ -1344,7 +1344,7 @@ class MorningEveningRefactor:
             
             # Rain mm data debug
             if report_data.rain_mm.geo_points:
-                debug_lines.append("RAIN(MM)")
+                debug_lines.append("####### RAIN (R) #######")
                 for i, point in enumerate(report_data.rain_mm.geo_points):
                     tg_ref = self._get_tg_reference(report_data.report_type, 'rain_mm', i)
                     debug_lines.append(f"{tg_ref}")
@@ -1411,7 +1411,7 @@ class MorningEveningRefactor:
                                             point_max_time = str(hour_time.hour)
                                         
                                         # Track threshold (earliest time when rain >= threshold)
-                                        if rain_value >= self.thresholds['rain_amount'] and point_threshold_time is None:
+                                        if rain_value is not None and rain_value >= self.thresholds['rain_amount'] and point_threshold_time is None:
                                             point_threshold_time = str(hour_time.hour)
                                             point_threshold_value = rain_value
                     
@@ -1449,7 +1449,7 @@ class MorningEveningRefactor:
                                                 continue
                                             
                                             rain_value = hour_data.get('rain', {}).get('1h', 0)
-                                            if rain_value >= self.thresholds['rain_amount'] and point_threshold_time is None:
+                                            if rain_value is not None and rain_value >= self.thresholds['rain_amount'] and point_threshold_time is None:
                                                 point_threshold_time = str(hour_time.hour)
                                                 point_threshold_value = rain_value
                                                 break
@@ -1485,7 +1485,7 @@ class MorningEveningRefactor:
                                                 continue
                                             
                                             rain_value = hour_data.get('rain', {}).get('1h', 0)
-                                            if point_max_value is None or rain_value > point_max_value:
+                                            if point_max_value is None or (rain_value is not None and rain_value > point_max_value):
                                                 point_max_value = rain_value
                                                 point_max_time = str(hour_time.hour)
                                 if point_max_time is not None:
@@ -1496,7 +1496,7 @@ class MorningEveningRefactor:
             
             # Rain percent data debug
             if report_data.rain_percent.geo_points:
-                debug_lines.append("RAIN(%)")
+                debug_lines.append("####### PRAIN (PR) #######")
                 for i, point in enumerate(report_data.rain_percent.geo_points):
                     tg_ref = self._get_tg_reference(report_data.report_type, 'rain_percent', i)
                     debug_lines.append(f"{tg_ref}")
@@ -1566,7 +1566,7 @@ class MorningEveningRefactor:
                                             rain_prob = entry.get('rain', {}).get('3h', 0)
                                             hour = entry_time.hour
                                             if hour in [5, 8, 11, 14, 17]:
-                                                if rain_prob >= rain_prob_threshold and point_threshold_time is None:
+                                                if rain_prob is not None and rain_prob >= rain_prob_threshold and point_threshold_time is None:
                                                     point_threshold_time = str(entry_time.hour)
                                                     point_threshold_value = rain_prob
                                                     break
@@ -1616,10 +1616,28 @@ class MorningEveningRefactor:
                 
 
             
-            # Wind data debug
-            if report_data.wind.geo_points:
-                debug_lines.append("WIND")
-                for i, point in enumerate(report_data.wind.geo_points):
+            # Wind data debug (EXACT same structure as RAIN (mm))
+            debug_lines.append("####### WIND (W) #######")
+            
+            # Get the correct stage and all n GEO points
+            start_date = datetime.strptime(self.config.get('startdatum', '2025-07-27'), '%Y-%m-%d').date()
+            days_since_start = (report_data.report_date - start_date).days
+            
+            if report_data.report_type == 'evening':
+                stage_idx = days_since_start + 1  # Tomorrow's stage
+            else:  # morning
+                stage_idx = days_since_start  # Today's stage
+            
+            import json
+            with open("etappen.json", "r") as f:
+                etappen_data = json.load(f)
+            
+            if stage_idx < len(etappen_data):
+                stage = etappen_data[stage_idx]
+                stage_points = stage.get('punkte', [])
+                
+                # Show ALL n GEO points, not just those with data
+                for i, point in enumerate(stage_points):
                     tg_ref = self._get_tg_reference(report_data.report_type, 'wind', i)
                     debug_lines.append(f"{tg_ref}")
                     debug_lines.append("Time | Wind (km/h)")
@@ -1671,7 +1689,7 @@ class MorningEveningRefactor:
                                             point_max_time = time_str
                                         
                                         # Track threshold (earliest time when wind >= threshold)
-                                        if wind_speed >= self.thresholds.get('wind_speed', 10) and point_threshold_time is None:
+                                        if wind_speed is not None and wind_speed >= self.thresholds.get('wind_speed', 10) and point_threshold_time is None:
                                             point_threshold_time = time_str
                                             point_threshold_value = wind_speed
                     
@@ -1712,7 +1730,7 @@ class MorningEveningRefactor:
                                         
                                         # Use the same extractor as in processing
                                         wind_speed = hour_data.get('wind', {}).get('speed', 0)
-                                        if wind_speed >= wind_threshold and point_threshold_time is None:
+                                        if wind_speed is not None and wind_speed >= wind_threshold and point_threshold_time is None:
                                             point_threshold_time = str(hour_time.hour)
                                             point_threshold_value = wind_speed
                                             break
@@ -1749,7 +1767,7 @@ class MorningEveningRefactor:
                                                 continue
                                             
                                             wind_speed = hour_data.get('wind', {}).get('speed', 0)
-                                            if point_max_value is None or wind_speed > point_max_value:
+                                            if point_max_value is None or (wind_speed is not None and wind_speed > point_max_value):
                                                 point_max_value = wind_speed
                                                 point_max_time = str(hour_time.hour)
                         if point_max_time is not None:
@@ -1758,10 +1776,16 @@ class MorningEveningRefactor:
                     debug_lines.append(f"MAX | {global_max_time}:00 | {global_max_value}")
                     debug_lines.append("")
             
-            # Gust data debug
-            if report_data.gust.geo_points:
-                debug_lines.append("GUST")
-                for i, point in enumerate(report_data.gust.geo_points):
+            # Gust data debug (EXACT same structure as RAIN (mm))
+            debug_lines.append("####### GUST (G) #######")
+            
+            # Get the correct stage and all n GEO points (same logic as WIND)
+            if stage_idx < len(etappen_data):
+                stage = etappen_data[stage_idx]
+                stage_points = stage.get('punkte', [])
+                
+                # Show ALL n GEO points, not just those with data
+                for i, point in enumerate(stage_points):
                     tg_ref = self._get_tg_reference(report_data.report_type, 'gust', i)
                     debug_lines.append(f"{tg_ref}")
                     debug_lines.append("Time | Gust (km/h)")
@@ -1800,7 +1824,7 @@ class MorningEveningRefactor:
                                     point_max_time = time_str
                                 
                                 # Track threshold (earliest time when gust >= threshold)
-                                if gust_value >= self.thresholds.get('wind_gust_threshold', 5.0) and point_threshold_time is None:
+                                if gust_value is not None and gust_value >= self.thresholds.get('wind_gust_threshold', 5.0) and point_threshold_time is None:
                                     point_threshold_time = time_str
                                     point_threshold_value = gust_value
                     
@@ -1830,7 +1854,7 @@ class MorningEveningRefactor:
                                         hour_date = hour_time.date()
                                         if hour_date == report_data.report_date:
                                             gust_value = hour_data.get('wind', {}).get('gust', 0)
-                                            if gust_value >= self.thresholds.get('wind_gust_threshold', 5.0) and point_threshold_time is None:
+                                            if gust_value is not None and gust_value >= self.thresholds.get('wind_gust_threshold', 5.0) and point_threshold_time is None:
                                                 point_threshold_time = str(hour_time.hour)
                                                 point_threshold_value = gust_value
                                                 break
@@ -1857,7 +1881,7 @@ class MorningEveningRefactor:
                                         hour_date = hour_time.date()
                                         if hour_date == report_data.report_date:
                                             gust_value = hour_data.get('wind', {}).get('gust', 0)
-                                            if point_max_value is None or gust_value > point_max_value:
+                                            if point_max_value is None or (gust_value is not None and gust_value > point_max_value):
                                                 point_max_value = gust_value
                                                 point_max_time = str(hour_time.hour)
                         if point_max_time is not None:
@@ -1868,7 +1892,7 @@ class MorningEveningRefactor:
             
             # Thunderstorm data debug
             if report_data.thunderstorm.geo_points:
-                debug_lines.append("THUNDERSTORM")
+                debug_lines.append("####### THUNDERSTORM (TH) #######")
                 for i, point in enumerate(report_data.thunderstorm.geo_points):
                     tg_ref = self._get_tg_reference(report_data.report_type, 'thunderstorm', i)
                     debug_lines.append(f"{tg_ref}")
@@ -1942,7 +1966,7 @@ class MorningEveningRefactor:
                                                 point_max_time = time_str
                                             
                                             # Track threshold (earliest time when storm >= threshold)
-                                            if thunderstorm_level >= self.thresholds['thunderstorm'] and point_threshold_time is None:
+                                            if thunderstorm_level is not None and thunderstorm_level >= self.thresholds['thunderstorm_warning_level'] and point_threshold_time is None:
                                                 point_threshold_time = time_str
                                                 point_threshold_value = thunderstorm_level
                     
@@ -1979,7 +2003,7 @@ class MorningEveningRefactor:
                                                 'Orages': 'high'
                                             }
                                             thunderstorm_level = thunderstorm_levels.get(condition, 'none')
-                                            if thunderstorm_level >= self.thresholds['thunderstorm'] and point_threshold_time is None:
+                                            if thunderstorm_level is not None and thunderstorm_level >= self.thresholds['thunderstorm_warning_level'] and point_threshold_time is None:
                                                 point_threshold_time = str(hour_time.hour)
                                                 point_threshold_value = thunderstorm_level
                                                 break

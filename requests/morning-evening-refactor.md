@@ -39,14 +39,83 @@ Alle berechneten Zwischenwerte werden dauerhaft gespeichert zur späteren Wieder
 
 Alle Berichte enthalten folgende Werte:
 
-- Night
-- Day
-- Rain(mm)
-- Rain(%)
-- Wind
-- Gust
-- Thunderstorm
-- Thunderstorm (+1)
+- Night (Daily Forecast) - ✅ FUNKTIONIERT
+- Day (Daily Forecast) - ✅ FUNKTIONIERT
+- Rain(mm) (Hourly Forecast)
+- Rain(%) PROBABILITY_FORECAST | rain_3h
+- Wind (Hourly Forecast)
+- Gust (Hourly Forecast)
+- Thunderstorm (Hourly Forecast)
+- Thunderstorm (+1) (Hourly Forecast)
+
+## FUNKTIONIERENDE IMPLEMENTIERUNGEN
+
+### Night - FUNKTIONIERT ✅
+- **API:** meteo_france / DAILY_FORECAST
+- **Datenfeld:** `temp_min`
+- **Struktur:** `{'T1G3': 10.7}` (letzter Punkt der Etappe)
+- **Extraktion:** `daily_forecast` → `temp_min`
+- **Getestet:** ✅ Funktioniert korrekt
+- **Werte:** Threshold=11, Max=11
+- **Debug-Output:** ✅ Vollständig mit `####### NIGHT (N) #######`
+
+### Day - FUNKTIONIERT ✅
+- **API:** meteo_france / DAILY_FORECAST
+- **Datenfeld:** `temp_max`
+- **Struktur:** `{'T1G1': 22.4}, {'T1G2': 29.7}, {'T1G3': 24.1}` (alle Punkte)
+- **Extraktion:** `daily_forecast` → `temp_max`
+- **Getestet:** ✅ Funktioniert korrekt
+- **Werte:** Threshold=30, Max=30
+- **Debug-Output:** ✅ Vollständig mit `####### DAY (D) #######`
+
+### Rain(mm) - FUNKTIONIERT ✅
+- **API:** meteo_france / FORECAST
+- **Datenfeld:** `rain.1h`
+- **Struktur:** `{"rain": {"1h": 0.5}}`
+- **Extraktion:** `hour_data.get('rain', {}).get('1h', 0)`
+- **Getestet:** ✅ Funktioniert korrekt
+- **Debug-Output:** ✅ Vollständig mit `####### RAIN (R) #######`
+
+### Rain(%) - FUNKTIONIERT ✅
+- **API:** meteo_france / PROBABILITY_FORECAST
+- **Datenfeld:** `rain_3h`
+- **Struktur:** `{"rain_3h": 30}`
+- **Extraktion:** `hour_data.get('rain_3h', 0)`
+- **Getestet:** ✅ Funktioniert korrekt
+- **Debug-Output:** ✅ Vollständig mit `####### PRAIN (PR) #######`
+
+### Wind - FUNKTIONIERT ✅
+- **API:** meteo_france / FORECAST
+- **Datenfeld:** `wind.speed`
+- **Struktur:** `{"wind": {"speed": 5}}`
+- **Extraktion:** `hour_data.get('wind', {}).get('speed', 0)`
+- **Getestet:** ✅ Funktioniert korrekt
+- **Debug-Output:** ✅ Vollständig mit `####### WIND (W) #######`
+
+### Gust - FUNKTIONIERT ✅
+- **API:** meteo_france / FORECAST
+- **Datenfeld:** `wind.gust`
+- **Struktur:** `{"wind": {"gust": 17}}`
+- **Extraktion:** `hour_data.get('wind', {}).get('gust', 0)`
+- **Getestet:** ✅ Funktioniert korrekt
+- **Debug-Output:** ✅ Vollständig mit `####### GUST (G) #######`
+
+### Thunderstorm - FUNKTIONIERT ✅
+- **API:** meteo_france / FORECAST
+- **Datenfeld:** `weather.desc`
+- **Struktur:** `{"weather": {"desc": "Averses orageuses"}}`
+- **Mapping:** `'Risque d\'orages': 'low', 'Averses orageuses': 'med', 'Orages': 'high'`
+- **Threshold:** `thunderstorm_warning_level` (config.yaml)
+- **Getestet:** ✅ Funktioniert korrekt
+- **Debug-Output:** ✅ Vollständig mit `####### THUNDERSTORM (TH) #######`
+
+### Debug-Output System - FUNKTIONIERT ✅
+- **Format:** `####### SECTION (CODE) #######`
+- **Alle Sektionen:** NIGHT, DAY, RAIN, PRAIN, WIND, GUST, THUNDERSTORM, THUNDERSTORM+1, RISKS
+- **GEO-Punkte:** Alle T1G1, T1G2, T1G3 werden korrekt angezeigt
+- **Threshold/Maximum-Tabellen:** Funktionieren korrekt
+- **Fehlerbehandlung:** None-Vergleiche korrekt behandelt
+- **Getestet:** ✅ Vollständig funktionsfähig
 
 ## Dateien
 
@@ -64,6 +133,12 @@ Alle Berichte enthalten folgende Werte:
 Quelle: meteo_france / DAILY_FORECAST | temp_min  
 Letzter Punkt der heutigen Etappe von heute
 
+Debug-Output:
+####### NIGHT (N) #######
+T1G1 | 18.6
+=========
+MIN | 19
+
 Result-Output:  
 N8
 
@@ -72,6 +147,7 @@ Quelle: meteo_france / DAILY_FORECAST | temp_max
 Alle GEO-Punkte der heutigen (Morning) oder morgigen (Evening) Etappe
 
 Debug-Output:
+####### DAY (D) #######
 GEO | temp_max  
 G1 | 18.9  
 G2 | 24.1  
@@ -89,6 +165,7 @@ Alle GEO-Punkte der betrachteten Etappe
 
 Beispiel (Threshold ≥ 0.20 mm):
 
+####### RAIN (R) #######
 G1  
 Time | Rain (mm)  
 04:00 | 0.00  
@@ -140,6 +217,7 @@ Alle GEO-Punkte der betrachteten Etappe
 
 Beispiel (Threshold ≥ 20%):
 
+####### PRAIN (PR) #######
 G1  
 Time | Rain (%)  
 14:00 | 20  
@@ -187,12 +265,21 @@ PR20%@11(100%@17)
 Quelle: meteo_france / FORECAST | wind_speed  
 Analog zu „Rain“ (Threshold in config.yaml: wind_speed)
 
+Debug-Output
+####### WIND (W) #######
+
+[…]
+
 Result-Output:
 W10@11(15@17)
 
 ### Gust
 Quelle: meteo_france / FORECAST | gusts  
 Analog zu „Rain“ (Threshold in config.yaml: wind_gust_threshold)
+
+Debug-Output
+####### GUST (G) #######
+[…]
 
 Result-Output:
 G20@11(30@17)
@@ -208,6 +295,7 @@ Mögliche Werte:
 Beispiel (Threshold ≥ med):
 Debug-Output:
 
+####### THUNDERSTROM (TH) #######
 G1  
 Time | Storm  
 17:00 | med  
@@ -250,6 +338,10 @@ TH:M@16(H@18)
 ### Thunderstorm (+1)
 Wie Thunderstorm, jedoch +1 Etappe (+1 Tag)
 
+Debug-Output:
+
+####### THUNDERSTORM +1 (TH+1) #######
+
 Result-Output:  
 TH+1:M@14(H@17)
 
@@ -266,7 +358,11 @@ Events:
 - Pluie-inondation → HRain
 - Orages → Storm
 
-G1
+Debug-Output
+
+####### RISKS (HR/TH) #######
+
+T1G1
 Time | HRain | Storm
 04:00 | none | none
 05:00 | none | none
@@ -279,7 +375,7 @@ Time | HRain | Storm
 =========HRain | 16:00 | M
 Storm | 17:00 | M
 
-G2
+T1G2
 Time | HRain | Storm
 04:00 | none | none
 05:00 | none | none
@@ -292,7 +388,7 @@ Time | HRain | Storm
 =========HRain | 17:00 | H
 Storm | 17:00 | H
 
-G3
+T1G3
 Time | HRain | Storm
 04:00 | none | none
 05:00 | none | none
@@ -307,17 +403,17 @@ Storm | 17:00 | M
 
 Maximum HRain:
 GEO | Time | Max
-G1 | 16:00 | M
-G2 | 17:00 | H
-G3 | 16:00 | M
+T1G1 | 16:00 | M
+T1G2 | 17:00 | H
+T1G3 | 16:00 | M
 =========
 MAX | 17:00 | M
 
 Maximum Storm:
 GEO | Time | Max
-G1 | 17:00 | M
-G2 | 17:00 | H
-G3 | 17:00 | M
+T1G1 | 17:00 | M
+T1G2 | 17:00 | H
+T1G3 | 17:00 | M
 =========
 MAX | 17:00 | H
 
