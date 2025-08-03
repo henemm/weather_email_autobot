@@ -1,32 +1,32 @@
 {
   "stage_name": "Test",
   "report_date": "2025-08-03",
-  "report_type": "evening",
+  "report_type": "morning",
   "night": {
-    "threshold_value": 11,
+    "threshold_value": 19,
     "threshold_time": null,
-    "max_value": 11,
+    "max_value": 19,
     "max_time": null,
     "geo_points": [
       {
-        "T1G3": 11
+        "T1G3": 18.6
       }
     ]
   },
   "day": {
-    "threshold_value": 29,
+    "threshold_value": 30,
     "threshold_time": null,
-    "max_value": 29,
+    "max_value": 30,
     "max_time": null,
     "geo_points": [
       {
-        "T2G1": 23.6
+        "T1G1": 22.4
       },
       {
-        "T2G2": 26.6
+        "T1G2": 26
       },
       {
-        "T2G3": 29
+        "T1G3": 29.7
       }
     ]
   },
@@ -37,8 +37,7 @@
     "max_time": null,
     "geo_points": [
       {
-        "T2G1": {
-          "04": 0,
+        "T1G1": {
           "05": 0,
           "06": 0,
           "07": 0,
@@ -57,8 +56,7 @@
         }
       },
       {
-        "T2G2": {
-          "04": 0,
+        "T1G2": {
           "05": 0,
           "06": 0,
           "07": 0,
@@ -77,8 +75,7 @@
         }
       },
       {
-        "T2G3": {
-          "04": 0,
+        "T1G3": {
           "05": 0,
           "06": 0,
           "07": 0,
@@ -101,42 +98,50 @@
   "rain_percent": {
     "threshold_value": null,
     "threshold_time": null,
-    "max_value": 10,
-    "max_time": "08",
+    "max_value": 0,
+    "max_time": "05",
     "geo_points": [
       {
-        "T2G1": {
-          "08": 10,
-          "14": 0
+        "T1G1": {
+          "05": 0,
+          "08": 0,
+          "11": 0,
+          "14": 0,
+          "17": 0
         }
       },
       {
-        "T2G2": {
+        "T1G2": {
+          "05": 0,
           "08": 0,
-          "14": 0
+          "11": 0,
+          "14": 0,
+          "17": 0
         }
       },
       {
-        "T2G3": {
+        "T1G3": {
+          "05": 0,
           "08": 0,
-          "14": 0
+          "11": 0,
+          "14": 0,
+          "17": 0
         }
       }
     ]
   },
   "wind": {
-    "threshold_value": 2,
-    "threshold_time": "04",
+    "threshold_value": 1,
+    "threshold_time": "05",
     "max_value": 7,
-    "max_time": "17",
+    "max_time": "05",
     "geo_points": [
       {
-        "T2G1": {
-          "04": 2,
+        "T1G1": {
           "05": 1,
           "06": 1,
           "07": 1,
-          "08": 0,
+          "08": 1,
           "09": 1,
           "10": 1,
           "11": 1,
@@ -151,10 +156,9 @@
         }
       },
       {
-        "T2G2": {
-          "04": 3,
-          "05": 3,
-          "06": 3,
+        "T1G2": {
+          "05": 2,
+          "06": 1,
           "07": 3,
           "08": 2,
           "09": 2,
@@ -165,19 +169,18 @@
           "14": 2,
           "15": 3,
           "16": 3,
-          "17": 4,
-          "18": 3,
+          "17": 3,
+          "18": 4,
           "19": 4
         }
       },
       {
-        "T2G3": {
-          "04": 6,
-          "05": 6,
+        "T1G3": {
+          "05": 7,
           "06": 6,
-          "07": 6,
+          "07": 7,
           "08": 6,
-          "09": 6,
+          "09": 5,
           "10": 5,
           "11": 5,
           "12": 5,
@@ -194,13 +197,12 @@
   },
   "gust": {
     "threshold_value": 13,
-    "threshold_time": "04",
-    "max_value": 14,
+    "threshold_time": "05",
+    "max_value": 15,
     "max_time": "07",
     "geo_points": [
       {
-        "T2G1": {
-          "04": 0,
+        "T1G1": {
           "05": 0,
           "06": 0,
           "07": 0,
@@ -219,8 +221,7 @@
         }
       },
       {
-        "T2G2": {
-          "04": 0,
+        "T1G2": {
           "05": 0,
           "06": 0,
           "07": 0,
@@ -239,22 +240,21 @@
         }
       },
       {
-        "T2G3": {
-          "04": 13,
+        "T1G3": {
           "05": 13,
-          "06": 13,
-          "07": 14,
+          "06": 14,
+          "07": 15,
           "08": 14,
-          "09": 14,
-          "10": 12,
-          "11": 11,
+          "09": 13,
+          "10": 0,
+          "11": 0,
           "12": 0,
           "13": 0,
           "14": 11,
-          "15": 12,
-          "16": 13,
-          "17": 13,
-          "18": 14,
+          "15": 11,
+          "16": 12,
+          "17": 12,
+          "18": 13,
           "19": 14
         }
       }
@@ -329,32 +329,32 @@
     "threshold_value": null,
     "threshold_time": null,
     "max_value": "none",
-    "max_time": "0",
+    "max_time": "5",
     "geo_points": [
       {
         "name": "G1",
         "threshold_value": null,
         "threshold_time": null,
         "max_value": "none",
-        "max_time": "0"
+        "max_time": "5"
       },
       {
         "name": "G2",
         "threshold_value": null,
         "threshold_time": null,
         "max_value": "none",
-        "max_time": "0"
+        "max_time": "5"
       },
       {
         "name": "G3",
         "threshold_value": null,
         "threshold_time": null,
         "max_value": "none",
-        "max_time": "0"
+        "max_time": "5"
       }
     ]
   },
   "debug_info": {},
-  "generated_at": "2025-08-02T11:27:58.217217",
+  "generated_at": "2025-08-03T07:18:05.210718",
   "version": "morning-evening-refactor-v1"
 }

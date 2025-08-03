@@ -359,20 +359,16 @@ class MorningEveningRefactor:
                 point_data = api.get_complete_forecast_data(lat, lon, point_name)
                 
                 # Get temp_max from daily forecast
-                daily_data = point_data.get('daily_data', [])
-                stage_date_str = stage_date.strftime('%Y-%m-%d')
+                daily_forecast = point_data.get('daily_forecast', {})
+                daily_data = daily_forecast.get('daily', [])
                 
                 for entry in daily_data:
                     entry_date = entry.get('date')
-                    # Handle both string and date objects
-                    if isinstance(entry_date, str):
-                        entry_date_str = entry_date
-                    else:
-                        entry_date_str = entry_date.strftime('%Y-%m-%d') if entry_date else None
-                    
-                    if entry_date_str == stage_date_str:
-                        # Get temp_max from temperature object
-                        temperature = entry.get('temperature', {})
+                    # Handle datetime.date objects
+                    if isinstance(entry_date, date):
+                        if entry_date == stage_date:
+                            # Get temp_max from temperature object
+                            temperature = entry.get('temperature', {})
                         temp_max = temperature.get('max') if temperature else None
                         
                         if temp_max is not None:
