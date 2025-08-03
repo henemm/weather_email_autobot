@@ -516,31 +516,34 @@ class MorningEveningRefactor:
                             
                             if entry_date == stage_date:
                                 # Get 3h rain probability (handle None values)
-                                rain_prob_raw = entry.get('rain', {}).get('3h', 0)
-                                rain_prob = rain_prob_raw if rain_prob_raw is not None else 0
+                                rain_prob_raw = entry.get('rain', {}).get('3h', None)
                                 
-                                # Ensure we have a valid numeric value
-                                if rain_prob is None:
-                                    rain_prob = 0
-                                
-                                # Only use 3-hour intervals: 05:00, 08:00, 11:00, 14:00, 17:00
-                                hour = entry_time.hour
-                                if hour in [5, 8, 11, 14, 17]:
-                                    hour_str = entry_time.strftime('%H')
-                                    point_prob_data[hour_str] = rain_prob
+                                # Only process if we have a valid numeric value
+                                if rain_prob_raw is not None and isinstance(rain_prob_raw, (int, float)):
+                                    rain_prob = float(rain_prob_raw)
                                     
-                                    # Track maximum for this point
-                                    if point_max_prob is None or rain_prob > point_max_prob:
-                                        point_max_prob = rain_prob
-                                        point_max_time = hour_str
-                                    
-                                    # Track threshold (earliest time when rain >= threshold)
-                                    if rain_prob is not None and rain_prob >= rain_prob_threshold and point_threshold_time is None:
-                                        point_threshold_prob = rain_prob
-                                        point_threshold_time = hour_str
+                                    # Only use 3-hour intervals: 05:00, 08:00, 11:00, 14:00, 17:00
+                                    hour = entry_time.hour
+                                    if hour in [5, 8, 11, 14, 17]:
+                                        hour_str = entry_time.strftime('%H')
+                                        point_prob_data[hour_str] = rain_prob
+                                        
+                                        # Track maximum for this point
+                                        if point_max_prob is None or rain_prob > point_max_prob:
+                                            point_max_prob = rain_prob
+                                            point_max_time = hour_str
+                                        
+                                        # Track threshold (earliest time when rain >= threshold)
+                                        if rain_prob >= rain_prob_threshold and point_threshold_time is None:
+                                            point_threshold_prob = rain_prob
+                                            point_threshold_time = hour_str
                 
-                # Store point data with T-G reference
+
+                
+                # Store point data with T-G reference (only if we have actual data)
                 tg_ref = self._get_tg_reference(report_type, 'rain_percent', i)
+                
+                # Add point data (show all data, even if 0, for consistency)
                 geo_points.append({tg_ref: point_prob_data})
                 
                 # Update global maximum
@@ -593,8 +596,9 @@ class MorningEveningRefactor:
                 stage_date = target_date  # Today's date
             
             # Use unified processing with wind data extractor
+            # Convert m/s to km/h: 1 m/s = 3.6 km/h
             wind_threshold = self.thresholds.get('wind_speed', 1.0)
-            wind_extractor = lambda h: h.get('wind', {}).get('speed', 0)
+            wind_extractor = lambda h: h.get('wind', {}).get('speed', 0) * 3.6
             
             result = self._process_unified_hourly_data(weather_data, stage_date, wind_extractor, wind_threshold, report_type, 'wind')
             
@@ -643,8 +647,9 @@ class MorningEveningRefactor:
                 stage_date = target_date  # Today's date
             
             # Use unified processing with gust data extractor
+            # Convert m/s to km/h: 1 m/s = 3.6 km/h
             gust_threshold = self.thresholds.get('wind_gust_threshold', 5.0)
-            gust_extractor = lambda h: h.get('wind', {}).get('gust', 0)
+            gust_extractor = lambda h: h.get('wind', {}).get('gust', 0) * 3.6
             
             result = self._process_unified_hourly_data(weather_data, stage_date, gust_extractor, gust_threshold, report_type, 'gust')
             
@@ -904,7 +909,7 @@ class MorningEveningRefactor:
     
     def process_risks_data(self, weather_data: Dict[str, Any], stage_name: str, target_date: date, report_type: str) -> WeatherThresholdData:
         """
-        Process risks/warnings data - DISABLED: Vigilance API not in current specification.
+        Process risks/warnings data from hourly forecast data.
         
         Args:
             weather_data: Weather data from API
@@ -913,15 +918,185 @@ class MorningEveningRefactor:
             report_type: Type of report ('morning' or 'evening')
             
         Returns:
-            WeatherThresholdData with threshold and maximum values
+            WeatherThresholdData with threshold and maximum values for both HRain and Storm
         """
         result = WeatherThresholdData()
         result.geo_points = []
         
-        # DISABLED: Vigilance API is not part of current specification
-        # This function previously called MeteoFrance Vigilance API which is not allowed
-        logger.info(f"Risks data processing disabled - Vigilance API not in current specification")
-        return result
+        try:
+            if not weather_data or 'hourly_data' not in weather_data:
+                logger.warning(f"No hourly data available for risks processing on {target_date}")
+                return result
+            
+            hourly_data = weather_data['hourly_data']
+            
+            # Level hierarchy for threshold comparison
+            level_hierarchy = {'none': 0, 'L': 1, 'M': 2, 'H': 3}
+            
+            # Track both HRain and Storm separately
+            hrain_max_level = None
+            hrain_max_time = None
+            hrain_threshold_level = None
+            hrain_threshold_time = None
+            
+            storm_max_level = None
+            storm_max_time = None
+            storm_threshold_level = None
+            storm_threshold_time = None
+            
+            # Process each geo point
+            for geo_index, geo_data in enumerate(hourly_data):
+                if not geo_data or 'data' not in geo_data:
+                    continue
+                    
+                geo_name = f"G{geo_index + 1}"
+                
+                # Track per-geo point data
+                geo_hrain_max = None
+                geo_hrain_max_time = None
+                geo_hrain_threshold = None
+                geo_hrain_threshold_time = None
+                
+                geo_storm_max = None
+                geo_storm_max_time = None
+                geo_storm_threshold = None
+                geo_storm_threshold_time = None
+                
+                # Process hourly data for this geo point
+                for hour_data in geo_data['data']:
+                    if not hour_data or 'dt' not in hour_data:
+                        continue
+                        
+                    try:
+                        hour_time = datetime.fromtimestamp(hour_data['dt'])
+                        hour_date = hour_time.date()
+                        
+                        # Only process data for the target date
+                        if hour_date != target_date:
+                            continue
+                        
+                        # Apply time filter: only 4:00 - 19:00 Uhr
+                        hour = hour_time.hour
+                        if hour < 4 or hour > 19:
+                            continue
+                        
+                        # Extract weather condition
+                        condition = hour_data.get('condition', '')
+                        if not condition and 'weather' in hour_data:
+                            weather_data = hour_data['weather']
+                            condition = weather_data.get('desc', '')
+                        
+                        # Map condition to HRain and Storm levels
+                        hrain_level = 'none'
+                        storm_level = 'none'
+                        
+                        condition_lower = condition.lower()
+                        
+                        # HRain: Pluie-inondation
+                        if 'pluie' in condition_lower or 'inondation' in condition_lower:
+                            hrain_level = 'L'  # Gelb
+                        elif 'averses' in condition_lower and ('pluie' in condition_lower or 'orage' in condition_lower):
+                            hrain_level = 'M'  # Orange
+                        elif 'pluie forte' in condition_lower or 'inondation' in condition_lower:
+                            hrain_level = 'H'  # Rot
+                        
+                        # Storm: Orages
+                        if 'orage' in condition_lower and 'orage' not in condition_lower:
+                            storm_level = 'L'  # Gelb
+                        elif 'orages' in condition_lower:
+                            storm_level = 'M'  # Orange
+                        elif 'orage violent' in condition_lower or 'orage fort' in condition_lower:
+                            storm_level = 'H'  # Rot
+                        
+                        # Track HRain levels
+                        if hrain_level != 'none':
+                            if geo_hrain_max is None or level_hierarchy[hrain_level] > level_hierarchy[geo_hrain_max]:
+                                geo_hrain_max = hrain_level
+                                geo_hrain_max_time = hour_time.strftime('%H')
+                            
+                            if geo_hrain_threshold is None:
+                                geo_hrain_threshold = hrain_level
+                                geo_hrain_threshold_time = hour_time.strftime('%H')
+                        
+                        # Track Storm levels
+                        if storm_level != 'none':
+                            if geo_storm_max is None or level_hierarchy[storm_level] > level_hierarchy[geo_storm_max]:
+                                geo_storm_max = storm_level
+                                geo_storm_max_time = hour_time.strftime('%H')
+                            
+                            if geo_storm_threshold is None:
+                                geo_storm_threshold = storm_level
+                                geo_storm_threshold_time = hour_time.strftime('%H')
+                        
+                    except Exception as e:
+                        logger.warning(f"Error processing hour data for risks: {e}")
+                        continue
+                
+                # Add geo point data with both HRain and Storm
+                result.geo_points.append({
+                    'name': geo_name,
+                    'hrain_threshold_value': geo_hrain_threshold,
+                    'hrain_threshold_time': geo_hrain_threshold_time,
+                    'hrain_max_value': geo_hrain_max,
+                    'hrain_max_time': geo_hrain_max_time,
+                    'storm_threshold_value': geo_storm_threshold,
+                    'storm_threshold_time': geo_storm_threshold_time,
+                    'storm_max_value': geo_storm_max,
+                    'storm_max_time': geo_storm_max_time
+                })
+                
+                # Track global HRain levels
+                if geo_hrain_threshold is not None:
+                    if hrain_threshold_level is None:
+                        hrain_threshold_level = geo_hrain_threshold
+                        hrain_threshold_time = geo_hrain_threshold_time
+                    elif level_hierarchy[geo_hrain_threshold] < level_hierarchy[hrain_threshold_level]:
+                        hrain_threshold_level = geo_hrain_threshold
+                        hrain_threshold_time = geo_hrain_threshold_time
+                
+                if geo_hrain_max is not None:
+                    if hrain_max_level is None or level_hierarchy[geo_hrain_max] > level_hierarchy[hrain_max_level]:
+                        hrain_max_level = geo_hrain_max
+                        hrain_max_time = geo_hrain_max_time
+                
+                # Track global Storm levels
+                if geo_storm_threshold is not None:
+                    if storm_threshold_level is None:
+                        storm_threshold_level = geo_storm_threshold
+                        storm_threshold_time = geo_storm_threshold_time
+                    elif level_hierarchy[geo_storm_threshold] < level_hierarchy[storm_threshold_level]:
+                        storm_threshold_level = geo_storm_threshold
+                        storm_threshold_time = geo_storm_threshold_time
+                
+                if geo_storm_max is not None:
+                    if storm_max_level is None or level_hierarchy[geo_storm_max] > level_hierarchy[storm_max_level]:
+                        storm_max_level = geo_storm_max
+                        storm_max_time = geo_storm_max_time
+            
+            # Set global threshold and maximum (use HRain as primary, Storm as secondary)
+            if hrain_threshold_level is not None:
+                result.threshold_value = hrain_threshold_level
+                result.threshold_time = hrain_threshold_time
+                result.max_value = hrain_max_level
+                result.max_time = hrain_max_time
+            
+            # Store Storm data in debug_info for separate processing
+            result.debug_info = {
+                'hrain_threshold_value': hrain_threshold_level,
+                'hrain_threshold_time': hrain_threshold_time,
+                'hrain_max_value': hrain_max_level,
+                'hrain_max_time': hrain_max_time,
+                'storm_threshold_value': storm_threshold_level,
+                'storm_threshold_time': storm_threshold_time,
+                'storm_max_value': storm_max_level,
+                'storm_max_time': storm_max_time
+            }
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Failed to process risks data: {e}")
+            return result
     
     def process_risk_zonal_data(self, weather_data: Dict[str, Any], stage_name: str, target_date: date, report_type: str) -> WeatherThresholdData:
         """
@@ -1145,20 +1320,42 @@ class MorningEveningRefactor:
                 threshold_part = f"{threshold_level}@{report_data.thunderstorm_plus_one.threshold_time}"
                 if report_data.thunderstorm_plus_one.max_value != report_data.thunderstorm_plus_one.threshold_value:
                     max_part = f"{max_level}@{report_data.thunderstorm_plus_one.max_time}"
-                    parts.append(f"S+1:{threshold_part}({max_part})")
+                    parts.append(f"TH+:{threshold_part}({max_part})")
                 else:
-                    parts.append(f"S+1:{threshold_part}")
+                    parts.append(f"TH+:{threshold_part}")
             else:
-                parts.append("S+1:-")
+                parts.append("TH+:-")
             
             # Risks (Warnungen) - EXAKT wie spezifiziert
-            if report_data.risks.threshold_value is not None:
-                threshold_part = f"{report_data.risks.threshold_value}@{report_data.risks.threshold_time}"
-                if report_data.risks.max_value != report_data.risks.threshold_value:
-                    max_part = f"({report_data.risks.max_value}@{report_data.risks.max_time})"
-                    parts.append(f"HR:{threshold_part}TH:{max_part}")
+            # Get HRain and Storm data from debug_info
+            hrain_threshold_value = report_data.risks.debug_info.get('hrain_threshold_value')
+            hrain_threshold_time = report_data.risks.debug_info.get('hrain_threshold_time')
+            hrain_max_value = report_data.risks.debug_info.get('hrain_max_value')
+            hrain_max_time = report_data.risks.debug_info.get('hrain_max_time')
+            
+            storm_threshold_value = report_data.risks.debug_info.get('storm_threshold_value')
+            storm_threshold_time = report_data.risks.debug_info.get('storm_threshold_time')
+            storm_max_value = report_data.risks.debug_info.get('storm_max_value')
+            storm_max_time = report_data.risks.debug_info.get('storm_max_time')
+            
+            if hrain_threshold_value is not None or storm_threshold_value is not None:
+                # Format HRain part
+                if hrain_threshold_value is not None:
+                    hrain_part = f"{hrain_threshold_value}@{hrain_threshold_time}"
+                    if hrain_max_value != hrain_threshold_value:
+                        hrain_part = f"{hrain_threshold_value}@{hrain_threshold_time}({hrain_max_value}@{hrain_max_time})"
                 else:
-                    parts.append(f"HR:{threshold_part}TH:{threshold_part}")
+                    hrain_part = "-"
+                
+                # Format Storm part
+                if storm_threshold_value is not None:
+                    storm_part = f"{storm_threshold_value}@{storm_threshold_time}"
+                    if storm_max_value != storm_threshold_value:
+                        storm_part = f"{storm_threshold_value}@{storm_threshold_time}({storm_max_value}@{storm_max_time})"
+                else:
+                    storm_part = "-"
+                
+                parts.append(f"HR:{hrain_part}TH:{storm_part}")
             else:
                 parts.append("HR:-TH:-")
             
@@ -2051,7 +2248,7 @@ class MorningEveningRefactor:
             
             # Thunderstorm (+1) data debug
             if report_data.thunderstorm_plus_one.geo_points:
-                debug_lines.append("THUNDERSTORM (+1)")
+                debug_lines.append("####### THUNDERSTORM +1 (TH+1) #######")
                 
                 # Calculate stage date for thunderstorm (+1)
                 plus_one_date = report_data.report_date + timedelta(days=1)
@@ -2138,85 +2335,115 @@ class MorningEveningRefactor:
             
             # Risks (Warnungen) data debug
             if report_data.risks.geo_points:
-                debug_lines.append("Risks (Warnungen) Data:")
-                for point in report_data.risks.geo_points:
-                    debug_lines.append(f"{point['name']}")
-                    debug_lines.append("Time | Warnung")
-                    if point['threshold_time'] is not None:
-                        debug_lines.append(f"{point['threshold_time']}:00 | {point['threshold_value']}")
-                    debug_lines.append("=========")
-                    if point['threshold_time'] is not None:
-                        debug_lines.append(f"{point['threshold_time']}:00 | {point['threshold_value']} (Threshold)")
-                    if point['max_time'] is not None:
-                        debug_lines.append(f"{point['max_time']}:00 | {point['max_value']} (Max)")
-                    debug_lines.append("")
+                debug_lines.append("####### RISKS (HR/TH) #######")
                 
-                # Add global threshold and maximum info
-                if report_data.risks.threshold_time is not None:
-                    debug_lines.append("Threshold (Warnungen)")
-                    debug_lines.append("GEO | Time | Warnung")
-                    for point in report_data.risks.geo_points:
-                        if point['threshold_time'] is not None:
-                            debug_lines.append(f"{point['name']} | {point['threshold_time']} | {point['threshold_value']}")
-                    debug_lines.append("=========")
-                    debug_lines.append(f"Threshold | {report_data.risks.threshold_time} | {report_data.risks.threshold_value}")
-                    debug_lines.append("")
+                # Get HRain and Storm data from debug_info
+                hrain_threshold_value = report_data.risks.debug_info.get('hrain_threshold_value')
+                hrain_threshold_time = report_data.risks.debug_info.get('hrain_threshold_time')
+                hrain_max_value = report_data.risks.debug_info.get('hrain_max_value')
+                hrain_max_time = report_data.risks.debug_info.get('hrain_max_time')
                 
-                if report_data.risks.max_time is not None:
-                    debug_lines.append("Maximum (Warnungen)")
-                    debug_lines.append("GEO | Time | Max")
-                    for point in report_data.risks.geo_points:
-                        if point['max_time'] is not None:
-                            debug_lines.append(f"{point['name']} | {point['max_time']} | {point['max_value']}")
-                    debug_lines.append("=========")
-                    debug_lines.append(f"MAX | {report_data.risks.max_time} | {report_data.risks.max_value}")
-                    debug_lines.append("")
-            
-            # Risk Zonal data debug
-            if report_data.risk_zonal.geo_points:
-                debug_lines.append("Risk Zonal Data:")
-                for i, point in enumerate(report_data.risk_zonal.geo_points):
-                    # Risk Zonal uses today's stage (T1) for morning, tomorrow's stage (T2) for evening
+                storm_threshold_value = report_data.risks.debug_info.get('storm_threshold_value')
+                storm_threshold_time = report_data.risks.debug_info.get('storm_threshold_time')
+                storm_max_value = report_data.risks.debug_info.get('storm_max_value')
+                storm_max_time = report_data.risks.debug_info.get('storm_max_time')
+                
+                # Generate hourly data for each geo point
+                for i, point in enumerate(report_data.risks.geo_points):
+                    # Get T-G reference
                     if report_data.report_type == 'morning':
                         tg_ref = f"T1G{i+1}"
                     else:  # evening
                         tg_ref = f"T2G{i+1}"
+                    
                     debug_lines.append(f"{tg_ref}")
-                    debug_lines.append("Time | Risiko")
-                    if point['threshold_time'] is not None:
-                        debug_lines.append(f"{point['threshold_time']}:00 | {point['threshold_value']}")
+                    debug_lines.append("Time | HRain | Storm")
+                    
+                    # Generate hourly data from API data
+                    if hasattr(self, '_last_weather_data') and self._last_weather_data:
+                        hourly_data = self._last_weather_data.get('hourly_data', [])
+                        if i < len(hourly_data) and 'data' in hourly_data[i]:
+                            for hour_data in hourly_data[i]['data']:
+                                if 'dt' in hour_data:
+                                    hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                    hour_date = hour_time.date()
+                                    if hour_date == report_data.report_date:
+                                        # Apply time filter: only 4:00 - 19:00 Uhr
+                                        hour = hour_time.hour
+                                        if hour < 4 or hour > 19:
+                                            continue
+                                        
+                                        # Extract weather condition
+                                        condition = hour_data.get('condition', '')
+                                        if not condition and 'weather' in hour_data:
+                                            weather_data = hour_data['weather']
+                                            condition = weather_data.get('desc', '')
+                                        
+                                        # Map condition to HRain and Storm levels
+                                        condition_lower = condition.lower()
+                                        
+                                        hrain_level = 'none'
+                                        if 'pluie' in condition_lower or 'inondation' in condition_lower:
+                                            hrain_level = 'L'
+                                        elif 'averses' in condition_lower and ('pluie' in condition_lower or 'orage' in condition_lower):
+                                            hrain_level = 'M'
+                                        elif 'pluie forte' in condition_lower or 'inondation' in condition_lower:
+                                            hrain_level = 'H'
+                                        
+                                        storm_level = 'none'
+                                        if 'orage' in condition_lower and 'orage' not in condition_lower:
+                                            storm_level = 'L'
+                                        elif 'orages' in condition_lower:
+                                            storm_level = 'M'
+                                        elif 'orage violent' in condition_lower or 'orage fort' in condition_lower:
+                                            storm_level = 'H'
+                                        
+                                        debug_lines.append(f"{hour_time.strftime('%H')}:00 | {hrain_level} | {storm_level}")
+                    
                     debug_lines.append("=========")
-                    if point['threshold_time'] is not None:
-                        debug_lines.append(f"{point['threshold_time']}:00 | {point['threshold_value']} (Threshold)")
-                    if point['max_time'] is not None:
-                        debug_lines.append(f"{point['max_time']}:00 | {point['max_value']} (Max)")
+                    if point.get('hrain_threshold_time') is not None:
+                        debug_lines.append(f"HRain | {point['hrain_threshold_time']}:00 | {point['hrain_threshold_value']}")
+                    if point.get('storm_threshold_time') is not None:
+                        debug_lines.append(f"Storm | {point['storm_threshold_time']}:00 | {point['storm_threshold_value']}")
                     debug_lines.append("")
                 
-                # Add global threshold and maximum info
-                if report_data.risk_zonal.threshold_time is not None:
-                    debug_lines.append("Threshold (Risiko)")
-                    debug_lines.append("GEO | Time | Risiko")
-                    for point in report_data.risk_zonal.geo_points:
-                        if point['threshold_time'] is not None:
-                            debug_lines.append(f"{point['name']} | {point['threshold_time']} | {point['threshold_value']}")
+                # Add global maximum tables (only if we have actual data)
+                if hrain_max_value is not None and hrain_max_value != 'none':
+                    debug_lines.append("Maximum HRain:")
+                    debug_lines.append("GEO | Time | Max")
+                    for i, point in enumerate(report_data.risks.geo_points):
+                        if point.get('hrain_max_time') is not None and point.get('hrain_max_value') is not None and point.get('hrain_max_value') != 'none':
+                            if report_data.report_type == 'morning':
+                                tg_ref = f"T1G{i+1}"
+                            else:  # evening
+                                tg_ref = f"T2G{i+1}"
+                            debug_lines.append(f"{tg_ref} | {point['hrain_max_time']}:00 | {point['hrain_max_value']}")
                     debug_lines.append("=========")
-                    debug_lines.append(f"Threshold | {report_data.risk_zonal.threshold_time} | {report_data.risk_zonal.threshold_value}")
+                    debug_lines.append(f"MAX | {hrain_max_time}:00 | {hrain_max_value}")
                     debug_lines.append("")
                 
-                if report_data.risk_zonal.max_time is not None:
-                                    debug_lines.append("Maximum (Risiko)")
+                if storm_max_value is not None and storm_max_value != 'none':
+                    debug_lines.append("Maximum Storm:")
+                    debug_lines.append("GEO | Time | Max")
+                    for i, point in enumerate(report_data.risks.geo_points):
+                        if point.get('storm_max_time') is not None and point.get('storm_max_value') is not None and point.get('storm_max_value') != 'none':
+                            if report_data.report_type == 'morning':
+                                tg_ref = f"T1G{i+1}"
+                            else:  # evening
+                                tg_ref = f"T2G{i+1}"
+                            debug_lines.append(f"{tg_ref} | {point['storm_max_time']}:00 | {point['storm_max_value']}")
+                    debug_lines.append("=========")
+                    debug_lines.append(f"MAX | {storm_max_time}:00 | {storm_max_value}")
+                    debug_lines.append("")
+                
+                # Add Maximum Thunder table (always show, even if empty)
+                debug_lines.append("Maximum Thunder:")
                 debug_lines.append("GEO | Time | Max")
-                for i, point in enumerate(report_data.risk_zonal.geo_points):
-                    if point['max_time'] is not None:
-                        # Risk Zonal uses today's stage (T1) for morning, tomorrow's stage (T2) for evening
-                        if report_data.report_type == 'morning':
-                            tg_ref = f"T1G{i+1}"
-                        else:  # evening
-                            tg_ref = f"T2G{i+1}"
-                        debug_lines.append(f"{tg_ref} | {point['max_time']} | {point['max_value']}")
-                    debug_lines.append("=========")
-                    debug_lines.append(f"MAX | {report_data.risk_zonal.max_time} | {report_data.risk_zonal.max_value}")
-                    debug_lines.append("")
+                debug_lines.append("=========")
+                debug_lines.append("MAX | - | -")
+                debug_lines.append("")
+            
+
             
             return "\n".join(debug_lines)
             

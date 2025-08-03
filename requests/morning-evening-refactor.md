@@ -22,18 +22,29 @@ Detaillierter Export zur Nachvollziehbarkeit der Berechnungen. Wird:
 Persistenz: 
 Alle berechneten Zwischenwerte werden dauerhaft gespeichert zur späteren Wiederverwendung (z. B. für Abgleich zukünftiger Berichte).
 
+## KRITISCHE REGEL: EINHEITLICHE METHODENVERWENDUNG
+
+**Morning und Evening Reports verwenden EXAKT die gleichen Methoden!**
+
+- **Morning Report:** Verwendet `process_night_data()`, `process_day_data()`, etc.
+- **Evening Report:** Verwendet **EXAKT DIESELBEN** `process_night_data()`, `process_day_data()`, etc.
+- **Keine unterschiedliche Logik** je nach Report-Typ!
+- **Nur die Input-Parameter** (Datum, Stage) unterscheiden sich
+
 ## Berichtsformen
 
 ### Morning
 - Betrachtet die GEO-Punkte der heutigen Etappe für heute
 - Betrachtet die GEO-Punkte der morgigen Etappe für morgen
 - Debug-Output enthält: Datum heute, Etappenname heute, Anzahl GEO-Punkte; analog für morgen
+- **Verwendet:** `process_night_data()`, `process_day_data()`, etc.
 
 ### Evening
 - Betrachtet die GEO-Punkte der heutigen Etappe für heute
 - Betrachtet die GEO-Punkte der morgigen Etappe für morgen
 - Betrachtet die GEO-Punkte der übermorgen Etappe für übermorgen
 - Debug-Output enthält: Datum + Etappenname + Anzahl GEO-Punkte für heute, morgen, übermorgen
+- **Verwendet:** **EXAKT DIESELBEN** `process_night_data()`, `process_day_data()`, etc.
 
 ## Werte
 

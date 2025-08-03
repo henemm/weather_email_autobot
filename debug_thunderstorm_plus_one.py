@@ -1,101 +1,110 @@
 #!/usr/bin/env python3
+"""
+Debug script to check Thunderstorm +1 section.
+"""
 
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
+from datetime import datetime, date
 from src.weather.core.morning_evening_refactor import MorningEveningRefactor
-from datetime import date, timedelta
 import yaml
 
-def debug_thunderstorm_plus_one():
-    """Debug thunderstorm plus one data processing"""
-    
-    # Load config
-    with open('config.yaml', 'r') as f:
-        config = yaml.safe_load(f)
-    
-    # Create refactor instance
-    refactor = MorningEveningRefactor(config)
-    
-    # Test with evening report for tomorrow
-    stage_name = "Petra"
-    target_date = date(2025, 8, 3)  # Tomorrow
-    report_type = "evening"
-    
-    print(f"🔍 Debugging Thunderstorm (+1) for {stage_name} on {target_date}")
+def main():
+    print("🔍 THUNDERSTORM +1 DEBUG")
     print("=" * 50)
     
-    # Calculate +1 day
-    plus_one_date = target_date + timedelta(days=1)
+    # Load config
+    with open("config.yaml", "r") as f:
+        config = yaml.safe_load(f)
     
-    # For Evening report: Thunderstorm (+1) = thunderstorm maximum of all points of over-tomorrow's stage for over-tomorrow
-    # For Morning report: Thunderstorm (+1) = thunderstorm maximum of all points of tomorrow's stage for tomorrow
-    if report_type == 'evening':
-        stage_date = plus_one_date + timedelta(days=1)  # Over-tomorrow's date
-    else:  # morning
-        stage_date = plus_one_date  # Tomorrow's date
+    # Initialize refactor
+    refactor = MorningEveningRefactor(config)
     
-    print(f"Target date: {target_date}")
-    print(f"Plus one date: {plus_one_date}")
-    print(f"Stage date: {stage_date}")
-    print(f"Report type: {report_type}")
+    # Test stage and date
+    stage_name = "Test"
+    target_date = date(2025, 8, 3)
     
-    # Fetch weather data for target_date (this is the problem!)
+    print(f"📅 Test Date: {target_date}")
+    print(f"📍 Stage: {stage_name}")
+    print()
+    
+    # Fetch weather data
+    print("🌤️ Fetching weather data...")
     weather_data = refactor.fetch_weather_data(stage_name, target_date)
     
-    print(f"\n📊 Weather Data Structure:")
-    print(f"Keys: {list(weather_data.keys())}")
+    if not weather_data:
+        print("❌ No weather data available")
+        return
     
-    hourly_data = weather_data.get('hourly_data', [])
-    print(f"Hourly data count: {len(hourly_data)}")
+    print("✅ Weather data fetched successfully")
+    print()
     
-    if hourly_data:
-        print(f"\n📊 First hourly data point:")
-        first_point = hourly_data[0]
-        print(f"Keys: {list(first_point.keys())}")
-        
-        if 'data' in first_point:
-            print(f"Data count: {len(first_point['data'])}")
-            
-            if first_point['data']:
-                print(f"\n📊 First hour data:")
-                first_hour = first_point['data'][0]
-                print(f"Keys: {list(first_hour.keys())}")
-                
-                # Check for weather condition
-                condition = first_hour.get('condition', '')
-                if not condition and 'weather' in first_hour:
-                    weather_data_hour = first_hour['weather']
-                    condition = weather_data_hour.get('desc', '')
-                
-                print(f"Weather condition: {condition}")
-                
-                # Check all available dates in the data
-                print(f"\n📅 Available dates in data:")
-                dates_found = set()
-                for i, point_data in enumerate(hourly_data):
-                    if 'data' in point_data:
-                        for hour_data in point_data['data']:
-                            if 'dt' in hour_data:
-                                from datetime import datetime
-                                hour_time = datetime.fromtimestamp(hour_data['dt'])
-                                dates_found.add(hour_time.date())
-                
-                print(f"Dates found: {sorted(dates_found)}")
-                print(f"Looking for stage_date: {stage_date}")
-                print(f"Stage_date in data: {stage_date in dates_found}")
+    # Process Thunderstorm +1 data
+    print("⛈️ PROCESSING THUNDERSTORM +1 DATA:")
+    print("-" * 30)
     
-    # Test the actual process_thunderstorm_plus_one_data function
-    print(f"\n🔍 Testing process_thunderstorm_plus_one_data function:")
-    thunderstorm_plus_one_result = refactor.process_thunderstorm_plus_one_data(weather_data, stage_name, target_date, report_type)
+    thunderstorm_plus_one_data = refactor.process_thunderstorm_plus_one_data(
+        weather_data, stage_name, target_date, "morning"
+    )
     
-    print(f"Thunderstorm (+1) result:")
-    print(f"  Threshold time: {thunderstorm_plus_one_result.threshold_time}")
-    print(f"  Threshold value: {thunderstorm_plus_one_result.threshold_value}")
-    print(f"  Max time: {thunderstorm_plus_one_result.max_time}")
-    print(f"  Max value: {thunderstorm_plus_one_result.max_value}")
-    print(f"  Geo points count: {len(thunderstorm_plus_one_result.geo_points)}")
+    print(f"Threshold Value: {thunderstorm_plus_one_data.threshold_value}")
+    print(f"Threshold Time: {thunderstorm_plus_one_data.threshold_time}")
+    print(f"Max Value: {thunderstorm_plus_one_data.max_value}")
+    print(f"Max Time: {thunderstorm_plus_one_data.max_time}")
+    print(f"Geo Points: {len(thunderstorm_plus_one_data.geo_points)}")
+    
+    for i, point in enumerate(thunderstorm_plus_one_data.geo_points):
+        print(f"  Point {i+1}: {point}")
+    
+    print()
+    
+    # Generate debug output
+    print("🔍 GENERATING DEBUG OUTPUT:")
+    print("-" * 30)
+    
+    # Create a minimal report data for testing
+    from src.weather.core.morning_evening_refactor import WeatherReportData, WeatherThresholdData
+    
+    report_data = WeatherReportData(
+        stage_name=stage_name,
+        report_date=target_date,
+        report_type="morning",
+        night=WeatherThresholdData(),
+        day=WeatherThresholdData(),
+        rain_mm=WeatherThresholdData(),
+        rain_percent=WeatherThresholdData(),
+        wind=WeatherThresholdData(),
+        gust=WeatherThresholdData(),
+        thunderstorm=WeatherThresholdData(),
+        thunderstorm_plus_one=thunderstorm_plus_one_data,
+        risks=WeatherThresholdData(),
+        risk_zonal=WeatherThresholdData()
+    )
+    
+    # Store weather data for debug output generation
+    refactor._last_weather_data = weather_data
+    
+    debug_output = refactor.generate_debug_output(report_data)
+    
+    # Extract Thunderstorm +1 section
+    lines = debug_output.split('\n')
+    in_thunderstorm_plus_one = False
+    thunderstorm_plus_one_lines = []
+    
+    for line in lines:
+        if "####### THUNDERSTORM +1 (TH+1) #######" in line:
+            in_thunderstorm_plus_one = True
+            thunderstorm_plus_one_lines.append(line)
+        elif in_thunderstorm_plus_one and line.startswith("#######"):
+            break
+        elif in_thunderstorm_plus_one:
+            thunderstorm_plus_one_lines.append(line)
+    
+    print("THUNDERSTORM +1 DEBUG OUTPUT:")
+    for line in thunderstorm_plus_one_lines:
+        print(f"  {line}")
 
 if __name__ == "__main__":
-    debug_thunderstorm_plus_one() 
+    main() 
