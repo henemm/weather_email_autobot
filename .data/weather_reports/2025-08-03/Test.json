@@ -281,33 +281,11 @@
   "risk_zonal": {
     "threshold_value": null,
     "threshold_time": null,
-    "max_value": "L",
-    "max_time": "14",
-    "geo_points": [
-      {
-        "name": "G1",
-        "threshold_value": null,
-        "threshold_time": null,
-        "max_value": "none",
-        "max_time": "14"
-      },
-      {
-        "name": "G2",
-        "threshold_value": null,
-        "threshold_time": null,
-        "max_value": "L",
-        "max_time": "14"
-      },
-      {
-        "name": "G3",
-        "threshold_value": null,
-        "threshold_time": null,
-        "max_value": "L",
-        "max_time": "14"
-      }
-    ]
+    "max_value": null,
+    "max_time": null,
+    "geo_points": []
   },
   "debug_info": {},
-  "generated_at": "2025-08-03T14:34:10.036437",
+  "generated_at": "2025-08-03T14:41:23.196391",
   "version": "morning-evening-refactor-v1"
 }

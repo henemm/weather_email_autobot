@@ -1100,123 +1100,50 @@ class MorningEveningRefactor:
     
     def process_risk_zonal_data(self, weather_data: Dict[str, Any], stage_name: str, target_date: date, report_type: str) -> WeatherThresholdData:
         """
-        Process risk zonal data from hourly forecast data.
+        Process risk zonal data using GR20 Risk Block API.
         
         Args:
-            weather_data: Weather data from API
+            weather_data: Weather data from API (not used for risk zonal)
             stage_name: Name of the stage
             target_date: Target date for the report
             report_type: Type of report ('morning' or 'evening')
             
         Returns:
-            WeatherThresholdData with threshold and maximum values
+            WeatherThresholdData with risk block string
         """
         result = WeatherThresholdData()
         result.geo_points = []
         
         try:
-            if not weather_data or 'hourly_data' not in weather_data:
-                logger.warning(f"No hourly data available for risk zonal processing on {target_date}")
+            # Import the GR20 Risk Block formatter
+            from src.fire.risk_block_formatter import format_risk_block
+            
+            # Get stage coordinates for risk block generation
+            coordinates = self.get_stage_coordinates(stage_name)
+            if not coordinates:
+                logger.warning(f"No coordinates available for stage {stage_name}")
                 return result
             
-            hourly_data = weather_data['hourly_data']
-            threshold = self.thresholds.get('risk_zonal', 2) # Default to level 2 (Orange)
+            # Use the first coordinate for risk block (or could use center point)
+            lat, lon = coordinates[0]
             
-            # Risk Zonal level mapping
-            risk_zonal_levels = {
-                1: 'L',  # Gelb
-                2: 'M',  # Orange  
-                3: 'H',  # Rot
-                4: 'R'   # Violett
-            }
+            # Generate risk block using GR20 Risk Block API
+            risk_block = format_risk_block(lat, lon, self.config)
             
-            # Level hierarchy for threshold comparison
-            level_hierarchy = {'L': 1, 'M': 2, 'H': 3, 'R': 4}
-            threshold_level = threshold
-            
-            max_level = None
-            max_level_time = None
-            threshold_level_found = None
-            threshold_level_time = None
-            
-            # Process each geo point
-            for geo_index, geo_data in enumerate(hourly_data):
-                if not geo_data or 'data' not in geo_data:
-                    continue
-                    
-                geo_name = f"G{geo_index + 1}"
-                
-                # Process hourly data for this geo point
-                for hour_data in geo_data['data']:
-                    if not hour_data or 'dt' not in hour_data:
-                        continue
-                        
-                    try:
-                        hour_time = datetime.fromtimestamp(hour_data['dt'])
-                        hour_date = hour_time.date()
-                        
-                        # Only process data for the target date
-                        if hour_date != target_date:
-                            continue
-                        
-                        # Extract weather condition
-                        condition = hour_data.get('condition', '')
-                        if not condition and 'weather' in hour_data:
-                            weather_data = hour_data['weather']
-                            condition = weather_data.get('desc', '')
-                        
-                        # Map condition to risk zonal level
-                        risk_zonal_level = 'none'
-                        if 'pluie' in condition.lower() or 'inondation' in condition.lower():
-                            risk_zonal_level = 'L' # Gelb
-                        elif 'orage' in condition.lower():
-                            risk_zonal_level = 'M' # Orange
-                        elif 'orages' in condition.lower():
-                            risk_zonal_level = 'H' # Rot
-                        elif 'orage violette' in condition.lower():
-                            risk_zonal_level = 'R' # Violett
-                        
-                        current_level_value = level_hierarchy.get(risk_zonal_level, 0)
-                        
-                        # Check for threshold (first occurrence meeting threshold)
-                        if (current_level_value >= threshold_level and 
-                            threshold_level_found is None):
-                            threshold_level_found = risk_zonal_level
-                            threshold_level_time = str(hour_time.hour)
-                            
-                        # Check for maximum (highest level)
-                        if (max_level is None or 
-                            current_level_value > level_hierarchy.get(max_level, 0)):
-                            max_level = risk_zonal_level
-                            max_level_time = str(hour_time.hour)
-                            
-                    except (ValueError, TypeError) as e:
-                        logger.warning(f"Error processing risk zonal data for {geo_name}: {e}")
-                        continue
-                
-                # Add geo point data
-                geo_point = {
-                    'name': geo_name,
-                    'threshold_value': threshold_level_found,
-                    'threshold_time': threshold_level_time,
-                    'max_value': max_level,
-                    'max_time': max_level_time
-                }
-                result.geo_points.append(geo_point)
-                
-                # Update overall result
-                if threshold_level_found:
-                    result.threshold_value = threshold_level_found
-                    result.threshold_time = threshold_level_time
-                
-                if max_level:
-                    result.max_value = max_level
-                    result.max_time = max_level_time
+            if risk_block:
+                # Store the risk block string in debug_info for result output
+                result.debug_info = {'risk_block': risk_block}
+                logger.info(f"Generated risk block for {stage_name}: {risk_block}")
+            else:
+                # No relevant risks found
+                result.debug_info = {'risk_block': None}
+                logger.info(f"No relevant risks found for {stage_name}")
             
             return result
             
         except Exception as e:
-            logger.error(f"Failed to process risk zonal data for {stage_name}: {e}")
+            logger.error(f"Failed to process risk zonal data: {e}")
+            result.debug_info = {'risk_block': None}
             return result
     
     def format_result_output(self, report_data: WeatherReportData) -> str:
@@ -1359,9 +1286,10 @@ class MorningEveningRefactor:
             else:
                 parts.append("HR:-TH:-")
             
-            # Risk Zonal - EXAKT wie spezifiziert
-            if report_data.risk_zonal.threshold_value is not None:
-                parts.append(f"Z:{report_data.risk_zonal.threshold_value}")
+            # Risk Zonal - EXAKT wie spezifiziert (GR20 Risk Block API)
+            risk_block = report_data.risk_zonal.debug_info.get('risk_block')
+            if risk_block:
+                parts.append(f"Z:{risk_block}")
             else:
                 parts.append("Z:-")
             
