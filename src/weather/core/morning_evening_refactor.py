@@ -103,7 +103,7 @@ class MorningEveningRefactor:
             List of (lat, lon) coordinate tuples
         """
         try:
-            from src.position.etappenlogik import get_stage_info
+            from position.etappenlogik import get_stage_info
             stage_info = get_stage_info(self.config)
             
             if stage_info and stage_info.get("name") == stage_name:
@@ -247,7 +247,7 @@ class MorningEveningRefactor:
             last_lat, last_lon = last_point['lat'], last_point['lon']
             
             # Fetch weather data for the last point using EnhancedMeteoFranceAPI
-            from src.wetter.enhanced_meteofrance_api import EnhancedMeteoFranceAPI
+            from wetter.enhanced_meteofrance_api import EnhancedMeteoFranceAPI
             api = EnhancedMeteoFranceAPI()
             last_point_name = f"{stage['name']}_point_{len(stage_points)}"
             
@@ -345,7 +345,7 @@ class MorningEveningRefactor:
                 return WeatherThresholdData()
             
             # Fetch weather data for all points
-            from src.wetter.enhanced_meteofrance_api import EnhancedMeteoFranceAPI
+            from wetter.enhanced_meteofrance_api import EnhancedMeteoFranceAPI
             api = EnhancedMeteoFranceAPI()
             
             geo_points = []
@@ -1116,7 +1116,7 @@ class MorningEveningRefactor:
         
         try:
             # Import the GR20 Risk Block formatter
-            from src.fire.risk_block_formatter import format_risk_block
+            from fire.risk_block_formatter import format_risk_block
             
             # Get stage coordinates for risk block generation
             coordinates = self.get_stage_coordinates(stage_name)
@@ -2652,7 +2652,7 @@ class MorningEveningRefactor:
                             last_lat, last_lon = last_point['lat'], last_point['lon']
                             
                             # Find the data for this specific coordinate
-                            from src.wetter.enhanced_meteofrance_api import EnhancedMeteoFranceAPI
+                            from wetter.enhanced_meteofrance_api import EnhancedMeteoFranceAPI
                             api = EnhancedMeteoFranceAPI()
                             last_point_name = f"{stage['name']}_point_{len(stage_points)}"
                             

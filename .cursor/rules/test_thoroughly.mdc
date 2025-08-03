@@ -1,0 +1,42 @@
+# 🧪 THOROUGH TESTING RULE
+
+## CRITICAL: ALWAYS FOLLOW THIS RULE
+
+**BEFORE claiming anything works:**
+
+1. **NEVER say "✅ PERFEKT!" or "✅ FUNKTIONIERT!" without thorough testing**
+2. **ALWAYS verify the complete output** - not just the first few lines
+3. **ALWAYS check actual email content** - not just terminal logs
+4. **ALWAYS compare expected vs actual results**
+5. **ALWAYS test both morning and evening reports**
+6. **ALWAYS verify debug output is complete** - not truncated
+7. **ALWAYS check all sections are present** (NIGHT, DAY, RAIN, WIND, GUST, THUNDERSTORM, etc.)
+
+## TESTING CHECKLIST
+
+**Before claiming success, verify:**
+
+- [ ] Result output is correct format
+- [ ] Debug output is complete (not truncated)
+- [ ] All weather sections are present
+- [ ] Both morning and evening reports work
+- [ ] Email content matches expectations
+- [ ] No error messages in output
+- [ ] All data is properly formatted
+
+## FAILURE TO FOLLOW = IMMEDIATE CORRECTION
+
+**If I violate this rule:**
+- Immediately admit the mistake
+- Do NOT make excuses
+- Fix the problem systematically
+- Test again thoroughly
+
+## NO EXCEPTIONS
+
+**This rule applies to ALL claims about functionality working.**
+**No shortcuts. No assumptions. No premature success claims.**
+description:
+globs:
+alwaysApply: false
+---

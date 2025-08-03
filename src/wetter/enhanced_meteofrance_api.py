@@ -253,12 +253,12 @@ class EnhancedMeteoFranceAPI:
     def _extract_thunderstorm_data(self, forecast_entries: List[Dict[str, Any]]) -> List[ThunderstormData]:
         """Extract thunderstorm detection data."""
         thunderstorm_data = []
-        thunderstorm_keywords = ['orage', 'thunderstorm', 'éclair', 'orages', 'averses orageuses']
+        thunderstorm_keywords = ['Risque d\'orages', 'Averses orageuses', 'Orages']
         
         for entry in forecast_entries:
             try:
                 weather = entry.get('weather', {})
-                desc = weather.get('desc', '').lower()
+                desc = weather.get('desc', '')
                 
                 if any(keyword in desc for keyword in thunderstorm_keywords):
                     thunderstorm_entry = ThunderstormData(

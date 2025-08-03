@@ -308,6 +308,7 @@ def generate_gr20_report_text(report_data: Dict[str, Any], config: Dict[str, Any
             - report_type: "morning", "evening", or "dynamic"
             - weather_data: Detailed weather data for formatting
             - report_time: Datetime of the report
+            - result_output: New MorningEveningRefactor output (if available)
         config: Configuration dictionary
         
     Returns:
@@ -315,16 +316,32 @@ def generate_gr20_report_text(report_data: Dict[str, Any], config: Dict[str, Any
     """
     report_type = report_data.get("report_type", "morning")
     
-    # Generate base report text
-    if report_type == "morning":
-        base_text = _generate_morning_report(report_data, config)
-    elif report_type == "evening":
-        base_text = _generate_evening_report(report_data, config)
-    elif report_type == "dynamic":
-        base_text = _generate_dynamic_report(report_data, config)
+    # Check if we have new MorningEveningRefactor output
+    if "result_output" in report_data and report_data["result_output"]:
+        # Use the new result_output directly
+        base_text = report_data["result_output"]
+        logger.info(f"Using MorningEveningRefactor result_output: {base_text}")
+        
+        # Also use the new debug_output if available
+        if "debug_output" in report_data and report_data["debug_output"]:
+            # Append the new debug_output to the base_text
+            final_text = f"{base_text}\n\n{report_data['debug_output']}"
+            logger.info(f"Using MorningEveningRefactor debug_output (length: {len(report_data['debug_output'])} characters)")
+        else:
+            final_text = base_text
     else:
-        # Fallback to old format for backward compatibility
-        base_text = _generate_legacy_report(report_data, config)
+        # Fallback to old generation methods
+        if report_type == "morning":
+            base_text = _generate_morning_report(report_data, config)
+        elif report_type == "evening":
+            base_text = _generate_evening_report(report_data, config)
+        elif report_type == "dynamic":
+            base_text = _generate_dynamic_report(report_data, config)
+        else:
+            # Fallback to old format for backward compatibility
+            base_text = _generate_legacy_report(report_data, config)
+        
+        final_text = base_text
     
     # Add risk block if relevant
     try:
@@ -335,30 +352,21 @@ def generate_gr20_report_text(report_data: Dict[str, Any], config: Dict[str, Any
         if latitude and longitude:
             risk_block = format_risk_block(latitude, longitude)
             if risk_block:
-                # Append risk block to base text
-                combined_text = f"{base_text} {risk_block}"
+                # Append risk block to final_text
+                combined_text = f"{final_text} {risk_block}"
                 
-                # Ensure total length doesn't exceed 160 characters
-                if len(combined_text) <= 160:
-                    final_text = combined_text
-                else:
-                    # If too long, truncate the base text to make room for risk block
-                    available_space = 160 - len(risk_block) - 1  # -1 for space
-                    if available_space > 0:
-                        truncated_base = base_text[:available_space]
-                        final_text = f"{truncated_base} {risk_block}"
-                    else:
-                        # If risk block is too long, return base text only
-                        logger.warning(f"Risk block too long ({len(risk_block)} chars), using base text only")
-                        final_text = base_text
+                # For emails, don't truncate - allow full debug output
+                # Only apply 160 character limit for SMS
+                final_text = combined_text
             else:
-                final_text = base_text
+                # Keep final_text as is
+                pass
         else:
-            final_text = base_text
+            # Keep final_text as is
+            pass
     except Exception as e:
         logger.error(f"Error adding risk block to report: {e}")
-        # Return base text if risk block fails
-        final_text = base_text
+        # Keep final_text as is
     
     # Add enhanced alternative risk analysis if enabled
     if config.get('alternative_risk_analysis', {}).get('enabled', False):
@@ -408,9 +416,11 @@ def generate_gr20_report_text(report_data: Dict[str, Any], config: Dict[str, Any
             logger.error(f"Error in alternative risk analysis: {e}")
     
     # Add debug information if enabled
-    debug_info = generate_debug_email_append(report_data, config)
-    if debug_info:
-        final_text += debug_info
+    # Only generate old debug output if we don't have new MorningEveningRefactor debug_output
+    if "debug_output" not in report_data or not report_data["debug_output"]:
+        debug_info = generate_debug_email_append(report_data, config)
+        if debug_info:
+            final_text += debug_info
     
     return final_text
 
