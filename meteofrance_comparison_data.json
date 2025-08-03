@@ -1,0 +1,26 @@
+[
+  {
+    "coordinates": [
+      42.0167,
+      9.4
+    ],
+    "forecast": "<meteofrance_api.model.forecast.Forecast object at 0x7fce3476af10>",
+    "raw_data": "<meteofrance_api.model.forecast.Forecast object at 0x7fce3476af10>"
+  },
+  {
+    "coordinates": [
+      42.0267,
+      9.41
+    ],
+    "forecast": "<meteofrance_api.model.forecast.Forecast object at 0x7fce3479b250>",
+    "raw_data": "<meteofrance_api.model.forecast.Forecast object at 0x7fce3479b250>"
+  },
+  {
+    "coordinates": [
+      42.0367,
+      9.42
+    ],
+    "forecast": "<meteofrance_api.model.forecast.Forecast object at 0x7fce347cb5d0>",
+    "raw_data": "<meteofrance_api.model.forecast.Forecast object at 0x7fce347cb5d0>"
+  }
+]

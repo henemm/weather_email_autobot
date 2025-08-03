@@ -1,0 +1,16 @@
+{
+  "location": "Prunelli-di-Fiumorbo (20243)",
+  "url": "https://meteofrance.com/previsions-meteo-france/prunelli-di-fiumorbo/20243",
+  "extracted_at": "2025-08-03T15:04:55.063604",
+  "current_temperature": null,
+  "forecast_text": "METEO PRUNELLI-DI-FIUMORBO par Météo-France - Prévisions Météo gratuites pour aujourd’hui, demain et à 15 jours.",
+  "conditions": {
+    "rain": false,
+    "thunderstorm": false,
+    "wind": false,
+    "high_temp": false,
+    "low_temp": true
+  },
+  "temperature_ranges": [],
+  "wind_speeds": []
+}

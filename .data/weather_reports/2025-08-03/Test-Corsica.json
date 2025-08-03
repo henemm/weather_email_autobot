@@ -1,0 +1,291 @@
+{
+  "stage_name": "Test-Corsica",
+  "report_date": "2025-08-03",
+  "report_type": "evening",
+  "night": {
+    "threshold_value": 14,
+    "threshold_time": null,
+    "max_value": 14,
+    "max_time": null,
+    "geo_points": [
+      {
+        "T1G3": 13.7
+      }
+    ]
+  },
+  "day": {
+    "threshold_value": 30,
+    "threshold_time": null,
+    "max_value": 30,
+    "max_time": null,
+    "geo_points": [
+      {
+        "T2G1": 26.1
+      },
+      {
+        "T2G2": 29.7
+      },
+      {
+        "T2G3": 25.7
+      }
+    ]
+  },
+  "rain_mm": {
+    "threshold_value": 5.5,
+    "threshold_time": "14",
+    "max_value": 6.9,
+    "max_time": "15",
+    "geo_points": [
+      {
+        "T2G1": {
+          "14": 5.5,
+          "15": 6.9,
+          "16": 0,
+          "17": 0,
+          "18": 0,
+          "19": 0
+        }
+      },
+      {
+        "T2G2": {
+          "14": 5.5,
+          "15": 6.9,
+          "16": 0,
+          "17": 0,
+          "18": 0,
+          "19": 0
+        }
+      },
+      {
+        "T2G3": {
+          "14": 5.5,
+          "15": 6.9,
+          "16": 0,
+          "17": 0,
+          "18": 0,
+          "19": 0
+        }
+      }
+    ]
+  },
+  "rain_percent": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": 0.0,
+    "max_time": "05",
+    "geo_points": [
+      {
+        "T2G1": {
+          "05": 0.0,
+          "08": 0.0,
+          "11": 0.0,
+          "14": 0.0,
+          "17": 0.0
+        }
+      },
+      {
+        "T2G2": {
+          "05": 0.0,
+          "08": 0.0,
+          "11": 0.0,
+          "14": 0.0,
+          "17": 0.0
+        }
+      },
+      {
+        "T2G3": {
+          "05": 0.0,
+          "08": 0.0,
+          "11": 0.0,
+          "14": 0.0,
+          "17": 0.0
+        }
+      }
+    ]
+  },
+  "wind": {
+    "threshold_value": 18.0,
+    "threshold_time": "14",
+    "max_value": 18.0,
+    "max_time": "14",
+    "geo_points": [
+      {
+        "T2G1": {
+          "14": 18.0,
+          "15": 10.8,
+          "16": 14.4,
+          "17": 14.4,
+          "18": 14.4,
+          "19": 10.8
+        }
+      },
+      {
+        "T2G2": {
+          "14": 18.0,
+          "15": 10.8,
+          "16": 14.4,
+          "17": 14.4,
+          "18": 14.4,
+          "19": 10.8
+        }
+      },
+      {
+        "T2G3": {
+          "14": 18.0,
+          "15": 10.8,
+          "16": 14.4,
+          "17": 14.4,
+          "18": 14.4,
+          "19": 10.8
+        }
+      }
+    ]
+  },
+  "gust": {
+    "threshold_value": 39.6,
+    "threshold_time": "14",
+    "max_value": 39.6,
+    "max_time": "14",
+    "geo_points": [
+      {
+        "T2G1": {
+          "14": 39.6,
+          "15": 0.0,
+          "16": 0.0,
+          "17": 0.0,
+          "18": 0.0,
+          "19": 0.0
+        }
+      },
+      {
+        "T2G2": {
+          "14": 39.6,
+          "15": 0.0,
+          "16": 0.0,
+          "17": 0.0,
+          "18": 0.0,
+          "19": 0.0
+        }
+      },
+      {
+        "T2G3": {
+          "14": 39.6,
+          "15": 0.0,
+          "16": 0.0,
+          "17": 0.0,
+          "18": 0.0,
+          "19": 0.0
+        }
+      }
+    ]
+  },
+  "thunderstorm": {
+    "threshold_value": "med",
+    "threshold_time": "15",
+    "max_value": "med",
+    "max_time": "15",
+    "geo_points": [
+      {
+        "name": "G1",
+        "threshold_value": "med",
+        "threshold_time": "15",
+        "max_value": "med",
+        "max_time": "15"
+      },
+      {
+        "name": "G2",
+        "threshold_value": "med",
+        "threshold_time": "15",
+        "max_value": "med",
+        "max_time": "15"
+      },
+      {
+        "name": "G3",
+        "threshold_value": "med",
+        "threshold_time": "15",
+        "max_value": "med",
+        "max_time": "15"
+      }
+    ]
+  },
+  "thunderstorm_plus_one": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
+    "geo_points": [
+      {
+        "name": "G1",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      },
+      {
+        "name": "G2",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      },
+      {
+        "name": "G3",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      }
+    ]
+  },
+  "risks": {
+    "threshold_value": "L",
+    "threshold_time": "14",
+    "max_value": "M",
+    "max_time": "15",
+    "geo_points": [
+      {
+        "name": "G1",
+        "hrain_threshold_value": "L",
+        "hrain_threshold_time": "14",
+        "hrain_max_value": "M",
+        "hrain_max_time": "15",
+        "storm_threshold_value": "M",
+        "storm_threshold_time": "16",
+        "storm_max_value": "M",
+        "storm_max_time": "16"
+      },
+      {
+        "name": "G2",
+        "hrain_threshold_value": "L",
+        "hrain_threshold_time": "14",
+        "hrain_max_value": "M",
+        "hrain_max_time": "15",
+        "storm_threshold_value": "M",
+        "storm_threshold_time": "16",
+        "storm_max_value": "M",
+        "storm_max_time": "16"
+      },
+      {
+        "name": "G3",
+        "hrain_threshold_value": "L",
+        "hrain_threshold_time": "14",
+        "hrain_max_value": "M",
+        "hrain_max_time": "15",
+        "storm_threshold_value": "M",
+        "storm_threshold_time": "16",
+        "storm_max_value": "M",
+        "storm_max_time": "16"
+      }
+    ]
+  },
+  "risk_zonal": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
+    "geo_points": []
+  },
+  "debug_info": {},
+  "generated_at": "2025-08-03T15:25:30.939129",
+  "version": "morning-evening-refactor-v1"
+}
