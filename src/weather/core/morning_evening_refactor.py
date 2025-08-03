@@ -369,20 +369,20 @@ class MorningEveningRefactor:
                         if entry_date == stage_date:
                             # Get temp_max from temperature object
                             temperature = entry.get('temperature', {})
-                        temp_max = temperature.get('max') if temperature else None
-                        
-                        if temp_max is not None:
-                            # Day uses today's stage for morning, tomorrow's stage for evening
-                            if report_type == 'morning':
-                                tg_ref = f"T1G{i+1}"
-                            else:  # evening
-                                tg_ref = f"T2G{i+1}"
-                            geo_points.append({tg_ref: temp_max})
+                            temp_max = temperature.get('max') if temperature else None
                             
-                            # Track the maximum temperature
-                            if max_temp is None or temp_max > max_temp:
-                                max_temp = temp_max
-                        break
+                            if temp_max is not None:
+                                # Day uses today's stage for morning, tomorrow's stage for evening
+                                if report_type == 'morning':
+                                    tg_ref = f"T1G{i+1}"
+                                else:  # evening
+                                    tg_ref = f"T2G{i+1}"
+                                geo_points.append({tg_ref: temp_max})
+                                
+                                # Track the maximum temperature
+                                if max_temp is None or temp_max > max_temp:
+                                    max_temp = temp_max
+                            break
             
             if max_temp is not None:
                 return WeatherThresholdData(
@@ -1320,9 +1320,8 @@ class MorningEveningRefactor:
                 debug_lines.append("####### NIGHT (N) #######")
                 for i, point in enumerate(report_data.night.geo_points):
                     for geo, value in point.items():
-                        # Night always uses today's stage (T1)
-                        tg_ref = f"T1G{i+1}"
-                        debug_lines.append(f"{tg_ref} | {value}")
+                        # Use the actual geo reference from the data
+                        debug_lines.append(f"{geo} | {value}")
                 debug_lines.append("=========")
                 debug_lines.append(f"MIN | {report_data.night.max_value}")
                 debug_lines.append("")
@@ -1332,12 +1331,8 @@ class MorningEveningRefactor:
                 debug_lines.append("####### DAY (D) #######")
                 for i, point in enumerate(report_data.day.geo_points):
                     for geo, value in point.items():
-                        # Day uses today's stage for morning, tomorrow's stage for evening
-                        if report_data.report_type == 'morning':
-                            tg_ref = f"T1G{i+1}"
-                        else:  # evening
-                            tg_ref = f"T2G{i+1}"
-                        debug_lines.append(f"{tg_ref} | {value}")
+                        # Use the actual geo reference from the data
+                        debug_lines.append(f"{geo} | {value}")
                 debug_lines.append("=========")
                 debug_lines.append(f"MAX | {report_data.day.max_value}")
                 debug_lines.append("")
