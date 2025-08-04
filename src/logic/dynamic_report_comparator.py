@@ -98,12 +98,15 @@ class DynamicReportComparator:
         has_significant_changes = False
         
         for element_name, threshold_key in elements_to_compare:
-            if self._compare_element(current_report, previous_report, element_name, threshold_key):
+            changed, element_details = self._compare_element(current_report, previous_report, element_name, threshold_key)
+            if changed:
                 has_significant_changes = True
                 change_details["changes"].append({
                     "element": element_name,
                     "threshold_key": threshold_key
                 })
+                # Add detailed change information
+                change_details[element_name] = element_details
         
         if has_significant_changes:
             change_details["reason"] = "significant_changes_detected"
@@ -114,7 +117,7 @@ class DynamicReportComparator:
         return has_significant_changes, change_details
     
     def _compare_element(self, current: Dict[str, Any], previous: Dict[str, Any], 
-                        element_name: str, threshold_key: str) -> bool:
+                        element_name: str, threshold_key: str) -> Tuple[bool, Dict[str, Any]]:
         """
         Compare a specific weather element between current and previous reports.
         
@@ -125,7 +128,7 @@ class DynamicReportComparator:
             threshold_key: Key for delta threshold in config
             
         Returns:
-            True if significant change detected, False otherwise
+            Tuple of (changed: bool, details: Dict[str, Any])
         """
         try:
             # Get current and previous element data
@@ -133,12 +136,21 @@ class DynamicReportComparator:
             previous_element = previous.get(element_name, {})
             
             if not current_element or not previous_element:
-                return False
+                return False, {}
+            
+            # Initialize change details
+            change_details = {
+                "changed": False,
+                "old_value": None,
+                "new_value": None,
+                "old_time": None,
+                "new_time": None
+            }
             
             # Get threshold value
             threshold = self.delta_thresholds.get(threshold_key, 0)
             if threshold == 0:
-                return False
+                return False, {}
             
             # Compare maximum values
             current_max = current_element.get('max_value')
@@ -148,7 +160,12 @@ class DynamicReportComparator:
                 max_change = abs(current_max - previous_max)
                 if max_change >= threshold:
                     logger.debug(f"{element_name} max change: {max_change} >= {threshold}")
-                    return True
+                    change_details["changed"] = True
+                    change_details["old_value"] = previous_max
+                    change_details["new_value"] = current_max
+                    change_details["old_time"] = previous_element.get('max_time')
+                    change_details["new_time"] = current_element.get('max_time')
+                    return True, change_details
             
             # Compare threshold times (if both have thresholds)
             current_threshold_time = current_element.get('threshold_time')
@@ -172,7 +189,12 @@ class DynamicReportComparator:
                     
                     if time_change >= 1:  # At least 1 hour difference
                         logger.debug(f"{element_name} threshold time change: {time_change} hours")
-                        return True
+                        change_details["changed"] = True
+                        change_details["old_value"] = previous_element.get('threshold_value')
+                        change_details["new_value"] = current_element.get('threshold_value')
+                        change_details["old_time"] = previous_threshold_time
+                        change_details["new_time"] = current_threshold_time
+                        return True, change_details
                 except (ValueError, TypeError):
                     pass
             
@@ -197,15 +219,20 @@ class DynamicReportComparator:
                     
                     if time_change >= 1:  # At least 1 hour difference
                         logger.debug(f"{element_name} maximum time change: {time_change} hours")
-                        return True
+                        change_details["changed"] = True
+                        change_details["old_value"] = previous_element.get('max_value')
+                        change_details["new_value"] = current_element.get('max_value')
+                        change_details["old_time"] = previous_max_time
+                        change_details["new_time"] = current_max_time
+                        return True, change_details
                 except (ValueError, TypeError):
                     pass
             
-            return False
+            return False, change_details
             
         except Exception as e:
             logger.error(f"Error comparing element {element_name}: {e}")
-            return False
+            return False, {}
     
     def save_comparison_result(self, stage_name: str, report_date: date, 
                              should_send: bool, change_details: Dict[str, Any]) -> None:

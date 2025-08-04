@@ -109,111 +109,59 @@
       }
     ]
   },
-  "rain_2h": {
-    "threshold_value": 1,
-    "threshold_time": "17",
-    "max_value": 1,
-    "max_time": "17",
-    "geo_points": [
-      {
-        "tg_ref": "T2G1",
-        "hourly_data": {
-          "17": 1,
-          "18": 1
-        },
-        "threshold_time": "17",
-        "threshold_value": 1,
-        "max_time": "17",
-        "max_value": 1
-      },
-      {
-        "tg_ref": "T2G2",
-        "hourly_data": {
-          "17": 1,
-          "18": 1
-        },
-        "threshold_time": "17",
-        "threshold_value": 1,
-        "max_time": "17",
-        "max_value": 1
-      },
-      {
-        "tg_ref": "T2G3",
-        "hourly_data": {
-          "17": 1,
-          "18": 1
-        },
-        "threshold_time": "17",
-        "threshold_value": 1,
-        "max_time": "17",
-        "max_value": 1
-      },
-      {
-        "tg_ref": "T2G3",
-        "hourly_data": {
-          "17": 1,
-          "18": 1
-        },
-        "threshold_time": "17",
-        "threshold_value": 1,
-        "max_time": "17",
-        "max_value": 1
-      }
-    ]
-  },
   "wind": {
-    "threshold_value": 7.2,
+    "threshold_value": 10.8,
     "threshold_time": "17",
-    "max_value": 10.8,
+    "max_value": 14.4,
     "max_time": "17",
     "geo_points": [
       {
         "tg_ref": "T2G1",
-        "hourly_data": {
-          "17": 7.2,
-          "18": 3.6,
-          "19": 3.6
-        },
-        "threshold_time": "17",
-        "threshold_value": 7.2,
-        "max_time": "17",
-        "max_value": 7.2
-      },
-      {
-        "tg_ref": "T2G2",
-        "hourly_data": {
-          "17": 7.2,
-          "18": 3.6,
-          "19": 3.6
-        },
-        "threshold_time": "17",
-        "threshold_value": 7.2,
-        "max_time": "17",
-        "max_value": 7.2
-      },
-      {
-        "tg_ref": "T2G3",
         "hourly_data": {
           "17": 10.8,
-          "18": 7.2,
-          "19": 7.2
+          "18": 3.6,
+          "19": 3.6
         },
         "threshold_time": "17",
         "threshold_value": 10.8,
         "max_time": "17",
         "max_value": 10.8
+      },
+      {
+        "tg_ref": "T2G2",
+        "hourly_data": {
+          "17": 10.8,
+          "18": 3.6,
+          "19": 3.6
+        },
+        "threshold_time": "17",
+        "threshold_value": 10.8,
+        "max_time": "17",
+        "max_value": 10.8
+      },
+      {
+        "tg_ref": "T2G3",
+        "hourly_data": {
+          "17": 14.4,
+          "18": 7.2,
+          "19": 7.2
+        },
+        "threshold_time": "17",
+        "threshold_value": 14.4,
+        "max_time": "17",
+        "max_value": 14.4
       },
       {
         "tg_ref": "T2G4",
         "hourly_data": {
-          "17": 10.8,
+          "17": 14.4,
           "18": 7.2,
           "19": 7.2
         },
         "threshold_time": "17",
-        "threshold_value": 10.8,
+        "threshold_value": 14.4,
         "max_time": "17",
-        "max_value": 10.8
+        "max_value": 14.4
       }
     ]
   },
@@ -405,6 +353,6 @@
     "geo_points": []
   },
   "debug_info": {},
-  "generated_at": "2025-08-04T17:30:03.312004",
+  "generated_at": "2025-08-04T18:30:04.968746",
   "version": "morning-evening-refactor-v1"
 }

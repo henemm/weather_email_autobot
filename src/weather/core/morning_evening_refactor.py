@@ -1173,9 +1173,105 @@ class MorningEveningRefactor:
         Returns:
             Formatted dynamic result string (max 160 characters)
         """
-        # TODO: Implement dynamic format showing only changes
-        # For now, return standard format until comparison logic is implemented
-        return self._format_standard_result_output(report_data)
+        try:
+            from logic.dynamic_report_comparator import DynamicReportComparator
+            
+            # Initialize comparator
+            comparator = DynamicReportComparator(self.config)
+            
+            # Load previous report
+            previous_report = comparator.load_last_report(report_data.stage_name, report_data.report_date)
+            
+            if not previous_report:
+                # No previous report available, show full report
+                return self._format_standard_result_output(report_data)
+            
+            # Compare reports to get changes
+            should_send, change_details = comparator.compare_reports(report_data, previous_report)
+            
+            if not change_details:
+                # No changes detected (should not happen if we're here)
+                return f"{report_data.stage_name[:10]} - NO CHANGES"
+            
+            # Format changes
+            changes = []
+            
+            # Process each change type
+            for change_type, change_info in change_details.items():
+                if change_type == 'wind' and change_info.get('changed'):
+                    old_val = change_info.get('old_value', '-')
+                    new_val = change_info.get('new_value', '-')
+                    old_time = change_info.get('old_time', '-')
+                    new_time = change_info.get('new_time', '-')
+                    
+                    if old_val != '-' and new_val != '-':
+                        if old_time == new_time:
+                            changes.append(f"W{old_val}@{old_time} -> W{new_val}@{new_time}")
+                        else:
+                            changes.append(f"W{old_val}@{old_time} -> W{new_val}@{new_time}")
+                
+                elif change_type == 'rain_mm' and change_info.get('changed'):
+                    old_val = change_info.get('old_value', '-')
+                    new_val = change_info.get('new_value', '-')
+                    old_time = change_info.get('old_time', '-')
+                    new_time = change_info.get('new_time', '-')
+                    
+                    if old_val != '-' and new_val != '-':
+                        if old_time == new_time:
+                            changes.append(f"R{old_val}@{old_time} -> R{new_val}@{new_time}")
+                        else:
+                            changes.append(f"R{old_val}@{old_time} -> R{new_val}@{new_time}")
+                
+                elif change_type == 'rain_percent' and change_info.get('changed'):
+                    old_val = change_info.get('old_value', '-')
+                    new_val = change_info.get('new_value', '-')
+                    old_time = change_info.get('old_time', '-')
+                    new_time = change_info.get('new_time', '-')
+                    
+                    if old_val != '-' and new_val != '-':
+                        if old_time == new_time:
+                            changes.append(f"PR{old_val}@{old_time} -> PR{new_val}@{new_time}")
+                        else:
+                            changes.append(f"PR{old_val}@{old_time} -> PR{new_val}@{new_time}")
+                
+                elif change_type == 'thunderstorm' and change_info.get('changed'):
+                    old_val = change_info.get('old_value', '-')
+                    new_val = change_info.get('new_value', '-')
+                    old_time = change_info.get('old_time', '-')
+                    new_time = change_info.get('new_time', '-')
+                    
+                    if old_val == '-':
+                        changes.append(f"TH:- -> TH:{new_val}@{new_time}")
+                    elif new_val == '-':
+                        changes.append(f"TH:{old_val}@{old_time} -> TH:-")
+                    else:
+                        if old_time == new_time:
+                            changes.append(f"TH:{old_val}@{old_time} -> TH:{new_val}@{new_time}")
+                        else:
+                            changes.append(f"TH:{old_val}@{old_time} -> TH:{new_val}@{new_time}")
+                
+                elif change_type == 'temperature' and change_info.get('changed'):
+                    old_val = change_info.get('old_value', '-')
+                    new_val = change_info.get('new_value', '-')
+                    
+                    if old_val != '-' and new_val != '-':
+                        changes.append(f"D{old_val} -> D{new_val}")
+            
+            # Build result string
+            stage_name = report_data.stage_name[:10]  # Max 10 characters
+            result = f"{stage_name} - {', '.join(changes)}"
+            
+            # Ensure we don't exceed 160 characters
+            if len(result) > 160:
+                # Truncate if necessary
+                result = result[:157] + "..."
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error formatting dynamic result output: {e}")
+            # Fallback to standard format
+            return self._format_standard_result_output(report_data)
     
     def _format_standard_result_output(self, report_data: WeatherReportData) -> str:
         """
