@@ -1,5 +1,22 @@
 [
   {
+    "name": "Test-Zevaco",
+    "punkte": [
+      {
+        "lat": 41.9167,
+        "lon": 8.9000
+      },
+      {
+        "lat": 41.9267,
+        "lon": 8.9100
+      },
+      {
+        "lat": 41.9367,
+        "lon": 8.9200
+      }
+    ]
+  },
+  {
     "name": "Test-Corsica",
     "punkte": [
       {

@@ -1,5 +1,30 @@
 # Weather Email Automation Configuration
 # This file contains all configuration parameters for the weather monitoring system
+# Start date for the weather monitoring (YYYY-MM-DD format)
+startdatum: '2025-07-28'
+
+
+# Weather thresholds for triggering alerts
+thresholds:
+  rain_amount: 0.5   # Rain amount in mm
+  rain_probability: 15.0  # Rain probability percentage
+  temperature: 25.0  # Temperature in Celsius
+  thunderstorm_warning_level: low 
+  thunderstorm_probability: 10.0  # Thunderstorm probability percentage
+  wind_speed: 1.0   # Wind speed in km/h
+  wind_gust_threshold: 5.0  # Wind gust difference threshold in km/h (show gusts if difference >= this value)
+  wind_gust_percentage: 50.0  # Wind gust percentage threshold (show gusts if gusts >= wind_speed * (1 + this/100))
+
+# Delta thresholds for change detection (when to trigger warnings)
+delta_thresholds:
+  rain_probability: 1.0
+  rain_amount: 1.5
+  temperature: 1.0
+  thunderstorm: 1
+  wind_speed: 1.0
+  max_daily_reports: 4  # Maximum number of reports per day
+  min_interval_min: 90  # Minimum interval between reports in minutes
+
 
 # Debug settings for development and troubleshooting
 debug:
@@ -10,16 +35,6 @@ debug:
   save_debug_files: true
   threshold_validation: true
 
-# Delta thresholds for change detection (when to trigger warnings)
-delta_thresholds:
-  rain_probability: 1.0
-  temperature: 1.0
-  thunderstorm_probability: 1.0
-  wind_speed: 1.0
-
-# Report frequency and timing settings
-max_daily_reports: 4  # Maximum number of reports per day
-min_interval_min: 90  # Minimum interval between reports in minutes
 
 # SMS notification settings
 sms:
@@ -50,19 +65,8 @@ smtp:
   to: henningemmrich@icloud.com
   user: henning.emmrich@gmail.com
 
-# Start date for the weather monitoring (YYYY-MM-DD format)
-startdatum: '2025-07-28'
 
-# Weather thresholds for triggering alerts
-thresholds:
-  rain_amount: 0.5   # Rain amount in mm
-  rain_probability: 15.0  # Rain probability percentage
-  temperature: 25.0  # Temperature in Celsius
-  thunderstorm_warning_level: low 
-  thunderstorm_probability: 10.0  # Thunderstorm probability percentage
-  wind_speed: 1.0   # Wind speed in km/h
-  wind_gust_threshold: 5.0  # Wind gust difference threshold in km/h (show gusts if difference >= this value)
-  wind_gust_percentage: 50.0  # Wind gust percentage threshold (show gusts if gusts >= wind_speed * (1 + this/100))
+
 
 # Fire risk level configuration for GR20 zones and massifs
 fire_risk_levels:
