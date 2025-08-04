@@ -575,10 +575,7 @@ def main():
                 # For manual dynamic mode, check if a dynamic report would actually be triggered
                 should_send = scheduler.should_send_report(current_time, current_risk)
                 
-                # TEMPORARY: Check debug config for forced email sending
-                if config.get("debug", {}).get("force_dynamic_email", False):
-                    print("[DEBUG] Force dynamic email sending enabled in config")
-                    should_send = True
+
                 
                 if not should_send:
                     print("[MANUAL] Dynamic report would NOT be triggered (thresholds/intervall/limit not met). Exiting.")

@@ -43,7 +43,7 @@ class WeatherReportData:
     day: WeatherThresholdData
     rain_mm: WeatherThresholdData
     rain_percent: WeatherThresholdData
-    rain_2h: WeatherThresholdData  # New: 2-hour rain forecast
+
     wind: WeatherThresholdData
     gust: WeatherThresholdData
     thunderstorm: WeatherThresholdData
@@ -566,117 +566,6 @@ class MorningEveningRefactor:
                 max_time=global_max_time,
                 geo_points=geo_points
             )
-        except Exception as e:
-            logger.error(f"Failed to process rain percent data: {e}")
-            return WeatherThresholdData()
-    
-    def process_rain_2h_data(self, weather_data: Dict[str, Any], stage_name: str, target_date: date, report_type: str) -> WeatherThresholdData:
-        """
-        Process 2-hour rain forecast data from meteofrance-api get_rain endpoint.
-        
-        Args:
-            weather_data: Weather data from API
-            stage_name: Name of the stage
-            target_date: Target date
-            report_type: 'morning', 'evening', or 'dynamic'
-            
-        Returns:
-            WeatherThresholdData for 2-hour rain forecast
-        """
-        try:
-            # Get stage coordinates
-            coordinates = self.get_stage_coordinates(stage_name)
-            if not coordinates:
-                logger.error(f"No coordinates found for stage {stage_name}")
-                return WeatherThresholdData()
-            
-            # Get rain forecast data from meteofrance-api
-            from meteofrance_api import MeteoFranceClient
-            client = MeteoFranceClient()
-            
-            geo_points = []
-            global_max_rain = None
-            global_max_time = None
-            global_threshold_rain = None
-            global_threshold_time = None
-            rain_threshold = self.thresholds.get('rain_amount', 0.2)
-            
-            # Process each coordinate point
-            for i, (lat, lon) in enumerate(coordinates):
-                try:
-                    # Get rain forecast for this point
-                    rain_forecast = client.get_rain(lat, lon)
-                    
-                    if not rain_forecast.forecast:
-                        logger.warning(f"No rain forecast data for point {i} ({lat}, {lon})")
-                        continue
-                    
-                    point_max_rain = None
-                    point_max_time = None
-                    point_threshold_rain = None
-                    point_threshold_time = None
-                    point_rain_data = {}
-                    
-                    # Process forecast entries (next 2-3 hours)
-                    for entry in rain_forecast.forecast:
-                        if 'dt' in entry and 'rain' in entry:
-                            entry_time = datetime.fromtimestamp(entry['dt'])
-                            rain_amount = entry.get('rain', 0)
-                            
-                            # Only process if we have valid rain data
-                            if isinstance(rain_amount, (int, float)) and rain_amount >= 0:
-                                hour_str = entry_time.strftime('%H')
-                                point_rain_data[hour_str] = rain_amount
-                                
-                                # Track maximum for this point
-                                if point_max_rain is None or rain_amount > point_max_rain:
-                                    point_max_rain = rain_amount
-                                    point_max_time = hour_str
-                                
-                                # Track threshold (earliest time when rain >= threshold)
-                                if rain_amount >= rain_threshold and point_threshold_time is None:
-                                    point_threshold_rain = rain_amount
-                                    point_threshold_time = hour_str
-                    
-                    # Store point data
-                    tg_ref = self._get_tg_reference(report_type, 'rain_2h', i, target_date)
-                    point_data = {
-                        'tg_ref': tg_ref,
-                        'hourly_data': point_rain_data,
-                        'threshold_time': point_threshold_time,
-                        'threshold_value': point_threshold_rain,
-                        'max_time': point_max_time,
-                        'max_value': point_max_rain
-                    }
-                    geo_points.append(point_data)
-                    
-                    # Update global values
-                    if point_max_rain is not None:
-                        if global_max_rain is None or point_max_rain > global_max_rain:
-                            global_max_rain = point_max_rain
-                            global_max_time = point_max_time
-                    
-                    if point_threshold_rain is not None:
-                        if global_threshold_time is None or point_threshold_time < global_threshold_time:
-                            global_threshold_rain = point_threshold_rain
-                            global_threshold_time = point_threshold_time
-                    
-                except Exception as e:
-                    logger.error(f"Error processing rain 2h data for point {i}: {e}")
-                    continue
-            
-            return WeatherThresholdData(
-                threshold_value=global_threshold_rain,
-                threshold_time=global_threshold_time,
-                max_value=global_max_rain,
-                max_time=global_max_time,
-                geo_points=geo_points
-            )
-            
-        except Exception as e:
-            logger.error(f"Error processing rain 2h data: {e}")
-            return WeatherThresholdData()
-            
         except Exception as e:
             logger.error(f"Failed to process rain percent data: {e}")
             return WeatherThresholdData()
@@ -1259,6 +1148,37 @@ class MorningEveningRefactor:
     
     def format_result_output(self, report_data: WeatherReportData) -> str:
         """
+        Format the result output for SMS/Email.
+        
+        Args:
+            report_data: Weather report data
+            
+        Returns:
+            Formatted result string (max 160 characters)
+        """
+        # For dynamic reports, use special format showing only changes
+        if report_data.report_type == 'dynamic':
+            return self._format_dynamic_result_output(report_data)
+        
+        # For morning/evening reports, use standard format
+        return self._format_standard_result_output(report_data)
+    
+    def _format_dynamic_result_output(self, report_data: WeatherReportData) -> str:
+        """
+        Format dynamic report result output showing only changes.
+        
+        Args:
+            report_data: Weather report data
+            
+        Returns:
+            Formatted dynamic result string (max 160 characters)
+        """
+        # TODO: Implement dynamic format showing only changes
+        # For now, return standard format until comparison logic is implemented
+        return self._format_standard_result_output(report_data)
+    
+    def _format_standard_result_output(self, report_data: WeatherReportData) -> str:
+        """
         Format the result output according to specifications.
         
         Args:
@@ -1487,7 +1407,7 @@ class MorningEveningRefactor:
                             return f"T2G{num_points}"
                     return f"T2G{point_index + 1}"
                     
-            elif data_type in ['rain_mm', 'rain_percent', 'rain_2h', 'wind', 'gust', 'thunderstorm']:
+            elif data_type in ['rain_mm', 'rain_percent', 'wind', 'gust', 'thunderstorm']:
                 # These use the same logic as 'day'
                 if report_type == 'morning':
                     stage_idx = days_since_start
@@ -1787,85 +1707,7 @@ class MorningEveningRefactor:
                     debug_lines.append("MAX | - | -")
                 debug_lines.append("")
             
-            # Rain 2H data debug (ONLY for dynamic reports)
-            if report_data.report_type == 'dynamic' and report_data.rain_2h.geo_points:
-                debug_lines.append("####### RAIN 2H (R2H) #######")
-                for i, point in enumerate(report_data.rain_2h.geo_points):
-                    tg_ref = point.get('tg_ref', self._get_tg_reference(report_data.report_type, 'rain_2h', i, report_data.report_date))
-                    debug_lines.append(f"{tg_ref}")
-                    debug_lines.append("Time | Rain (mm)")
-                    
-                    # Display hourly data from rain_2h
-                    hourly_data = point.get('hourly_data', {})
-                    if hourly_data:
-                        # Sort by hour and display
-                        for hour in sorted(hourly_data.keys(), key=int):
-                            rain_value = hourly_data[hour]
-                            debug_lines.append(f"{hour}:00 | {rain_value}")
-                    else:
-                        debug_lines.append("No data available")
-                    
-                    # Add threshold and maximum for this point
-                    debug_lines.append("=========")
-                    if point.get('threshold_time') is not None and point.get('threshold_value') is not None:
-                        debug_lines.append(f"{point['threshold_time']}:00 | {point['threshold_value']} (Threshold)")
-                    else:
-                        debug_lines.append("Threshold????")
-                    if point.get('max_time') is not None and point.get('max_value') is not None:
-                        debug_lines.append(f"{point['max_time']}:00 | {point['max_value']} (Max)")
-                    else:
-                        debug_lines.append("Maximum????")
-                    debug_lines.append("")
-                
-                # Add threshold and maximum tables for rain_2h
-                debug_lines.append("Threshold")
-                debug_lines.append("GEO | Time | mm")
-                for i, point in enumerate(report_data.rain_2h.geo_points):
-                    tg_ref = point.get('tg_ref', self._get_tg_reference(report_data.report_type, 'rain_2h', i, report_data.report_date))
-                    if point.get('threshold_time') is not None and point.get('threshold_value') is not None:
-                        debug_lines.append(f"{tg_ref} | {point['threshold_time']} | {point['threshold_value']}")
-                    else:
-                        debug_lines.append(f"{tg_ref} | - | -")
-                debug_lines.append("=========")
-                if report_data.rain_2h.threshold_time is not None and report_data.rain_2h.threshold_value is not None:
-                    debug_lines.append(f"Threshold | {report_data.rain_2h.threshold_time} | {report_data.rain_2h.threshold_value}")
-                else:
-                    debug_lines.append("Threshold | - | -")
-                
-                # Maximum table (only show if max > 0)
-                debug_lines.append("Maximum:")
-                debug_lines.append("GEO | Time | Max")
-                for i, point in enumerate(report_data.rain_2h.geo_points):
-                    tg_ref = point.get('tg_ref', self._get_tg_reference(report_data.report_type, 'rain_2h', i, report_data.report_date))
-                    if point.get('max_time') is not None and point.get('max_value') is not None and point.get('max_value', 0) > 0:
-                        debug_lines.append(f"{tg_ref} | {point['max_time']} | {point['max_value']}")
-                    else:
-                        debug_lines.append(f"{tg_ref} | - | -")
-                debug_lines.append("=========")
-                if report_data.rain_2h.max_time is not None and report_data.rain_2h.max_value is not None and report_data.rain_2h.max_value > 0:
-                    debug_lines.append(f"MAX | {report_data.rain_2h.max_time} | {report_data.rain_2h.max_value}")
-                else:
-                    debug_lines.append("MAX | - | -")
-                debug_lines.append("")
-                debug_lines.append("")
-                
-                # Always show maximum table
-                # Always show maximum table (skip if max_value is 0)
-                debug_lines.append("Maximum:")
-                debug_lines.append("GEO | Time | Max")
-                for i, point in enumerate(report_data.rain_mm.geo_points):
-                    tg_ref = point.get('tg_ref', self._get_tg_reference(report_data.report_type, 'rain_mm', i, report_data.report_date))
-                    if point.get('max_time') is not None and point.get('max_value') is not None and point.get('max_value') > 0:
-                        debug_lines.append(f"{tg_ref} | {point.get('max_time')} | {point.get('max_value')}")
-                    else:
-                        debug_lines.append(f"{tg_ref} | - | -")
-                debug_lines.append("=========")
-                if report_data.rain_mm.max_time is not None and report_data.rain_mm.max_value is not None and report_data.rain_mm.max_value > 0:
-                    debug_lines.append(f"MAX | {report_data.rain_mm.max_time} | {report_data.rain_mm.max_value}")
-                else:
-                    debug_lines.append("MAX | - | -")
-                    debug_lines.append("MAX | - | -")
-                debug_lines.append("")
+
             
             # Rain percent data debug
             if report_data.rain_percent.geo_points:
@@ -2597,13 +2439,12 @@ class MorningEveningRefactor:
             
             # For dynamic reports, check if we should actually send
             if report_type == 'dynamic':
-                # TEMPORARY: Force send for testing
-                should_send = True
-                logger.info(f"TEMPORARY: Forcing dynamic report send for {stage_name}")
-                # should_send = self._check_dynamic_report_conditions(stage_name, target_date_obj)
-                # if not should_send:
-                #     logger.info(f"Dynamic report conditions not met for {stage_name}")
-                #     return f"{stage_name}: NO CHANGES", "# DEBUG DATENEXPORT\nNo significant changes detected"
+                logger.info(f"Checking dynamic report conditions for {stage_name}")
+                should_send = self._check_dynamic_report_conditions(stage_name, target_date_obj)
+                logger.info(f"Dynamic report conditions result: {should_send}")
+                if not should_send:
+                    logger.info(f"Dynamic report conditions not met for {stage_name}")
+                    return f"{stage_name}: NO CHANGES", "# DEBUG DATENEXPORT\nNo significant changes detected"
             
             # Fetch weather data
             weather_data = self.fetch_weather_data(stage_name, target_date_obj)
@@ -2620,7 +2461,7 @@ class MorningEveningRefactor:
             day_data = self.process_day_data(weather_data, stage_name, target_date_obj, report_type)
             rain_mm_data = self.process_rain_mm_data(weather_data, stage_name, target_date_obj, report_type)
             rain_percent_data = self.process_rain_percent_data(weather_data, stage_name, target_date_obj, report_type)
-            rain_2h_data = self.process_rain_2h_data(weather_data, stage_name, target_date_obj, report_type)
+
             wind_data = self.process_wind_data(weather_data, stage_name, target_date_obj, report_type)
             gust_data = self.process_gust_data(weather_data, stage_name, target_date_obj, report_type)
             thunderstorm_data = self.process_thunderstorm_data(weather_data, stage_name, target_date_obj, report_type)
@@ -2637,7 +2478,6 @@ class MorningEveningRefactor:
                 day=day_data,
                 rain_mm=rain_mm_data,
                 rain_percent=rain_percent_data,
-                rain_2h=rain_2h_data,
                 wind=wind_data,
                 gust=gust_data,
                 thunderstorm=thunderstorm_data,
@@ -2719,7 +2559,7 @@ class MorningEveningRefactor:
             day_data = self.process_day_data(weather_data, stage_name, target_date, 'dynamic')
             rain_mm_data = self.process_rain_mm_data(weather_data, stage_name, target_date, 'dynamic')
             rain_percent_data = self.process_rain_percent_data(weather_data, stage_name, target_date, 'dynamic')
-            rain_2h_data = self.process_rain_2h_data(weather_data, stage_name, target_date, 'dynamic')
+
             wind_data = self.process_wind_data(weather_data, stage_name, target_date, 'dynamic')
             gust_data = self.process_gust_data(weather_data, stage_name, target_date, 'dynamic')
             thunderstorm_data = self.process_thunderstorm_data(weather_data, stage_name, target_date, 'dynamic')
@@ -2736,7 +2576,6 @@ class MorningEveningRefactor:
                 day=day_data,
                 rain_mm=rain_mm_data,
                 rain_percent=rain_percent_data,
-                rain_2h=rain_2h_data,
                 wind=wind_data,
                 gust=gust_data,
                 thunderstorm=thunderstorm_data,
