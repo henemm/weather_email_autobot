@@ -84,7 +84,7 @@ warning_output_file: output/inreach_warnung.txt
 
 # Alternative risk analysis configuration
 alternative_risk_analysis:
-  enabled: true  # Enable alternative risk analysis in emails
+  enabled: false  # Disable alternative risk analysis in emails
   thunderstorm_timing: true  # Show thunderstorm timing for hikers
   geo_aggregation: true  # Aggregate data from multiple GEO-points
 
