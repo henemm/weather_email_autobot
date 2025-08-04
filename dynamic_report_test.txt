@@ -1,0 +1,209 @@
+[2025-08-04 14:09:25] [utils.logging_setup] [INFO] Logging system initialized with level INFO
+[2025-08-04 14:09:25] [utils.logging_setup] [INFO] Log file: /opt/weather_email_autobot/logs/warning_monitor.log
+[2025-08-04 14:09:25] [logic.report_scheduler] [INFO] Report scheduler initialized with state file: data/gr20_report_state.json
+[2025-08-04 14:09:25] [notification.providers.seven_provider] [INFO] Seven.io SMS provider initialized
+[2025-08-04 14:09:25] [notification.modular_sms_client] [INFO] Modular SMS client initialized with seven provider
+[2025-08-04 14:09:25] [notification.modular_sms_client] [INFO] SMS mode: production
+[2025-08-04 14:09:25] [notification.modular_sms_client] [INFO] SMS recipient: +4917717816897
+[2025-08-04 14:09:25] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 14:09:25] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 14:09:25] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 14:09:25] [weather.core.morning_evening_refactor] [INFO] Generating dynamic report for Manganu on 2025-08-04
+[2025-08-04 14:09:25] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] EnhancedMeteoFranceAPI initialized
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_4 (42.22026, 8.980731)
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_4
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_4
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] EnhancedMeteoFranceAPI initialized
+[2025-08-04 14:09:25] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_1 (42.286473, 8.893564)
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_1
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_1
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_2 (42.25421, 8.925527)
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_2
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_2
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_3 (42.229355, 8.977679)
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_3
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_3
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_4 (42.22026, 8.980731)
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_4
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_4
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 14:09:26] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [INFO] Wind processing result: threshold_time=11, threshold_value=7.2, max_time=14, max_value=14.4
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [INFO] Wind processing final result: threshold_time=11, threshold_value=7.2, max_time=14, max_value=14.4
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 14:09:26] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 14:09:26] [fire.risk_block_formatter] [INFO] Found GR20 zone 208 with level 2
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [INFO] Generated risk block for Manganu: Z:HIGH208
+[2025-08-04 14:09:26] [logic.dynamic_report_comparator] [INFO] Loaded previous report from .data/weather_reports/2025-08-04/Manganu.json
+[2025-08-04 14:09:26] [logic.dynamic_report_comparator] [ERROR] Error saving comparison result: [Errno 13] Permission denied: '.data/weather_reports/2025-08-04/comparisons/Manganu_comparison_140926.json'
+[2025-08-04 14:09:26] [weather.core.morning_evening_refactor] [INFO] Dynamic report conditions not met for Manganu
+[2025-08-04 14:09:26] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] EnhancedMeteoFranceAPI initialized
+[2025-08-04 14:09:26] [wetter.weather_data_processor] [INFO] WeatherDataProcessor initialized with enhanced MeteoFrance API
+[2025-08-04 14:09:26] [wetter.weather_data_processor] [INFO] Processing weather data for stage: Manganu
+[2025-08-04 14:09:26] [wetter.weather_data_processor] [INFO] Number of coordinate points: 4
+[2025-08-04 14:09:26] [wetter.weather_data_processor] [INFO] Fetching data for point 1: Manganu_point_1 (42.286473, 8.893564)
+[2025-08-04 14:09:26] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_1 (42.286473, 8.893564)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_1
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_1
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Successfully added data for Manganu_point_1 (79 entries)
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Fetching data for point 2: Manganu_point_2 (42.25421, 8.925527)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_2 (42.25421, 8.925527)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_2
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_2
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Successfully added data for Manganu_point_2 (79 entries)
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Fetching data for point 3: Manganu_point_3 (42.229355, 8.977679)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_3 (42.229355, 8.977679)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_3
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_3
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Successfully added data for Manganu_point_3 (79 entries)
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Fetching data for point 4: Manganu_point_4 (42.22026, 8.980731)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_4 (42.22026, 8.980731)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_4
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_4
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Successfully added data for Manganu_point_4 (79 entries)
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Successfully processed weather data for stage Manganu with 4 points
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Generating weather summary for Manganu
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Time range: 04:00 - 22:00
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Found tomorrow's date: 2025-08-05
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Analyzing thunderstorm forecast for tomorrow (2025-08-05)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Found tomorrow's date: 2025-08-05
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Analyzing thunderstorm forecast for tomorrow (2025-08-05)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Generated comprehensive weather summary for Manganu
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_1 (42.286473, 8.893564)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_1
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_1
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_2 (42.25421, 8.925527)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_2
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_2
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_3 (42.229355, 8.977679)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_3
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_3
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_4 (42.22026, 8.980731)
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Received 79 hourly entries for Manganu_point_4
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 79 hourly entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Extracted 46 rain probability entries
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_4
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Getting tomorrow's thunderstorm forecast for Manganu
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Found tomorrow's date: 2025-08-05
+[2025-08-04 14:09:27] [wetter.enhanced_meteofrance_api] [INFO] Analyzing thunderstorm forecast for tomorrow (2025-08-05)
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Successfully retrieved thunderstorm forecast for Manganu
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Prepared enhanced data with 48 hourly entries
+[2025-08-04 14:09:27] [wetter.weather_data_processor] [INFO] Successfully generated weather summary for Manganu
+Starting GR20 Weather Report Monitor...
+Configuration loaded successfully
+SMS client initialized successfully
+SMS mode: production
+SMS recipient: +4917717816897
+Components initialized successfully
+Current stage: Manganu
+Using first point: 42.286473, 8.893564
+Current position: 42.286473, 8.893564
+Current stage: Manganu
+Generating dynamic report for stage: Manganu
+Report generated successfully
+Result Output: Manganu: NO CHANGES
+Debug Output Length: 51 characters
+Current risk score for Manganu: 0.00
+Manual mode: dynamic
+[MANUAL] Dynamic report would NOT be triggered (thresholds/intervall/limit not met). Exiting.
