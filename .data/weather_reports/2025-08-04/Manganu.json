@@ -1,7 +1,7 @@
 {
   "stage_name": "Manganu",
   "report_date": "2025-08-04",
-  "report_type": "dynamic",
+  "report_type": "evening",
   "night": {
     "threshold_value": 12,
     "threshold_time": null,
@@ -14,22 +14,19 @@
     ]
   },
   "day": {
-    "threshold_value": 26,
+    "threshold_value": 29,
     "threshold_time": null,
-    "max_value": 26,
+    "max_value": 29,
     "max_time": null,
     "geo_points": [
       {
-        "T2G1": 20.6
+        "T2G1": 28.9
       },
       {
-        "T2G2": 20.6
+        "T2G2": 28.4
       },
       {
-        "T2G3": 25.7
-      },
-      {
-        "T2G4": 25.7
+        "T2G3": 28.4
       }
     ]
   },
@@ -92,38 +89,53 @@
   "rain_percent": {
     "threshold_value": null,
     "threshold_time": null,
-    "max_value": null,
-    "max_time": null,
+    "max_value": 10.0,
+    "max_time": "17",
     "geo_points": [
       {
-        "T2G1": {}
+        "T2G1": {
+          "05": 0.0,
+          "08": 0.0,
+          "11": 0.0,
+          "14": 0.0,
+          "17": 10.0
+        }
       },
       {
-        "T2G2": {}
+        "T2G2": {
+          "05": 0.0,
+          "08": 0.0,
+          "11": 0.0,
+          "14": 0.0,
+          "17": 10.0
+        }
       },
       {
-        "T2G3": {}
-      },
-      {
-        "T2G3": {}
+        "T2G3": {
+          "05": 0.0,
+          "08": 0.0,
+          "11": 0.0,
+          "14": 0.0,
+          "17": 10.0
+        }
       }
     ]
   },
   "wind": {
-    "threshold_value": 15.2,
+    "threshold_value": 20.5,
     "threshold_time": "17",
-    "max_value": 18.7,
+    "max_value": 25.8,
     "max_time": "17",
     "geo_points": [
       {
         "tg_ref": "T2G1",
         "hourly_data": {
           "17": 10.8,
-          "18": 3.6,
+          "18": 7.2,
           "19": 3.6
         },
         "threshold_time": "17",
-        "threshold_value": 15.2,
+        "threshold_value": 20.5,
         "max_time": "17",
         "max_value": 10.8
       },
@@ -131,11 +143,11 @@
         "tg_ref": "T2G2",
         "hourly_data": {
           "17": 10.8,
-          "18": 3.6,
+          "18": 7.2,
           "19": 3.6
         },
         "threshold_time": "17",
-        "threshold_value": 15.2,
+        "threshold_value": 20.5,
         "max_time": "17",
         "max_value": 10.8
       },
@@ -143,25 +155,25 @@
         "tg_ref": "T2G3",
         "hourly_data": {
           "17": 14.4,
-          "18": 7.2,
+          "18": 10.8,
           "19": 7.2
         },
         "threshold_time": "17",
         "threshold_value": 14.4,
         "max_time": "17",
-        "max_value": 18.7
+        "max_value": 25.8
       },
       {
         "tg_ref": "T2G4",
         "hourly_data": {
           "17": 14.4,
-          "18": 7.2,
+          "18": 10.8,
           "19": 7.2
         },
         "threshold_time": "17",
         "threshold_value": 14.4,
         "max_time": "17",
-        "max_value": 18.7
+        "max_value": 25.8
       }
     ]
   },
@@ -353,6 +365,6 @@
     "geo_points": []
   },
   "debug_info": {},
-  "generated_at": "2025-08-04T18:30:04.968746",
+  "generated_at": "2025-08-04T19:00:07.822883",
   "version": "morning-evening-refactor-v1"
 }
