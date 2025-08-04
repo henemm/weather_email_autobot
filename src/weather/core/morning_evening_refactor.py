@@ -1787,8 +1787,8 @@ class MorningEveningRefactor:
                     debug_lines.append("MAX | - | -")
                 debug_lines.append("")
             
-            # Rain 2H data debug (new section)
-            if report_data.rain_2h.geo_points:
+            # Rain 2H data debug (ONLY for dynamic reports)
+            if report_data.report_type == 'dynamic' and report_data.rain_2h.geo_points:
                 debug_lines.append("####### RAIN 2H (R2H) #######")
                 for i, point in enumerate(report_data.rain_2h.geo_points):
                     tg_ref = point.get('tg_ref', self._get_tg_reference(report_data.report_type, 'rain_2h', i, report_data.report_date))
