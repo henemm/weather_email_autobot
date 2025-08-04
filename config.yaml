@@ -34,6 +34,7 @@ debug:
   raw_data_output: true
   save_debug_files: true
   threshold_validation: true
+  force_dynamic_email: true  # TEMPORARY: Force dynamic email sending for testing
 
 
 # SMS notification settings
