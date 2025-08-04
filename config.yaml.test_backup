@@ -1,0 +1,92 @@
+# Weather Email Automation Configuration
+# This file contains all configuration parameters for the weather monitoring system
+# Start date for the weather monitoring (YYYY-MM-DD format)
+startdatum: '2025-07-28'
+
+
+# Weather thresholds for triggering alerts
+thresholds:
+  rain_amount: 0.5   # Rain amount in mm
+  rain_probability: 15.0  # Rain probability percentage
+  temperature: 25.0  # Temperature in Celsius
+  thunderstorm_warning_level: low 
+  thunderstorm_probability: 10.0  # Thunderstorm probability percentage
+  wind_speed: 1.0   # Wind speed in km/h
+  wind_gust_threshold: 5.0  # Wind gust difference threshold in km/h (show gusts if difference >= this value)
+  wind_gust_percentage: 50.0  # Wind gust percentage threshold (show gusts if gusts >= wind_speed * (1 + this/100))
+
+# Delta thresholds for change detection (when to trigger warnings)
+delta_thresholds:
+  rain_probability: 1.0
+  rain_amount: 1.5
+  temperature: 1.0
+  thunderstorm: 1
+  wind_speed: 1.0
+  max_daily_reports: 4  # Maximum number of reports per day
+  min_interval_min: 90  # Minimum interval between reports in minutes
+
+
+# Debug settings for development and troubleshooting
+debug:
+  comparison_with_report: true
+  enabled: true
+  output_directory: output/debug
+  raw_data_output: true
+  save_debug_files: true
+  threshold_validation: true
+
+
+
+# SMS notification settings
+sms:
+  api_key: ${SEVEN_API_KEY}
+  enabled: false # true or false
+  mode: production # 'test' or 'production'
+  production_number: '+4917717816897'
+  provider: seven  # 'seven' or 'twilio'
+  # Seven.io configuration
+  seven:
+    api_key: ${SEVEN_API_KEY}
+    sender: '4916092170813'
+
+  # Phone numbers for notifications
+  test_number: '+4915158450319'
+
+  # Twilio configuration (alternative provider)
+  twilio:
+    account_sid: ${TWILIO_ACCOUNT_SID}
+    auth_token: ${TWILIO_AUTH_TOKEN}
+    from: ${TWILIO_PHONE_NUMBER}
+
+# Email configuration for sending weather reports
+smtp:
+  host: smtp.gmail.com
+  port: 587
+  subject: GR20
+  to: henningemmrich@icloud.com
+  user: henning.emmrich@gmail.com
+
+
+
+
+# Fire risk level configuration for GR20 zones and massifs
+fire_risk_levels:
+  zone_risk_mapping:
+    1: "LOW"      # Low risk - ignored in output
+    2: "HIGH"     # Medium risk - shown as Z:HIGH208,217
+    3: "HIGH"     # High risk - shown as Z:HIGH208,217
+    4: "MAX"      # Very high risk - shown as Z:MAX209
+  minimum_display_level: 2  # Only show zones with risk level >= 2
+  massif_restriction_threshold: 1  # Massif restricted when procedure >= 1
+
+# Output file for warning messages
+warning_output_file: output/inreach_warnung.txt
+
+# Alternative risk analysis configuration
+alternative_risk_analysis:
+  enabled: true  # Enable alternative risk analysis in emails
+  thunderstorm_timing: true  # Show thunderstorm timing for hikers
+  geo_aggregation: true  # Aggregate data from multiple GEO-points
+
+# Compact formatter configuration
+use_compact_formatter: true  # Use new compact MorningEveningFormatter for reports

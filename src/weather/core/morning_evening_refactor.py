@@ -1189,6 +1189,8 @@ class MorningEveningRefactor:
             # Compare reports to get changes
             should_send, change_details = comparator.compare_reports(report_data, previous_report)
             
+            logger.info(f"Dynamic format - change_details: {change_details}")
+            
             if not change_details:
                 # No changes detected (should not happen if we're here)
                 return f"{report_data.stage_name[:10]} - NO CHANGES"
@@ -1197,7 +1199,9 @@ class MorningEveningRefactor:
             changes = []
             
             # Process each change type
+            logger.info(f"Processing change_details keys: {list(change_details.keys())}")
             for change_type, change_info in change_details.items():
+                logger.info(f"Processing change_type: {change_type}, change_info: {change_info}")
                 if change_type == 'wind' and change_info.get('changed'):
                     old_val = change_info.get('old_value', '-')
                     new_val = change_info.get('new_value', '-')

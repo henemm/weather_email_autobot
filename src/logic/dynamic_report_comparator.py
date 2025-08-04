@@ -86,6 +86,21 @@ class DynamicReportComparator:
             "changes": []
         }
         
+        # Convert WeatherReportData to dictionary if needed
+        if hasattr(current_report, 'stage_name'):
+            # It's a WeatherReportData object, convert to dict
+            from dataclasses import asdict
+            current_dict = asdict(current_report)
+        else:
+            current_dict = current_report
+            
+        if hasattr(previous_report, 'stage_name'):
+            # It's a WeatherReportData object, convert to dict
+            from dataclasses import asdict
+            previous_dict = asdict(previous_report)
+        else:
+            previous_dict = previous_report
+        
         # Compare each weather element
         elements_to_compare = [
             ('rain_mm', 'rain_amount'),
@@ -98,7 +113,7 @@ class DynamicReportComparator:
         has_significant_changes = False
         
         for element_name, threshold_key in elements_to_compare:
-            changed, element_details = self._compare_element(current_report, previous_report, element_name, threshold_key)
+            changed, element_details = self._compare_element(current_dict, previous_dict, element_name, threshold_key)
             if changed:
                 has_significant_changes = True
                 change_details["changes"].append({
@@ -107,6 +122,7 @@ class DynamicReportComparator:
                 })
                 # Add detailed change information
                 change_details[element_name] = element_details
+                logger.info(f"Added change details for {element_name}: {element_details}")
         
         if has_significant_changes:
             change_details["reason"] = "significant_changes_detected"
