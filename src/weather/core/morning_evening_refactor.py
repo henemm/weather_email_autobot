@@ -2597,10 +2597,13 @@ class MorningEveningRefactor:
             
             # For dynamic reports, check if we should actually send
             if report_type == 'dynamic':
-                should_send = self._check_dynamic_report_conditions(stage_name, target_date_obj)
-                if not should_send:
-                    logger.info(f"Dynamic report conditions not met for {stage_name}")
-                    return f"{stage_name}: NO CHANGES", "# DEBUG DATENEXPORT\nNo significant changes detected"
+                # TEMPORARY: Force send for testing
+                should_send = True
+                logger.info(f"TEMPORARY: Forcing dynamic report send for {stage_name}")
+                # should_send = self._check_dynamic_report_conditions(stage_name, target_date_obj)
+                # if not should_send:
+                #     logger.info(f"Dynamic report conditions not met for {stage_name}")
+                #     return f"{stage_name}: NO CHANGES", "# DEBUG DATENEXPORT\nNo significant changes detected"
             
             # Fetch weather data
             weather_data = self.fetch_weather_data(stage_name, target_date_obj)

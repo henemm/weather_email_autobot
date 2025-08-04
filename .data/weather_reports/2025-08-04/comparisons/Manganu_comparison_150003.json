@@ -1,0 +1,19 @@
+{
+  "stage_name": "Manganu",
+  "report_date": "2025-08-04",
+  "comparison_time": "2025-08-04T15:00:03.934176",
+  "should_send": false,
+  "change_details": {
+    "reason": "no_significant_changes",
+    "changes": []
+  },
+  "delta_thresholds": {
+    "rain_probability": 0.1,
+    "rain_amount": 0.1,
+    "temperature": 0.1,
+    "thunderstorm": 1,
+    "wind_speed": 0.1,
+    "max_daily_reports": 4,
+    "min_interval_min": 1
+  }
+}

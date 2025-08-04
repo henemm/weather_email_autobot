@@ -37,14 +37,11 @@
     "threshold_value": null,
     "threshold_time": null,
     "max_value": 0,
-    "max_time": "11",
+    "max_time": "14",
     "geo_points": [
       {
         "tg_ref": "T2G1",
         "hourly_data": {
-          "11": 0,
-          "12": 0,
-          "13": 0,
           "14": 0,
           "15": 0,
           "16": 0,
@@ -54,15 +51,12 @@
         },
         "threshold_time": null,
         "threshold_value": null,
-        "max_time": "11",
+        "max_time": "14",
         "max_value": 0
       },
       {
         "tg_ref": "T2G2",
         "hourly_data": {
-          "11": 0,
-          "12": 0,
-          "13": 0,
           "14": 0,
           "15": 0,
           "16": 0,
@@ -72,15 +66,12 @@
         },
         "threshold_time": null,
         "threshold_value": null,
-        "max_time": "11",
+        "max_time": "14",
         "max_value": 0
       },
       {
         "tg_ref": "T2G3",
         "hourly_data": {
-          "11": 0,
-          "12": 0,
-          "13": 0,
           "14": 0,
           "15": 0,
           "16": 0,
@@ -90,15 +81,12 @@
         },
         "threshold_time": null,
         "threshold_value": null,
-        "max_time": "11",
+        "max_time": "14",
         "max_value": 0
       },
       {
         "tg_ref": "T2G4",
         "hourly_data": {
-          "11": 0,
-          "12": 0,
-          "13": 0,
           "14": 0,
           "15": 0,
           "16": 0,
@@ -108,7 +96,7 @@
         },
         "threshold_time": null,
         "threshold_value": null,
-        "max_time": "11",
+        "max_time": "14",
         "max_value": 0
       }
     ]
@@ -121,42 +109,87 @@
     "geo_points": [
       {
         "T2G1": {
-          "14": 0.0,
           "17": 10.0
         }
       },
       {
         "T2G2": {
-          "14": 0.0,
           "17": 10.0
         }
       },
       {
         "T2G3": {
-          "14": 0.0,
           "17": 10.0
         }
       },
       {
         "T2G3": {
-          "14": 0.0,
           "17": 10.0
         }
       }
     ]
   },
+  "rain_2h": {
+    "threshold_value": 1,
+    "threshold_time": "14",
+    "max_value": 1,
+    "max_time": "14",
+    "geo_points": [
+      {
+        "tg_ref": "T2G1",
+        "hourly_data": {
+          "14": 1,
+          "15": 1
+        },
+        "threshold_time": "14",
+        "threshold_value": 1,
+        "max_time": "14",
+        "max_value": 1
+      },
+      {
+        "tg_ref": "T2G2",
+        "hourly_data": {
+          "14": 1,
+          "15": 1
+        },
+        "threshold_time": "14",
+        "threshold_value": 1,
+        "max_time": "14",
+        "max_value": 1
+      },
+      {
+        "tg_ref": "T2G3",
+        "hourly_data": {
+          "14": 1,
+          "15": 1
+        },
+        "threshold_time": "14",
+        "threshold_value": 1,
+        "max_time": "14",
+        "max_value": 1
+      },
+      {
+        "tg_ref": "T2G3",
+        "hourly_data": {
+          "14": 1,
+          "15": 1
+        },
+        "threshold_time": "14",
+        "threshold_value": 1,
+        "max_time": "14",
+        "max_value": 1
+      }
+    ]
+  },
   "wind": {
     "threshold_value": 7.2,
-    "threshold_time": "11",
+    "threshold_time": "14",
     "max_value": 14.4,
     "max_time": "14",
     "geo_points": [
       {
         "tg_ref": "T2G1",
         "hourly_data": {
-          "11": 7.2,
-          "12": 3.6,
-          "13": 7.2,
           "14": 7.2,
           "15": 10.8,
           "16": 10.8,
@@ -164,7 +197,7 @@
           "18": 3.6,
           "19": 3.6
         },
-        "threshold_time": "11",
+        "threshold_time": "14",
         "threshold_value": 7.2,
         "max_time": "15",
         "max_value": 10.8
@@ -172,9 +205,6 @@
       {
         "tg_ref": "T2G2",
         "hourly_data": {
-          "11": 7.2,
-          "12": 3.6,
-          "13": 7.2,
           "14": 7.2,
           "15": 10.8,
           "16": 10.8,
@@ -182,7 +212,7 @@
           "18": 3.6,
           "19": 3.6
         },
-        "threshold_time": "11",
+        "threshold_time": "14",
         "threshold_value": 7.2,
         "max_time": "15",
         "max_value": 10.8
@@ -190,9 +220,6 @@
       {
         "tg_ref": "T2G3",
         "hourly_data": {
-          "11": 7.2,
-          "12": 10.8,
-          "13": 10.8,
           "14": 14.4,
           "15": 14.4,
           "16": 10.8,
@@ -200,17 +227,14 @@
           "18": 7.2,
           "19": 7.2
         },
-        "threshold_time": "11",
-        "threshold_value": 7.2,
+        "threshold_time": "14",
+        "threshold_value": 14.4,
         "max_time": "14",
         "max_value": 14.4
       },
       {
         "tg_ref": "T2G4",
         "hourly_data": {
-          "11": 7.2,
-          "12": 10.8,
-          "13": 10.8,
           "14": 14.4,
           "15": 14.4,
           "16": 10.8,
@@ -218,8 +242,8 @@
           "18": 7.2,
           "19": 7.2
         },
-        "threshold_time": "11",
-        "threshold_value": 7.2,
+        "threshold_time": "14",
+        "threshold_value": 14.4,
         "max_time": "14",
         "max_value": 14.4
       }
@@ -229,14 +253,11 @@
     "threshold_value": null,
     "threshold_time": null,
     "max_value": 0.0,
-    "max_time": "11",
+    "max_time": "14",
     "geo_points": [
       {
         "tg_ref": "T2G1",
         "hourly_data": {
-          "11": 0.0,
-          "12": 0.0,
-          "13": 0.0,
           "14": 0.0,
           "15": 0.0,
           "16": 0.0,
@@ -246,15 +267,12 @@
         },
         "threshold_time": null,
         "threshold_value": null,
-        "max_time": "11",
+        "max_time": "14",
         "max_value": 0.0
       },
       {
         "tg_ref": "T2G2",
         "hourly_data": {
-          "11": 0.0,
-          "12": 0.0,
-          "13": 0.0,
           "14": 0.0,
           "15": 0.0,
           "16": 0.0,
@@ -264,15 +282,12 @@
         },
         "threshold_time": null,
         "threshold_value": null,
-        "max_time": "11",
+        "max_time": "14",
         "max_value": 0.0
       },
       {
         "tg_ref": "T2G3",
         "hourly_data": {
-          "11": 0.0,
-          "12": 0.0,
-          "13": 0.0,
           "14": 0.0,
           "15": 0.0,
           "16": 0.0,
@@ -282,15 +297,12 @@
         },
         "threshold_time": null,
         "threshold_value": null,
-        "max_time": "11",
+        "max_time": "14",
         "max_value": 0.0
       },
       {
         "tg_ref": "T2G4",
         "hourly_data": {
-          "11": 0.0,
-          "12": 0.0,
-          "13": 0.0,
           "14": 0.0,
           "15": 0.0,
           "16": 0.0,
@@ -300,7 +312,7 @@
         },
         "threshold_time": null,
         "threshold_value": null,
-        "max_time": "11",
+        "max_time": "14",
         "max_value": 0.0
       }
     ]
@@ -437,6 +449,6 @@
     "geo_points": []
   },
   "debug_info": {},
-  "generated_at": "2025-08-04T13:00:03.753358",
+  "generated_at": "2025-08-04T14:30:10.225163",
   "version": "morning-evening-refactor-v1"
 }
