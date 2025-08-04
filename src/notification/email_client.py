@@ -322,7 +322,7 @@ def generate_gr20_report_text(report_data: Dict[str, Any], config: Dict[str, Any
         base_text = report_data["result_output"]
         logger.info(f"Using MorningEveningRefactor result_output: {base_text}")
         
-        # Also use the new debug_output if available
+        # Always include debug_output for emails (this function is for emails)
         if "debug_output" in report_data and report_data["debug_output"]:
             # Append the new debug_output to the base_text
             final_text = f"{base_text}\n\n{report_data['debug_output']}"
@@ -423,6 +423,45 @@ def generate_gr20_report_text(report_data: Dict[str, Any], config: Dict[str, Any
             final_text += debug_info
     
     return final_text
+
+
+def generate_sms_report_text(report_data: Dict[str, Any], config: Dict[str, Any]) -> str:
+    """
+    Generate GR20 weather report text for SMS (result_output only, no debug_output).
+    
+    Args:
+        report_data: Dictionary containing report information:
+            - location: Current location name
+            - report_type: "morning", "evening", or "dynamic"
+            - weather_data: Detailed weather data for formatting
+            - report_time: Datetime of the report
+            - result_output: New MorningEveningRefactor output (if available)
+        config: Configuration dictionary
+        
+    Returns:
+        Formatted report text for SMS (result_output only, max 160 characters)
+    """
+    report_type = report_data.get("report_type", "morning")
+    
+    # Check if we have new MorningEveningRefactor output
+    if "result_output" in report_data and report_data["result_output"]:
+        # For SMS: Use ONLY the result_output (no debug_output)
+        sms_text = report_data["result_output"]
+        logger.info(f"Using MorningEveningRefactor result_output for SMS: {sms_text}")
+        return sms_text
+    else:
+        # Fallback to old generation methods (without debug_output)
+        if report_type == "morning":
+            base_text = _generate_morning_report(report_data, config)
+        elif report_type == "evening":
+            base_text = _generate_evening_report(report_data, config)
+        elif report_type == "dynamic":
+            base_text = _generate_dynamic_report(report_data, config)
+        else:
+            # Fallback to old format for backward compatibility
+            base_text = _generate_legacy_report(report_data, config)
+        
+        return base_text
 
 
 def _prepare_weather_data_by_point(report_data: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:

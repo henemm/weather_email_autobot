@@ -575,8 +575,6 @@ def main():
                 # For manual dynamic mode, check if a dynamic report would actually be triggered
                 should_send = scheduler.should_send_report(current_time, current_risk)
                 
-
-                
                 if not should_send:
                     print("[MANUAL] Dynamic report would NOT be triggered (thresholds/intervall/limit not met). Exiting.")
                     return  # <--- Ensure early exit here

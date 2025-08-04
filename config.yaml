@@ -40,8 +40,8 @@ debug:
 # SMS notification settings
 sms:
   api_key: ${SEVEN_API_KEY}
-  enabled: false # true or false
-  mode: production # 'test' or 'production'
+  enabled: true # true or false
+  mode: test # 'test' or 'production'
   production_number: '+4917717816897'
   provider: seven  # 'seven' or 'twilio'
   # Seven.io configuration

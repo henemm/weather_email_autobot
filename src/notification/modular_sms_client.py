@@ -213,8 +213,12 @@ class ModularSmsClient:
             logger.info("SMS sending disabled")
             return False
         
-        # Use the central report text generation for SMS
-        message_text = generate_gr20_report_text(report_data, self.config)
+        # Use the SMS-specific report text generation (result_output only, no debug_output)
+        try:
+            from src.notification.email_client import generate_sms_report_text
+        except ImportError:
+            from notification.email_client import generate_sms_report_text
+        message_text = generate_sms_report_text(report_data, self.config)
         logger.info(f"Generated SMS text: {message_text}")
         
         # Send SMS
