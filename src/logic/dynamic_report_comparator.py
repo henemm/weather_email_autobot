@@ -157,8 +157,17 @@ class DynamicReportComparator:
             if current_threshold_time and previous_threshold_time:
                 # Convert times to hours for comparison
                 try:
-                    current_hour = int(current_threshold_time)
-                    previous_hour = int(previous_threshold_time)
+                    # Handle both string format "HH:MM" and integer format
+                    if isinstance(current_threshold_time, str):
+                        current_hour = int(current_threshold_time.split(':')[0])
+                    else:
+                        current_hour = int(current_threshold_time)
+                        
+                    if isinstance(previous_threshold_time, str):
+                        previous_hour = int(previous_threshold_time.split(':')[0])
+                    else:
+                        previous_hour = int(previous_threshold_time)
+                        
                     time_change = abs(current_hour - previous_hour)
                     
                     if time_change >= 1:  # At least 1 hour difference
@@ -173,8 +182,17 @@ class DynamicReportComparator:
             
             if current_max_time and previous_max_time:
                 try:
-                    current_hour = int(current_max_time)
-                    previous_hour = int(previous_max_time)
+                    # Handle both string format "HH:MM" and integer format
+                    if isinstance(current_max_time, str):
+                        current_hour = int(current_max_time.split(':')[0])
+                    else:
+                        current_hour = int(current_max_time)
+                        
+                    if isinstance(previous_max_time, str):
+                        previous_hour = int(previous_max_time.split(':')[0])
+                    else:
+                        previous_hour = int(previous_max_time)
+                        
                     time_change = abs(current_hour - previous_hour)
                     
                     if time_change >= 1:  # At least 1 hour difference
