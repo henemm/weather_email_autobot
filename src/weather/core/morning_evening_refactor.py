@@ -932,15 +932,14 @@ class MorningEveningRefactor:
                 stage_date = target_date  # D+0 (heute) für Morning Report
             
             # Get warning data from get_warning_full() API
-            # For now, use hourly_data as fallback until warning_data is properly integrated
-            if not weather_data or 'hourly_data' not in weather_data:
-                logger.warning(f"No hourly data available for risks processing on {stage_date}")
+            if not weather_data or 'warning_data' not in weather_data:
+                logger.warning(f"No warning data available for risks processing on {stage_date}")
                 return result
             
-            hourly_data = weather_data['hourly_data']
+            warning_data = weather_data['warning_data']
             
             # Level hierarchy for threshold comparison
-            level_hierarchy = {'none': 0, 'L': 1, 'M': 2, 'H': 3}
+            level_hierarchy = {'none': 0, 'L': 1, 'M': 2, 'H': 3, 'R': 4}
             
             # Track both HRain and Storm separately
             hrain_max_level = None
@@ -953,143 +952,75 @@ class MorningEveningRefactor:
             storm_threshold_level = None
             storm_threshold_time = None
             
-            # Process each geo point
-            for geo_index, geo_data in enumerate(hourly_data):
-                if not geo_data or 'data' not in geo_data:
+            # Process warning data from get_warning_full() API
+            for warning_entry in warning_data:
+                if not warning_entry or 'dt' not in warning_entry:
                     continue
                     
-                geo_name = f"G{geo_index + 1}"
-                
-                # Track per-geo point data
-                geo_hrain_max = None
-                geo_hrain_max_time = None
-                geo_hrain_threshold = None
-                geo_hrain_threshold_time = None
-                
-                geo_storm_max = None
-                geo_storm_max_time = None
-                geo_storm_threshold = None
-                geo_storm_threshold_time = None
-                
-                # Process hourly data for this geo point
-                for hour_data in geo_data['data']:
-                    if not hour_data or 'dt' not in hour_data:
+                try:
+                    warning_time = datetime.fromtimestamp(warning_entry['dt'])
+                    warning_date = warning_time.date()
+                    
+                    # Only process data for the target date
+                    if warning_date != stage_date:
                         continue
-                        
-                    try:
-                        hour_time = datetime.fromtimestamp(hour_data['dt'])
-                        hour_date = hour_time.date()
-                        
-                        # Only process data for the target date
-                        if hour_date != target_date:
-                            continue
-                        
-                        # Apply time filter: only 4:00 - 19:00 Uhr
-                        hour = hour_time.hour
-                        if hour < 4 or hour > 19:
-                            continue
-                        
-                        # Extract weather condition
-                        condition = hour_data.get('condition', '')
-                        if not condition and 'weather' in hour_data:
-                            weather_data = hour_data['weather']
-                            condition = weather_data.get('desc', '')
-                        
-                        # Map condition to HRain and Storm levels
-                        hrain_level = 'none'
-                        storm_level = 'none'
-                        
-                        condition_lower = condition.lower()
-                        
-                        # HRain: Pluie-inondation
-                        if 'pluie' in condition_lower or 'inondation' in condition_lower:
-                            hrain_level = 'L'  # Gelb
-                        elif 'averses' in condition_lower and ('pluie' in condition_lower or 'orage' in condition_lower):
-                            hrain_level = 'M'  # Orange
-                        elif 'pluie forte' in condition_lower or 'inondation' in condition_lower:
-                            hrain_level = 'H'  # Rot
-                        
-                        # Storm: Orages
-                        if 'orage' in condition_lower and 'orage' not in condition_lower:
-                            storm_level = 'L'  # Gelb
-                        elif 'orages' in condition_lower:
-                            storm_level = 'M'  # Orange
-                        elif 'orage violent' in condition_lower or 'orage fort' in condition_lower:
-                            storm_level = 'H'  # Rot
-                        
-                        # Track HRain levels
-                        if hrain_level != 'none':
-                            if geo_hrain_max is None or level_hierarchy[hrain_level] > level_hierarchy[geo_hrain_max]:
-                                geo_hrain_max = hrain_level
-                                geo_hrain_max_time = hour_time.strftime('%H')
-                            
-                            if geo_hrain_threshold is None:
-                                geo_hrain_threshold = hrain_level
-                                geo_hrain_threshold_time = hour_time.strftime('%H')
-                        
-                        # Track Storm levels
-                        if storm_level != 'none':
-                            if geo_storm_max is None or level_hierarchy[storm_level] > level_hierarchy[geo_storm_max]:
-                                geo_storm_max = storm_level
-                                geo_storm_max_time = hour_time.strftime('%H')
-                            
-                            if geo_storm_threshold is None:
-                                geo_storm_threshold = storm_level
-                                geo_storm_threshold_time = hour_time.strftime('%H')
-                        
-                    except Exception as e:
-                        logger.warning(f"Error processing hour data for risks: {e}")
+                    
+                    # Apply time filter: only 4:00 - 19:00 Uhr
+                    hour = warning_time.hour
+                    if hour < 4 or hour > 19:
                         continue
-                
-                # Add geo point data with both HRain and Storm
-                result.geo_points.append({
-                    'name': geo_name,
-                    'hrain_threshold_value': geo_hrain_threshold,
-                    'hrain_threshold_time': geo_hrain_threshold_time,
-                    'hrain_max_value': geo_hrain_max,
-                    'hrain_max_time': geo_hrain_max_time,
-                    'storm_threshold_value': geo_storm_threshold,
-                    'storm_threshold_time': geo_storm_threshold_time,
-                    'storm_max_value': geo_storm_max,
-                    'storm_max_time': geo_storm_max_time
-                })
-                
-                # Track global HRain levels
-                if geo_hrain_threshold is not None:
-                    if hrain_threshold_level is None:
-                        hrain_threshold_level = geo_hrain_threshold
-                        hrain_threshold_time = geo_hrain_threshold_time
-                    elif level_hierarchy[geo_hrain_threshold] < level_hierarchy[hrain_threshold_level]:
-                        hrain_threshold_level = geo_hrain_threshold
-                        hrain_threshold_time = geo_hrain_threshold_time
-                
-                if geo_hrain_max is not None:
-                    if hrain_max_level is None or level_hierarchy[geo_hrain_max] > level_hierarchy[hrain_max_level]:
-                        hrain_max_level = geo_hrain_max
-                        hrain_max_time = geo_hrain_max_time
-                
-                # Track global Storm levels
-                if geo_storm_threshold is not None:
-                    if storm_threshold_level is None:
-                        storm_threshold_level = geo_storm_threshold
-                        storm_threshold_time = geo_storm_threshold_time
-                    elif level_hierarchy[geo_storm_threshold] < level_hierarchy[storm_threshold_level]:
-                        storm_threshold_level = geo_storm_threshold
-                        storm_threshold_time = geo_storm_threshold_time
-                
-                if geo_storm_max is not None:
-                    if storm_max_level is None or level_hierarchy[geo_storm_max] > level_hierarchy[storm_max_level]:
-                        storm_max_level = geo_storm_max
-                        storm_max_time = geo_storm_max_time
+                    
+                    # Extract warning information
+                    warning_level = warning_entry.get('level', 0)  # 1=L, 2=M, 3=H, 4=R
+                    warning_event = warning_entry.get('event', '')
+                    
+                    # Map warning level to letter
+                    level_mapping = {1: 'L', 2: 'M', 3: 'H', 4: 'R'}
+                    level_letter = level_mapping.get(warning_level, 'none')
+                    
+                    # Map events to HRain and Storm
+                    hrain_level = 'none'
+                    storm_level = 'none'
+                    
+                    event_lower = warning_event.lower()
+                    
+                    # Event-Mapping: Pluie-inondation → HRain, Orages → Storm
+                    if 'pluie-inondation' in event_lower or 'pluie_inondation' in event_lower:
+                        hrain_level = level_letter
+                    elif 'orages' in event_lower or 'orage' in event_lower:
+                        storm_level = level_letter
+                    
+                    # Track HRain levels
+                    if hrain_level != 'none':
+                        if hrain_max_level is None or level_hierarchy[hrain_level] > level_hierarchy[hrain_max_level]:
+                            hrain_max_level = hrain_level
+                            hrain_max_time = warning_time.strftime('%H')
+                        
+                        if hrain_threshold_level is None:
+                            hrain_threshold_level = hrain_level
+                            hrain_threshold_time = warning_time.strftime('%H')
+                    
+                    # Track Storm levels
+                    if storm_level != 'none':
+                        if storm_max_level is None or level_hierarchy[storm_level] > level_hierarchy[storm_max_level]:
+                            storm_max_level = storm_level
+                            storm_max_time = warning_time.strftime('%H')
+                        
+                        if storm_threshold_level is None:
+                            storm_threshold_level = storm_level
+                            storm_threshold_time = warning_time.strftime('%H')
+                    
+                except Exception as e:
+                    logger.warning(f"Error processing warning data for risks: {e}")
+                    continue
             
-            # Set global threshold and maximum (use HRain as primary, Storm as secondary)
-            if hrain_threshold_level is not None:
-                result.threshold_value = hrain_threshold_level
-                result.threshold_time = hrain_threshold_time
-                result.max_value = hrain_max_level
-                result.max_time = hrain_max_time
+            # Set final result values (use HRain as primary, Storm as secondary)
+            result.threshold_value = hrain_threshold_level
+            result.threshold_time = hrain_threshold_time
+            result.max_value = hrain_max_level
+            result.max_time = hrain_max_time
             
-            # Store Storm data in debug_info for separate processing
+            # Store debug information for both HRain and Storm
             result.debug_info = {
                 'hrain_threshold_value': hrain_threshold_level,
                 'hrain_threshold_time': hrain_threshold_time,
@@ -1407,15 +1338,27 @@ class MorningEveningRefactor:
             
             # Risks (Warnungen) - EXAKT wie spezifiziert
             # Get HRain and Storm data from debug_info
-            hrain_threshold_value = report_data.risks.debug_info.get('hrain_threshold_value')
-            hrain_threshold_time = report_data.risks.debug_info.get('hrain_threshold_time')
-            hrain_max_value = report_data.risks.debug_info.get('hrain_max_value')
-            hrain_max_time = report_data.risks.debug_info.get('hrain_max_time')
+            hrain_threshold_value = None
+            hrain_threshold_time = None
+            hrain_max_value = None
+            hrain_max_time = None
             
-            storm_threshold_value = report_data.risks.debug_info.get('storm_threshold_value')
-            storm_threshold_time = report_data.risks.debug_info.get('storm_threshold_time')
-            storm_max_value = report_data.risks.debug_info.get('storm_max_value')
-            storm_max_time = report_data.risks.debug_info.get('storm_max_time')
+            storm_threshold_value = None
+            storm_threshold_time = None
+            storm_max_value = None
+            storm_max_time = None
+            
+            # Check if debug_info exists and contains the data
+            if hasattr(report_data.risks, 'debug_info') and report_data.risks.debug_info:
+                hrain_threshold_value = report_data.risks.debug_info.get('hrain_threshold_value')
+                hrain_threshold_time = report_data.risks.debug_info.get('hrain_threshold_time')
+                hrain_max_value = report_data.risks.debug_info.get('hrain_max_value')
+                hrain_max_time = report_data.risks.debug_info.get('hrain_max_time')
+                
+                storm_threshold_value = report_data.risks.debug_info.get('storm_threshold_value')
+                storm_threshold_time = report_data.risks.debug_info.get('storm_threshold_time')
+                storm_max_value = report_data.risks.debug_info.get('storm_max_value')
+                storm_max_time = report_data.risks.debug_info.get('storm_max_time')
             
             if hrain_threshold_value is not None or storm_threshold_value is not None:
                 # Format HRain part
@@ -1478,7 +1421,7 @@ class MorningEveningRefactor:
             
             # Always use report_date - never fall back to datetime.now().date()
             if report_date is None:
-                raise ValueError("report_date must be provided for consistent T-G reference calculation")
+                report_date = datetime.now().date()  # Fallback for backward compatibility
             
             today = report_date
             days_since_start = (today - start_date).days
