@@ -1386,6 +1386,12 @@ class MorningEveningRefactor:
                     parts.append(f"TH+:{threshold_part}({max_part})")
                 else:
                     parts.append(f"TH+:{threshold_part}")
+            elif report_data.thunderstorm_plus_one.max_value is not None:
+                # Show maximum even if threshold not reached
+                level_mapping = {'low': 'L', 'med': 'M', 'high': 'H'}
+                max_level = level_mapping.get(report_data.thunderstorm_plus_one.max_value, report_data.thunderstorm_plus_one.max_value)
+                max_part = f"{max_level}@{report_data.thunderstorm_plus_one.max_time}"
+                parts.append(f"TH+:{max_part}")
             else:
                 parts.append("TH+:-")
             
