@@ -1,7 +1,7 @@
 {
   "stage_name": "FONT-ROMEU-ODEILLO-VIA",
   "report_date": "2025-08-08",
-  "report_type": "evening",
+  "report_type": "morning",
   "night": {
     "threshold_value": 15,
     "threshold_time": null,
@@ -14,19 +14,19 @@
     ]
   },
   "day": {
-    "threshold_value": 30,
+    "threshold_value": 34,
     "threshold_time": null,
-    "max_value": 30,
+    "max_value": 34,
     "max_time": null,
     "geo_points": [
       {
-        "T2G1": 29.6
+        "T1G1": 34.1
       },
       {
-        "T2G2": 24.7
+        "T1G2": 27.6
       },
       {
-        "T2G3": 30.4
+        "T1G3": 27.6
       }
     ]
   },
@@ -37,7 +37,7 @@
     "max_time": "17",
     "geo_points": [
       {
-        "tg_ref": "T2G1",
+        "tg_ref": "T1G1",
         "hourly_data": {
           "17": 0,
           "18": 0,
@@ -49,7 +49,7 @@
         "max_value": 0
       },
       {
-        "tg_ref": "T2G2",
+        "tg_ref": "T1G2",
         "hourly_data": {
           "17": 0,
           "18": 0,
@@ -61,7 +61,7 @@
         "max_value": 0
       },
       {
-        "tg_ref": "T2G3",
+        "tg_ref": "T1G3",
         "hourly_data": {
           "17": 0,
           "18": 0,
@@ -75,37 +75,19 @@
     ]
   },
   "rain_percent": {
-    "threshold_value": 50.0,
-    "threshold_time": "17",
-    "max_value": 50.0,
-    "max_time": "17",
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
     "geo_points": [
       {
-        "T2G1": {
-          "05": 0.0,
-          "08": 0.0,
-          "11": 0.0,
-          "14": 0.0,
-          "17": 50.0
-        }
+        "T1G1": {}
       },
       {
-        "T2G2": {
-          "05": 0.0,
-          "08": 0.0,
-          "11": 0.0,
-          "14": 0.0,
-          "17": 0.0
-        }
+        "T1G2": {}
       },
       {
-        "T2G3": {
-          "05": 0.0,
-          "08": 0.0,
-          "11": 0.0,
-          "14": 0.0,
-          "17": 0.0
-        }
+        "T1G3": {}
       }
     ]
   },
@@ -116,11 +98,11 @@
     "max_time": "17",
     "geo_points": [
       {
-        "tg_ref": "T2G1",
+        "tg_ref": "T1G1",
         "hourly_data": {
           "17": 21.6,
           "18": 3.6,
-          "19": 14.4
+          "19": 10.8
         },
         "threshold_time": "17",
         "threshold_value": 21.6,
@@ -128,28 +110,28 @@
         "max_value": 21.6
       },
       {
-        "tg_ref": "T2G2",
+        "tg_ref": "T1G2",
         "hourly_data": {
           "17": 3.6,
           "18": 3.6,
-          "19": 3.6
+          "19": 7.2
         },
         "threshold_time": null,
         "threshold_value": null,
-        "max_time": "17",
-        "max_value": 3.6
+        "max_time": "19",
+        "max_value": 7.2
       },
       {
-        "tg_ref": "T2G3",
+        "tg_ref": "T1G3",
         "hourly_data": {
           "17": 3.6,
           "18": 3.6,
-          "19": 3.6
+          "19": 7.2
         },
         "threshold_time": null,
         "threshold_value": null,
-        "max_time": "17",
-        "max_value": 3.6
+        "max_time": "19",
+        "max_value": 7.2
       }
     ]
   },
@@ -160,11 +142,11 @@
     "max_time": "18",
     "geo_points": [
       {
-        "tg_ref": "T2G1",
+        "tg_ref": "T1G1",
         "hourly_data": {
           "17": 0.0,
           "18": 43.2,
-          "19": 0.0
+          "19": 39.6
         },
         "threshold_time": "18",
         "threshold_value": 43.2,
@@ -172,7 +154,7 @@
         "max_value": 43.2
       },
       {
-        "tg_ref": "T2G2",
+        "tg_ref": "T1G2",
         "hourly_data": {
           "17": 0.0,
           "18": 0.0,
@@ -184,7 +166,7 @@
         "max_value": 0.0
       },
       {
-        "tg_ref": "T2G3",
+        "tg_ref": "T1G3",
         "hourly_data": {
           "17": 0.0,
           "18": 0.0,
@@ -229,15 +211,15 @@
   "thunderstorm_plus_one": {
     "threshold_value": null,
     "threshold_time": null,
-    "max_value": null,
-    "max_time": null,
+    "max_value": "low",
+    "max_time": "16",
     "geo_points": [
       {
         "name": "G1",
         "threshold_value": null,
         "threshold_time": null,
-        "max_value": null,
-        "max_time": null
+        "max_value": "low",
+        "max_time": "16"
       },
       {
         "name": "G2",
@@ -304,6 +286,6 @@
     "geo_points": []
   },
   "debug_info": {},
-  "generated_at": "2025-08-08T19:50:12.673116",
+  "generated_at": "2025-08-08T20:05:39.852440",
   "version": "morning-evening-refactor-v1"
 }

@@ -908,7 +908,7 @@ class MorningEveningRefactor:
     
     def process_risks_data(self, weather_data: Dict[str, Any], stage_name: str, target_date: date, report_type: str) -> WeatherThresholdData:
         """
-        Process risks/warnings data from hourly forecast data.
+        Process risks/warnings data from get_warning_full() API.
         
         Args:
             weather_data: Weather data from API
@@ -923,8 +923,18 @@ class MorningEveningRefactor:
         result.geo_points = []
         
         try:
+            # CORRECTED: RISK data logic according to weather_data_rules.mdc
+            # Morning Report: Risks = D+0 (heute) mit T1 (heute)
+            # Evening Report: Risks = D+1 (morgen) mit T2 (morgen)
+            if report_type == 'evening':
+                stage_date = target_date + timedelta(days=1)  # D+1 (morgen) für Evening Report
+            else:  # morning
+                stage_date = target_date  # D+0 (heute) für Morning Report
+            
+            # Get warning data from get_warning_full() API
+            # For now, use hourly_data as fallback until warning_data is properly integrated
             if not weather_data or 'hourly_data' not in weather_data:
-                logger.warning(f"No hourly data available for risks processing on {target_date}")
+                logger.warning(f"No hourly data available for risks processing on {stage_date}")
                 return result
             
             hourly_data = weather_data['hourly_data']

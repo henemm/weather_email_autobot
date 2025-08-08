@@ -1,6 +1,3 @@
----
-alwaysApply: true
----
 
 # Weather Data Rules - VERBINDLICH
 
@@ -25,6 +22,7 @@ alwaysApply: true
 | **Morning/Dynamic** | Gust | T1G1,T1G2,T1G3 | D+0 | Alle Punkte heutiger Etappe, heute |
 | **Morning/Dynamic** | Thunderstorm | T1G1,T1G2,T1G3 | D+0 | Alle Punkte heutiger Etappe, heute |
 | **Morning/Dynamic** | Thunderstorm+1 | T2G1,T2G2,T2G3 | D+1 | Alle Punkte morgiger Etappe, morgen |
+| **Morning/Dynamic** | Risks | T1G1,T1G2,T1G3 | D+0 | Alle Punkte heutiger Etappe, heute |
 | **Evening** | Night | T1G3 | D+0 | Letzter Punkt heutiger Etappe, heute |
 | **Evening** | Day | T2G1,T2G2,T2G3 | D+1 | Alle Punkte morgiger Etappe, morgen |
 | **Evening** | Rain | T2G1,T2G2,T2G3 | D+1 | Alle Punkte morgiger Etappe, morgen |
@@ -32,6 +30,7 @@ alwaysApply: true
 | **Evening** | Gust | T2G1,T2G2,T2G3 | D+1 | Alle Punkte morgiger Etappe, morgen |
 | **Evening** | Thunderstorm | T2G1,T2G2,T2G3 | D+1 | Alle Punkte morgiger Etappe, morgen |
 | **Evening** | Thunderstorm+1 | T3G1,T3G2,T3G3 | D+2 | Alle Punkte übermorgiger Etappe, übermorgen |
+| **Evening** | Risks | T2G1,T2G2,T2G3 | D+1 | Alle Punkte morgiger Etappe, morgen |
 
 ## Merkregeln
 
@@ -54,10 +53,10 @@ alwaysApply: true
 
 ### TG-Referenzen:
 - **Morning/Dynamic Night:** `T1G3`
-- **Morning/Dynamic Day/Rain/Wind/Gust/Thunderstorm:** `T1G1,T1G2,T1G3`
+- **Morning/Dynamic Day/Rain/Wind/Gust/Thunderstorm/Risks:** `T1G1,T1G2,T1G3`
 - **Morning/Dynamic Thunderstorm+1:** `T2G1,T2G2,T2G3`
 - **Evening Night:** `T1G3`
-- **Evening Day/Rain/Wind/Gust/Thunderstorm:** `T2G1,T2G2,T2G3`
+- **Evening Day/Rain/Wind/Gust/Thunderstorm/Risks:** `T2G1,T2G2,T2G3`
 - **Evening Thunderstorm+1:** `T3G1,T3G2,T3G3`
 
 ### Datums-Filterung:
@@ -66,68 +65,7 @@ alwaysApply: true
 
 ## VERBINDLICHKEIT
 
-Diese Regeln sind **VERBINDLICH** für alle Analysen und Implementierungen. Bei jeder Frage zu Wetterdaten-Zuordnung ist diese Datei die **einzige Quelle der Wahrheit**. Keine eigenen Interpretationen oder Annahmen - nur diese Regeln verwenden. # Weather Data Rules - VERBINDLICH
-
-## Grundprinzip der Wetterdaten-Zuordnung
-
-### Morning-Report & Dynamic-Report:
-- **Verwenden heutige Etappe (T1) für heutige Daten (D+0)**
-- **Alle Wetterelemente (außer Thunderstorm+1) verwenden heute (D+0)**
-
-### Evening-Report:
-- **Verwenden morgige Etappe (T2) für morgige Daten (D+1)**
-- **Alle Wetterelemente (außer Night und Thunderstorm+1) verwenden morgen (D+1)**
-
-## Konkrete Zuordnungstabelle
-
-| Berichtstyp | Wetterelement | Geo-Punkte | Datum | Beschreibung |
-|-------------|---------------|------------|-------|--------------|
-| **Morning/Dynamic** | Night | T1G3 | D+0 | Letzter Punkt heutiger Etappe, heute |
-| **Morning/Dynamic** | Day | T1G1,T1G2,T1G3 | D+0 | Alle Punkte heutiger Etappe, heute |
-| **Morning/Dynamic** | Rain | T1G1,T1G2,T1G3 | D+0 | Alle Punkte heutiger Etappe, heute |
-| **Morning/Dynamic** | Wind | T1G1,T1G2,T1G3 | D+0 | Alle Punkte heutiger Etappe, heute |
-| **Morning/Dynamic** | Gust | T1G1,T1G2,T1G3 | D+0 | Alle Punkte heutiger Etappe, heute |
-| **Morning/Dynamic** | Thunderstorm | T1G1,T1G2,T1G3 | D+0 | Alle Punkte heutiger Etappe, heute |
-| **Morning/Dynamic** | Thunderstorm+1 | T2G1,T2G2,T2G3 | D+1 | Alle Punkte morgiger Etappe, morgen |
-| **Evening** | Night | T1G3 | D+0 | Letzter Punkt heutiger Etappe, heute |
-| **Evening** | Day | T2G1,T2G2,T2G3 | D+1 | Alle Punkte morgiger Etappe, morgen |
-| **Evening** | Rain | T2G1,T2G2,T2G3 | D+1 | Alle Punkte morgiger Etappe, morgen |
-| **Evening** | Wind | T2G1,T2G2,T2G3 | D+1 | Alle Punkte morgiger Etappe, morgen |
-| **Evening** | Gust | T2G1,T2G2,T2G3 | D+1 | Alle Punkte morgiger Etappe, morgen |
-| **Evening** | Thunderstorm | T2G1,T2G2,T2G3 | D+1 | Alle Punkte morgiger Etappe, morgen |
-| **Evening** | Thunderstorm+1 | T3G1,T3G2,T3G3 | D+2 | Alle Punkte übermorgiger Etappe, übermorgen |
-
-## Merkregeln
-
-### Morning/Dynamic:
-- **Heute für Heute** (außer Thunderstorm+1)
-- **T1G1,T1G2,T1G3 für D+0**
-- **T2G1,T2G2,T2G3 für D+1** (nur Thunderstorm+1)
-
-### Evening:
-- **Morgen für Morgen** (außer Night und Thunderstorm+1)
-- **T1G3 für D+0** (nur Night)
-- **T2G1,T2G2,T2G3 für D+1**
-- **T3G1,T3G2,T3G3 für D+2** (nur Thunderstorm+1)
-
-### Spezielle Regeln:
-1. **Night:** Immer nur T1G3 (letzter Punkt heutiger Etappe) für heute (D+0)
-2. **Thunderstorm+1:** Immer +1 Etappe und +1 Tag voraus
-
-## Implementierung im Code
-
-### TG-Referenzen:
-- **Morning/Dynamic Night:** `T1G3`
-- **Morning/Dynamic Day/Rain/Wind/Gust/Thunderstorm:** `T1G1,T1G2,T1G3`
-- **Morning/Dynamic Thunderstorm+1:** `T2G1,T2G2,T2G3`
-- **Evening Night:** `T1G3`
-- **Evening Day/Rain/Wind/Gust/Thunderstorm:** `T2G1,T2G2,T2G3`
-- **Evening Thunderstorm+1:** `T3G1,T3G2,T3G3`
-
-### Datums-Filterung:
-- **Morning/Dynamic:** `target_date` (heute) für alle außer Thunderstorm+1
-- **Evening:** `target_date + 1` (morgen) für alle außer Night und Thunderstorm+1
-
+Diese Regeln sind **VERBINDLICH** für alle Analysen und Implementierungen. Bei jeder Frage zu Wetterdaten-Zuordnung ist diese Datei die **einzige Quelle der Wahrheit**. Keine eigenen Interpretationen oder Annahmen - nur diese Regeln verwenden. 
 ## VERBINDLICHKEIT
 
 Diese Regeln sind **VERBINDLICH** für alle Analysen und Implementierungen. Bei jeder Frage zu Wetterdaten-Zuordnung ist diese Datei die **einzige Quelle der Wahrheit**. Keine eigenen Interpretationen oder Annahmen - nur diese Regeln verwenden. 
