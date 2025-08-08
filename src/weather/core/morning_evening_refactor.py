@@ -696,9 +696,9 @@ class MorningEveningRefactor:
         # Morning Report: TH = D+0 (heute) mit T1 (heute)
         # Evening Report: TH = D+1 (morgen) mit T2 (morgen)
         if report_type == 'evening':
-            stage_date = target_date  # target_date is already tomorrow for evening reports
+            stage_date = target_date + timedelta(days=1)  # D+1 (morgen) für Evening Report
         else:  # morning
-            stage_date = target_date  # target_date is today for morning reports
+            stage_date = target_date  # D+0 (heute) für Morning Report
         
         # Thunderstorm level mapping
         thunderstorm_levels = {
