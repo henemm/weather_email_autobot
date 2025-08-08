@@ -193,15 +193,15 @@
   "thunderstorm_plus_one": {
     "threshold_value": null,
     "threshold_time": null,
-    "max_value": null,
-    "max_time": null,
+    "max_value": "low",
+    "max_time": "17",
     "geo_points": [
       {
         "name": "G1",
         "threshold_value": null,
         "threshold_time": null,
-        "max_value": null,
-        "max_time": null
+        "max_value": "low",
+        "max_time": "17"
       },
       {
         "name": "G2",
@@ -220,10 +220,10 @@
     ]
   },
   "risks": {
-    "threshold_value": null,
-    "threshold_time": null,
-    "max_value": null,
-    "max_time": null,
+    "threshold_value": "L",
+    "threshold_time": "17",
+    "max_value": "L",
+    "max_time": "17",
     "geo_points": []
   },
   "risk_zonal": {
@@ -234,6 +234,6 @@
     "geo_points": []
   },
   "debug_info": {},
-  "generated_at": "2025-08-08T22:28:48.828267",
+  "generated_at": "2025-08-08T22:50:32.308246",
   "version": "morning-evening-refactor-v1"
 }

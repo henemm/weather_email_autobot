@@ -908,7 +908,7 @@ class MorningEveningRefactor:
     
     def process_risks_data(self, weather_data: Dict[str, Any], stage_name: str, target_date: date, report_type: str) -> WeatherThresholdData:
         """
-        Process risks/warnings data from get_warning_full() API.
+        Process risks/warnings data from get_warning_full() API using department mapping.
         
         Args:
             weather_data: Weather data from API
@@ -931,12 +931,23 @@ class MorningEveningRefactor:
             else:  # morning
                 stage_date = target_date  # D+0 (heute) für Morning Report
             
-            # Get warning data from get_warning_full() API
-            if not weather_data or 'warning_data' not in weather_data:
-                logger.warning(f"No warning data available for risks processing on {stage_date}")
+            # Get stage coordinates for department mapping
+            stage_coordinates = self.get_stage_coordinates(stage_name)
+            if not stage_coordinates:
+                logger.warning(f"No coordinates available for stage {stage_name}")
                 return result
             
-            warning_data = weather_data['warning_data']
+            # Use first coordinate point for department mapping
+            lat, lon = stage_coordinates[0]
+            
+            # Import department mapper
+            from wetter.department_mapper import get_warning_data_for_coordinates
+            
+            # Get warning data using department mapping
+            warning_data = get_warning_data_for_coordinates(lat, lon)
+            if not warning_data:
+                logger.warning(f"No warning data available for risks processing on {stage_date} for coordinates {lat}, {lon}")
+                return result
             
             # Level hierarchy for threshold comparison
             level_hierarchy = {'none': 0, 'L': 1, 'M': 2, 'H': 3, 'R': 4}
@@ -952,66 +963,60 @@ class MorningEveningRefactor:
             storm_threshold_level = None
             storm_threshold_time = None
             
-            # Process warning data from get_warning_full() API
-            for warning_entry in warning_data:
-                if not warning_entry or 'dt' not in warning_entry:
-                    continue
-                    
+            # Process warning data from CurrentPhenomenons object
+            # The warning_data is a CurrentPhenomenons object with phenomenons_max_colors
+            phenomenons_data = warning_data.phenomenons_max_colors
+            
+            # Phenomenon ID mapping based on Météo-France API documentation
+            # 1: Vent violent (Wind)
+            # 2: Pluie-inondation (Heavy Rain)
+            # 3: Orages (Thunderstorms)
+            # 4: Neige-verglas (Snow/Ice)
+            # 5: Canicule (Heat wave)
+            # 6: Grand-froid (Cold wave)
+            
+            # Level mapping: 1=L, 2=M, 3=H, 4=R
+            level_mapping = {1: 'L', 2: 'M', 3: 'H', 4: 'R'}
+            
+            for phenomenon in phenomenons_data:
                 try:
-                    warning_time = datetime.fromtimestamp(warning_entry['dt'])
-                    warning_date = warning_time.date()
+                    phenomenon_id = phenomenon.get('phenomenon_id')
+                    max_color_id = phenomenon.get('phenomenon_max_color_id')
                     
-                    # Only process data for the target date
-                    if warning_date != stage_date:
+                    if not phenomenon_id or not max_color_id:
                         continue
                     
-                    # Apply time filter: only 4:00 - 19:00 Uhr
-                    hour = warning_time.hour
-                    if hour < 4 or hour > 19:
-                        continue
-                    
-                    # Extract warning information
-                    warning_level = warning_entry.get('level', 0)  # 1=L, 2=M, 3=H, 4=R
-                    warning_event = warning_entry.get('event', '')
-                    
-                    # Map warning level to letter
-                    level_mapping = {1: 'L', 2: 'M', 3: 'H', 4: 'R'}
-                    level_letter = level_mapping.get(warning_level, 'none')
-                    
-                    # Map events to HRain and Storm
+                    # Map phenomenon ID to our categories
                     hrain_level = 'none'
                     storm_level = 'none'
                     
-                    event_lower = warning_event.lower()
-                    
-                    # Event-Mapping: Pluie-inondation → HRain, Orages → Storm
-                    if 'pluie-inondation' in event_lower or 'pluie_inondation' in event_lower:
-                        hrain_level = level_letter
-                    elif 'orages' in event_lower or 'orage' in event_lower:
-                        storm_level = level_letter
+                    if phenomenon_id == '2':  # Pluie-inondation
+                        hrain_level = level_mapping.get(max_color_id, 'none')
+                    elif phenomenon_id == '3':  # Orages
+                        storm_level = level_mapping.get(max_color_id, 'none')
                     
                     # Track HRain levels
                     if hrain_level != 'none':
                         if hrain_max_level is None or level_hierarchy[hrain_level] > level_hierarchy[hrain_max_level]:
                             hrain_max_level = hrain_level
-                            hrain_max_time = warning_time.strftime('%H')
+                            hrain_max_time = '17'  # Default time for current warnings
                         
                         if hrain_threshold_level is None:
                             hrain_threshold_level = hrain_level
-                            hrain_threshold_time = warning_time.strftime('%H')
+                            hrain_threshold_time = '17'  # Default time for current warnings
                     
                     # Track Storm levels
                     if storm_level != 'none':
                         if storm_max_level is None or level_hierarchy[storm_level] > level_hierarchy[storm_max_level]:
                             storm_max_level = storm_level
-                            storm_max_time = warning_time.strftime('%H')
+                            storm_max_time = '17'  # Default time for current warnings
                         
                         if storm_threshold_level is None:
                             storm_threshold_level = storm_level
-                            storm_threshold_time = warning_time.strftime('%H')
+                            storm_threshold_time = '17'  # Default time for current warnings
                     
                 except Exception as e:
-                    logger.warning(f"Error processing warning data for risks: {e}")
+                    logger.warning(f"Error processing phenomenon data for risks: {e}")
                     continue
             
             # Set final result values (use HRain as primary, Storm as secondary)
