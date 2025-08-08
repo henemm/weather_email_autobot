@@ -692,12 +692,13 @@ class MorningEveningRefactor:
         start_date = datetime.strptime(self.config.get('startdatum', '2025-07-27'), '%Y-%m-%d').date()
         days_since_start = (target_date - start_date).days
         
-        # For Evening report: Thunderstorm = thunderstorm maximum of all points of tomorrow's stage for tomorrow
-        # For Morning report: Thunderstorm = thunderstorm maximum of all points of today's stage for today
+        # CORRECTED: Thunderstorm data logic according to weather_data_rules.mdc
+        # Morning Report: TH = D+0 (heute) mit T1 (heute)
+        # Evening Report: TH = D+1 (morgen) mit T2 (morgen)
         if report_type == 'evening':
-            stage_date = target_date  # Use target_date (tomorrow) directly
+            stage_date = target_date  # target_date is already tomorrow for evening reports
         else:  # morning
-            stage_date = target_date  # Today's date
+            stage_date = target_date  # target_date is today for morning reports
         
         # Thunderstorm level mapping
         thunderstorm_levels = {
@@ -799,15 +800,13 @@ class MorningEveningRefactor:
         Returns:
             WeatherThresholdData with threshold and maximum values for +1 day
         """
-        # Calculate +1 day
-        plus_one_date = target_date + timedelta(days=1)
-        
-        # For Evening report: Thunderstorm (+1) = thunderstorm maximum of all points of over-tomorrow's stage for over-tomorrow
-        # For Morning report: Thunderstorm (+1) = thunderstorm maximum of all points of tomorrow's stage for tomorrow
+        # CORRECTED: Thunderstorm+1 data logic according to weather_data_rules.mdc
+        # Morning Report: TH+ = D+1 (morgen) mit T2 (morgen)
+        # Evening Report: TH+ = D+2 (übermorgen) mit T3 (übermorgen)
         if report_type == 'evening':
-            stage_date = plus_one_date + timedelta(days=1)  # Over-tomorrow's date
+            stage_date = target_date + timedelta(days=2)  # D+2 (übermorgen) für Evening Report
         else:  # morning
-            stage_date = plus_one_date  # Tomorrow's date
+            stage_date = target_date + timedelta(days=1)  # D+1 (morgen) für Morning Report
         
         # Use the same logic as thunderstorm but for the correct stage_date
         result = WeatherThresholdData()
