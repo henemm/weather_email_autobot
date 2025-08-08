@@ -35,17 +35,94 @@ class WeatherFormatter:
             Formatted report text (max 160 characters)
         """
         try:
+            # Check if new compact formatter should be used
+            if hasattr(self.config, 'use_compact_formatter') and self.config.use_compact_formatter:
+                return self._format_with_compact_formatter(weather_data, report_type, stage_names)
+            
+            # Generate standard report
             if report_type == ReportType.MORNING:
-                return self._format_morning_report(weather_data, stage_names)
+                standard_report = self._format_morning_report(weather_data, stage_names)
             elif report_type == ReportType.EVENING:
-                return self._format_evening_report(weather_data, stage_names)
+                standard_report = self._format_evening_report(weather_data, stage_names)
             elif report_type == ReportType.UPDATE:
-                return self._format_update_report(weather_data, stage_names)
+                standard_report = self._format_update_report(weather_data, stage_names)
             else:
                 raise ValueError(f"Unknown report type: {report_type}")
+            
+            # Add alternative risk analysis if enabled
+            if hasattr(self.config, 'alternative_risk_analysis') and self.config.alternative_risk_analysis.get('enabled', False):
+                try:
+                    from src.risiko.alternative_risk_analysis import AlternativeRiskAnalyzer
+                    
+                    # Prepare weather data for alternative analysis
+                    weather_data_for_analysis = {
+                        'forecast': getattr(weather_data, 'raw_forecast', []),
+                        'stage_name': stage_names.get('today', 'Unknown'),
+                        'stage_date': datetime.now().strftime('%Y-%m-%d')
+                    }
+                    
+                    # Generate alternative risk analysis
+                    analyzer = AlternativeRiskAnalyzer()
+                    risk_result = analyzer.analyze_all_risks(weather_data_for_analysis)
+                    alternative_report = analyzer.generate_report_text(risk_result)
+                    
+                    if alternative_report:
+                        # Append alternative report to standard report
+                        standard_report += "\n\n---\n\n## 🔍 Alternative Risk Analysis\n\n" + alternative_report
+                        logger.info("Successfully integrated alternative risk analysis into report")
+                    else:
+                        logger.warning("Failed to generate alternative risk report")
+                        
+                except ImportError as e:
+                    logger.warning(f"Alternative risk analysis modules not available: {e}")
+                except Exception as e:
+                    logger.error(f"Error generating alternative risk analysis: {e}")
+            
+            return standard_report
+            
         except Exception as e:
             logger.error(f"Error formatting report text: {e}")
             return f"Error: {str(e)}"
+    
+    def _format_with_compact_formatter(self, weather_data: AggregatedWeatherData, report_type: ReportType, 
+                                     stage_names: Dict[str, str]) -> str:
+        """
+        Use the new compact MorningEveningFormatter for report generation.
+        
+        Args:
+            weather_data: Aggregated weather data
+            report_type: Type of report (morning, evening, update)
+            stage_names: Dictionary with stage names
+            
+        Returns:
+            Compact formatted report text
+        """
+        try:
+            from .morning_evening_formatter import MorningEveningFormatter
+            
+            # Create compact formatter
+            compact_formatter = MorningEveningFormatter(self.config)
+            stage_name = stage_names.get('today', 'Unknown')
+            
+            # Generate report based on type
+            if report_type == ReportType.MORNING:
+                return compact_formatter.format_morning_report(stage_name, weather_data)
+            elif report_type == ReportType.EVENING:
+                return compact_formatter.format_evening_report(stage_name, weather_data)
+            elif report_type == ReportType.UPDATE:
+                # For update reports, use morning format as fallback
+                return compact_formatter.format_morning_report(stage_name, weather_data)
+            else:
+                raise ValueError(f"Unknown report type: {report_type}")
+                
+        except ImportError as e:
+            logger.error(f"Compact formatter not available: {e}")
+            # Fallback to standard formatter
+            return self._format_morning_report(weather_data, stage_names)
+        except Exception as e:
+            logger.error(f"Error using compact formatter: {e}")
+            # Fallback to standard formatter
+            return self._format_morning_report(weather_data, stage_names)
     
     def _format_morning_report(self, weather_data: AggregatedWeatherData, stage_names: Dict[str, str]) -> str:
         """Format morning report according to specification."""
@@ -475,7 +552,43 @@ class WeatherFormatter:
         )
         
         # Use the existing formatting logic
-        return self.format_report_text(agg_data, report_type, stage_names) 
+        standard_report = self.format_report_text(agg_data, report_type, stage_names)
+        
+        # Add alternative risk analysis if enabled
+        if hasattr(self.config, 'alternative_risk_analysis') and self.config.alternative_risk_analysis.get('enabled', False):
+            try:
+                from src.risiko.alternative_risk_analysis import AlternativeRiskAnalyzer
+                
+                # Prepare weather data for alternative analysis using the weather data
+                weather_data_for_analysis = {
+                    'max_temperature': weather_data.get('max_temperature', 0.0),
+                    'min_temperature': weather_data.get('min_temperature', 0.0),
+                    'max_rain_probability': weather_data.get('max_rain_probability', 0.0),
+                    'max_precipitation': weather_data.get('max_precipitation', 0.0),
+                    'max_wind_speed': weather_data.get('max_wind_speed', 0.0),
+                    'max_wind_gusts': weather_data.get('max_wind_gusts', 0.0),
+                    'stage_name': stage_names.get('today', 'Unknown'),
+                    'stage_date': datetime.now().strftime('%Y-%m-%d')
+                }
+                
+                # Generate alternative risk analysis
+                analyzer = AlternativeRiskAnalyzer()
+                risk_result = analyzer.analyze_all_risks(weather_data_for_analysis)
+                alternative_report = analyzer.generate_report_text(risk_result)
+                
+                if alternative_report:
+                    # Append alternative report to standard report
+                    standard_report += "\n\n---\n\n## 🔍 Alternative Risk Analysis\n\n" + alternative_report
+                    logger.info("Successfully integrated alternative risk analysis into debug-based report")
+                else:
+                    logger.warning("Failed to generate alternative risk report")
+                    
+            except ImportError as e:
+                logger.warning(f"Alternative risk analysis modules not available: {e}")
+            except Exception as e:
+                logger.error(f"Error generating alternative risk analysis: {e}")
+        
+        return standard_report 
 
     def format_report_from_debug_data(self, debug_output: str, report_type: ReportType, 
                                      stage_names: Dict[str, str]) -> str:
@@ -555,7 +668,44 @@ class WeatherFormatter:
         print(f"precipitation_max_time: '{weather_data.precipitation_max_time}' (type: {type(weather_data.precipitation_max_time)})")
         print(f"==========================================\n")
         
-        return self.format_report_text(weather_data, report_type, stage_names)
+        # Generate standard report
+        standard_report = self.format_report_text(weather_data, report_type, stage_names)
+        
+        # Add alternative risk analysis if enabled
+        if hasattr(self.config, 'alternative_risk_analysis') and self.config.alternative_risk_analysis.get('enabled', False):
+            try:
+                from src.risiko.alternative_risk_analysis import AlternativeRiskAnalyzer
+                
+                # Prepare weather data for alternative analysis using the extracted global maxima
+                weather_data_for_analysis = {
+                    'max_temperature': global_maxima.get('temperature', 0.0),
+                    'min_temperature': global_maxima.get('min_temperature', 0.0),
+                    'max_rain_probability': global_maxima.get('rain_probability', 0.0),
+                    'max_precipitation': global_maxima.get('precipitation', 0.0),
+                    'max_wind_speed': global_maxima.get('wind_speed', 0.0),
+                    'max_wind_gusts': global_maxima.get('wind_gusts', 0.0),
+                    'stage_name': stage_names.get('today', 'Unknown'),
+                    'stage_date': datetime.now().strftime('%Y-%m-%d')
+                }
+                
+                # Generate alternative risk analysis
+                analyzer = AlternativeRiskAnalyzer()
+                risk_result = analyzer.analyze_all_risks(weather_data_for_analysis)
+                alternative_report = analyzer.generate_report_text(risk_result)
+                
+                if alternative_report:
+                    # Append alternative report to standard report
+                    standard_report += "\n\n---\n\n## 🔍 Alternative Risk Analysis\n\n" + alternative_report
+                    logger.info("Successfully integrated alternative risk analysis into debug-based report")
+                else:
+                    logger.warning("Failed to generate alternative risk report")
+                    
+            except ImportError as e:
+                logger.warning(f"Alternative risk analysis modules not available: {e}")
+            except Exception as e:
+                logger.error(f"Error generating alternative risk analysis: {e}")
+        
+        return standard_report
     
     def _extract_global_maxima_from_debug(self, debug_output: str) -> Dict[str, Any]:
         """

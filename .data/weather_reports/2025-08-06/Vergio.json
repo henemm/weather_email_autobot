@@ -1,0 +1,309 @@
+{
+  "stage_name": "Vergio",
+  "report_date": "2025-08-06",
+  "report_type": "evening",
+  "night": {
+    "threshold_value": 11,
+    "threshold_time": null,
+    "max_value": 11,
+    "max_time": null,
+    "geo_points": [
+      {
+        "T1G3": 11.4
+      }
+    ]
+  },
+  "day": {
+    "threshold_value": 23,
+    "threshold_time": null,
+    "max_value": 23,
+    "max_time": null,
+    "geo_points": [
+      {
+        "T2G1": 17.1
+      },
+      {
+        "T2G2": 23.2
+      },
+      {
+        "T2G3": 23.2
+      }
+    ]
+  },
+  "rain_mm": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": 0,
+    "max_time": "17",
+    "geo_points": [
+      {
+        "tg_ref": "T2G1",
+        "hourly_data": {
+          "17": 0,
+          "18": 0,
+          "19": 0
+        },
+        "threshold_time": null,
+        "threshold_value": null,
+        "max_time": "17",
+        "max_value": 0
+      },
+      {
+        "tg_ref": "T2G2",
+        "hourly_data": {
+          "17": 0,
+          "18": 0,
+          "19": 0
+        },
+        "threshold_time": null,
+        "threshold_value": null,
+        "max_time": "17",
+        "max_value": 0
+      },
+      {
+        "tg_ref": "T2G3",
+        "hourly_data": {
+          "17": 0,
+          "18": 0,
+          "19": 0
+        },
+        "threshold_time": null,
+        "threshold_value": null,
+        "max_time": "17",
+        "max_value": 0
+      }
+    ]
+  },
+  "rain_percent": {
+    "threshold_value": 10.0,
+    "threshold_time": "14",
+    "max_value": 20.0,
+    "max_time": "17",
+    "geo_points": [
+      {
+        "T2G1": {
+          "05": 0.0,
+          "08": 0.0,
+          "11": 0.0,
+          "14": 10.0,
+          "17": 20.0
+        }
+      },
+      {
+        "T2G2": {
+          "05": 0.0,
+          "08": 0.0,
+          "11": 0.0,
+          "14": 0.0,
+          "17": 20.0
+        }
+      },
+      {
+        "T2G3": {
+          "05": 0.0,
+          "08": 0.0,
+          "11": 0.0,
+          "14": 0.0,
+          "17": 20.0
+        }
+      }
+    ]
+  },
+  "wind": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": 18.0,
+    "max_time": "17",
+    "geo_points": [
+      {
+        "tg_ref": "T2G1",
+        "hourly_data": {
+          "17": 7.2,
+          "18": 10.8,
+          "19": 10.8
+        },
+        "threshold_time": null,
+        "threshold_value": null,
+        "max_time": "18",
+        "max_value": 10.8
+      },
+      {
+        "tg_ref": "T2G2",
+        "hourly_data": {
+          "17": 18.0,
+          "18": 10.8,
+          "19": 7.2
+        },
+        "threshold_time": null,
+        "threshold_value": null,
+        "max_time": "17",
+        "max_value": 18.0
+      },
+      {
+        "tg_ref": "T2G3",
+        "hourly_data": {
+          "17": 18.0,
+          "18": 10.8,
+          "19": 7.2
+        },
+        "threshold_time": null,
+        "threshold_value": null,
+        "max_time": "17",
+        "max_value": 18.0
+      }
+    ]
+  },
+  "gust": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": 0.0,
+    "max_time": "17",
+    "geo_points": [
+      {
+        "tg_ref": "T2G1",
+        "hourly_data": {
+          "17": 0.0,
+          "18": 0.0,
+          "19": 0.0
+        },
+        "threshold_time": null,
+        "threshold_value": null,
+        "max_time": "17",
+        "max_value": 0.0
+      },
+      {
+        "tg_ref": "T2G2",
+        "hourly_data": {
+          "17": 0.0,
+          "18": 0.0,
+          "19": 0.0
+        },
+        "threshold_time": null,
+        "threshold_value": null,
+        "max_time": "17",
+        "max_value": 0.0
+      },
+      {
+        "tg_ref": "T2G3",
+        "hourly_data": {
+          "17": 0.0,
+          "18": 0.0,
+          "19": 0.0
+        },
+        "threshold_time": null,
+        "threshold_value": null,
+        "max_time": "17",
+        "max_value": 0.0
+      }
+    ]
+  },
+  "thunderstorm": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
+    "geo_points": [
+      {
+        "name": "G1",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      },
+      {
+        "name": "G2",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      },
+      {
+        "name": "G3",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      }
+    ]
+  },
+  "thunderstorm_plus_one": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
+    "geo_points": [
+      {
+        "name": "G1",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      },
+      {
+        "name": "G2",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      },
+      {
+        "name": "G3",
+        "threshold_value": null,
+        "threshold_time": null,
+        "max_value": null,
+        "max_time": null
+      }
+    ]
+  },
+  "risks": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
+    "geo_points": [
+      {
+        "name": "G1",
+        "hrain_threshold_value": null,
+        "hrain_threshold_time": null,
+        "hrain_max_value": null,
+        "hrain_max_time": null,
+        "storm_threshold_value": null,
+        "storm_threshold_time": null,
+        "storm_max_value": null,
+        "storm_max_time": null
+      },
+      {
+        "name": "G2",
+        "hrain_threshold_value": null,
+        "hrain_threshold_time": null,
+        "hrain_max_value": null,
+        "hrain_max_time": null,
+        "storm_threshold_value": null,
+        "storm_threshold_time": null,
+        "storm_max_value": null,
+        "storm_max_time": null
+      },
+      {
+        "name": "G3",
+        "hrain_threshold_value": null,
+        "hrain_threshold_time": null,
+        "hrain_max_value": null,
+        "hrain_max_time": null,
+        "storm_threshold_value": null,
+        "storm_threshold_time": null,
+        "storm_max_value": null,
+        "storm_max_time": null
+      }
+    ]
+  },
+  "risk_zonal": {
+    "threshold_value": null,
+    "threshold_time": null,
+    "max_value": null,
+    "max_time": null,
+    "geo_points": []
+  },
+  "debug_info": {},
+  "generated_at": "2025-08-06T19:00:03.516509",
+  "version": "morning-evening-refactor-v1"
+}

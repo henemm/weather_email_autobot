@@ -1,0 +1,113 @@
+Subject: 🌧️ Rain(mm) Debug Output Test - Vergio - 2025-08-02
+To: henningemmrich@icloud.com
+From: henning.emmrich@gmail.com
+Date: 2025-08-02 12:13:25
+--------------------------------------------------------------------------------
+
+# Rain(mm) Debug Output Test Results
+
+## Test Parameters
+- **Stage**: Vergio
+- **Date**: 2025-08-02
+- **Report Type**: morning
+
+## Result Output
+```
+Vergio: N- D- R- PR- W9@11 G17@11(18@12) TH- S+1:H@14 HR:-TH:- Z:-
+```
+
+## Rain(mm) Debug Output (Corrected Format)
+```
+Rain (mm) Data:
+T1G1
+Time | Rain (mm)
+4:00 | 0
+5:00 | 0
+6:00 | 0
+7:00 | 0
+8:00 | 0
+9:00 | 0
+10:00 | 0
+11:00 | 0
+12:00 | 0
+13:00 | 0
+14:00 | 0
+15:00 | 0
+16:00 | 0
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+
+T1G2
+Time | Rain (mm)
+4:00 | 0
+5:00 | 0
+6:00 | 0
+7:00 | 0
+8:00 | 0
+9:00 | 0
+10:00 | 0
+11:00 | 0
+12:00 | 0
+13:00 | 0
+14:00 | 0
+15:00 | 0
+16:00 | 0
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+
+T1G3
+Time | Rain (mm)
+4:00 | 0
+5:00 | 0
+6:00 | 0
+7:00 | 0
+8:00 | 0
+9:00 | 0
+10:00 | 0
+11:00 | 0
+12:00 | 0
+13:00 | 0
+14:00 | 0
+15:00 | 0
+16:00 | 0
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+
+Threshold
+GEO | Time | mm
+T1G1 | - | -
+T1G2 | - | -
+T1G3 | - | -
+=========
+Threshold | None:00 | None
+
+Maximum:
+GEO | Time | Max
+T1G1 | - | -
+T1G2 | - | -
+T1G3 | - | -
+=========
+MAX | None:00 | None
+
+```
+
+## Corrections Applied
+✅ **Threshold and Maximum tables appear only ONCE at the end** (not repeated for each GEO point)
+✅ **Maximum calculation only considers values > 0** (no more "11:00 | 0" for points with no rain)
+✅ **Format matches specification exactly**
+✅ **All GEO points shown in tables with "- | -" for no data**
+
+## Test Summary
+The Rain(mm) debug output has been corrected to match the specification:
+- Tables are not repeated for each GEO point
+- Maximum values are only shown when > 0
+- Format is consistent with specification examples
+
+---
+Generated on: 2025-08-02 12:13:25

@@ -154,13 +154,27 @@ def _parse_zone_css_classes(content: str) -> Dict[int, int]:
     return zone_risks
 
 
-def get_massif_restrictions() -> List[int]:
+def get_massif_restrictions(config: Optional[Dict[str, Any]] = None) -> List[int]:
     """
     Get list of massif IDs that are currently restricted by parsing the daily JSON data.
+    
+    Args:
+        config: Configuration dictionary (optional, will load from file if not provided)
+        
     Returns:
-        List of massif IDs with access restrictions (level >= 2)
+        List of massif IDs with access restrictions
     """
     import datetime
+    
+    # Load configuration if not provided
+    if config is None:
+        import yaml
+        with open('config.yaml', 'r', encoding='utf-8') as f:
+            config = yaml.safe_load(f)
+    
+    # Get massif restriction threshold from config
+    fire_config = config.get('fire_risk_levels', {})
+    restriction_threshold = fire_config.get('massif_restriction_threshold', 1)
     
     # Get today's date in YYYYMMDD format
     today = datetime.datetime.now().strftime("%Y%m%d")
@@ -178,8 +192,8 @@ def get_massif_restrictions() -> List[int]:
             for massif_id_str, massif_data in data["massifs"].items():
                 massif_id = int(massif_id_str)
                 if massif_id in GR20_MASSIFS:
-                    # massif_data is [level, procedure] where procedure = 1 means actually restricted
-                    if len(massif_data) >= 2 and massif_data[1] == 1:
+                    # massif_data is [level, procedure] where procedure >= threshold means actually restricted
+                    if len(massif_data) >= 2 and massif_data[1] >= restriction_threshold:
                         restricted_ids.append(massif_id)
                         logger.info(f"Found GR20 massif {massif_id} with procedure {massif_data[1]} (restricted)")
         
@@ -190,36 +204,55 @@ def get_massif_restrictions() -> List[int]:
         return []
 
 
-def format_risk_block(latitude: float, longitude: float) -> Optional[str]:
+def format_risk_block(latitude: float, longitude: float, config: Optional[Dict[str, Any]] = None) -> Optional[str]:
     """
     Generate a compact risk block string for weather reports.
     
     Args:
         latitude: Latitude coordinate
         longitude: Longitude coordinate
+        config: Configuration dictionary (optional, will load from file if not provided)
         
     Returns:
         Compact risk block string (e.g., "Z:HIGH204,208 MAX209 M:3,5,9")
         or None if no relevant risks
     """
     try:
+        # Load configuration if not provided
+        if config is None:
+            import yaml
+            with open('config.yaml', 'r', encoding='utf-8') as f:
+                config = yaml.safe_load(f)
+        
+        # Get fire risk level configuration
+        fire_config = config.get('fire_risk_levels', {})
+        zone_mapping = fire_config.get('zone_risk_mapping', {
+            1: "LOW",
+            2: "HIGH", 
+            3: "HIGH",
+            4: "MAX"
+        })
+        min_display_level = fire_config.get('minimum_display_level', 2)
+        
         # Get current risk levels for zones
         zone_risks = get_zone_risk_levels(latitude, longitude)
         
         # Get current massif restrictions
-        restricted_massifs = get_massif_restrictions()
+        restricted_massifs = get_massif_restrictions(config)
         
-        # Build zone part (only zones with risk level >= 2)
+        # Build zone part (only zones with risk level >= minimum_display_level)
         zone_parts = []
         high_risk_zones = []
         max_risk_zones = []
         
         for zone_id, risk_level in zone_risks.items():
-            if zone_id in GR20_ZONES and risk_level >= 2:
-                if risk_level == 4:  # Very high risk
+            if zone_id in GR20_ZONES and risk_level >= min_display_level:
+                risk_category = zone_mapping.get(risk_level, "HIGH")
+                if risk_category == "MAX":
                     max_risk_zones.append(str(zone_id))
-                else:  # High risk (level 2-3)
+                elif risk_category == "HIGH":
                     high_risk_zones.append(str(zone_id))
+                # LOW is ignored
         
         # Build zone string
         if high_risk_zones:

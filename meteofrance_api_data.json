@@ -1,0 +1,126 @@
+{
+  "coordinates": {
+    "lat": 42.0167,
+    "lon": 9.4
+  },
+  "extracted_at": "2025-08-03T15:11:12.039734",
+  "forecast_data": {
+    "current": {
+      "temperature": null,
+      "condition": null,
+      "wind_speed": null,
+      "wind_gust": null,
+      "rain_1h": null,
+      "rain_3h": null
+    },
+    "daily": [
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      },
+      {
+        "date": null,
+        "temp_min": null,
+        "temp_max": null,
+        "condition": null,
+        "rain_24h": null
+      }
+    ],
+    "hourly": []
+  },
+  "raw_forecast": "<meteofrance_api.model.forecast.Forecast object at 0x7f6b97038f10>"
+}

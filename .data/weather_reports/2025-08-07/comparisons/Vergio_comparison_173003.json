@@ -1,0 +1,64 @@
+{
+  "stage_name": "Vergio",
+  "report_date": "2025-08-07",
+  "comparison_time": "2025-08-07T17:30:03.373563",
+  "should_send": true,
+  "change_details": {
+    "reason": "significant_changes_detected",
+    "changes": [
+      {
+        "element": "rain_mm",
+        "threshold_key": "rain_amount"
+      },
+      {
+        "element": "rain_percent",
+        "threshold_key": "rain_probability"
+      },
+      {
+        "element": "wind",
+        "threshold_key": "wind_speed"
+      },
+      {
+        "element": "gust",
+        "threshold_key": "wind_speed"
+      }
+    ],
+    "rain_mm": {
+      "changed": true,
+      "old_value": 0,
+      "new_value": 0,
+      "old_time": "14",
+      "new_time": "17"
+    },
+    "rain_percent": {
+      "changed": true,
+      "old_value": 30.0,
+      "new_value": 0.0,
+      "old_time": "17",
+      "new_time": "17"
+    },
+    "wind": {
+      "changed": true,
+      "old_value": 10.8,
+      "new_value": 10.8,
+      "old_time": "16",
+      "new_time": "19"
+    },
+    "gust": {
+      "changed": true,
+      "old_value": 0.0,
+      "new_value": 0.0,
+      "old_time": "14",
+      "new_time": "17"
+    }
+  },
+  "delta_thresholds": {
+    "rain_probability": 10.0,
+    "rain_amount": 1.0,
+    "temperature": 5.0,
+    "thunderstorm": 1,
+    "wind_speed": 5.0,
+    "max_daily_reports": 4,
+    "min_interval_min": 59
+  }
+}

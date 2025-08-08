@@ -1,0 +1,53 @@
+{
+  "stage_name": "Ballone",
+  "report_date": "2025-08-06",
+  "comparison_time": "2025-08-06T08:30:04.039554",
+  "should_send": true,
+  "change_details": {
+    "reason": "significant_changes_detected",
+    "changes": [
+      {
+        "element": "rain_mm",
+        "threshold_key": "rain_amount"
+      },
+      {
+        "element": "wind",
+        "threshold_key": "wind_speed"
+      },
+      {
+        "element": "gust",
+        "threshold_key": "wind_speed"
+      }
+    ],
+    "rain_mm": {
+      "changed": true,
+      "old_value": 0,
+      "new_value": 0,
+      "old_time": "05",
+      "new_time": "08"
+    },
+    "wind": {
+      "changed": true,
+      "old_value": 10.8,
+      "new_value": 10.8,
+      "old_time": "05",
+      "new_time": "13"
+    },
+    "gust": {
+      "changed": true,
+      "old_value": 0.0,
+      "new_value": 0.0,
+      "old_time": "05",
+      "new_time": "08"
+    }
+  },
+  "delta_thresholds": {
+    "rain_probability": 10.0,
+    "rain_amount": 1.0,
+    "temperature": 5.0,
+    "thunderstorm": 1,
+    "wind_speed": 5.0,
+    "max_daily_reports": 4,
+    "min_interval_min": 59
+  }
+}

@@ -6,7 +6,7 @@ This specification defines the exact structure of weather reports in three opera
 
 - **Maximum length:** 160 characters
 - **Character set:** ASCII only (no emojis, links, special characters)
-- **Time format:** Local time (CEST), hours only (HH)
+- **Time format:** Local time (CEST), hours only (H, no leading zero)
 - **Data source:** meteofrance-api, fallback: open-meteo
 - **Thresholds:** From `config.yaml`
 - **Stages:** Determined via `etappen.json` based on date
@@ -172,7 +172,7 @@ Almhütte - Update: - Gew.35%@15(85%@16) - Regen55%@16(75%@17) - Regen2.0mm@15 -
 - **Single codebase** for all output formats (E-Mail, SMS)
 - **Maximum code reuse** between report types
 - **Consistent null value handling** across all reports
-- **Unified time formatting** (HH only)
+- **Unified time formatting** (H only, no leading zero)
 - **Centralized threshold management** from config.yaml
 
 ### Data Aggregation Strategy
@@ -227,3 +227,44 @@ Almhütte - Update: - Gew.35%@15(85%@16) - Regen55%@16(75%@17) - Regen2.0mm@15 -
 - Other unsupported characters are either replaced with a close ASCII/GSM-7 equivalent or removed if no safe replacement exists.
 - If normalization changes the message, this is logged in `output/logs/sms_normalization.log`.
 - If a message cannot be normalized to valid GSM-7, sending is aborted and logged in `output/logs/sms_encoding_violation.log`. 
+
+
+
+## 🔥 Erweiterung: Risiko-Gebiete (Zonen & Massifs)
+
+### Anzeige
+Bei **Waldbrandwarnung (Level ≥2)** oder **Massif-Betretungsverbot** wird ein zusätzlicher Block mit Risiko-IDs angehängt:
+
+```
+ - Z:HIGH[204,208] MAX[209] M:[3,5,9]
+```
+
+### Regeln
+- **Zonen (Z)**:
+  - `Z:` steht am Anfang des Risiko-Blocks
+  - Zwei Gruppen nach Warnlevel:
+    - `HIGH[ID1,ID2,...]` → Warnstufe 2
+    - `MAX[ID3,...]` → Warnstufe 3
+  - IDs innerhalb jeder Gruppe numerisch sortiert
+  - Gruppen entfallen, wenn leer
+  - Keine Anzeige bei leerer Zone
+
+- **Massifs (M)**:
+  - `M:[ID1,ID2,...]`
+  - Anzeige nur, wenn Massifs mit Betretungsverbot aktiv sind
+  - IDs numerisch sortiert
+  - Entfällt, wenn leer
+
+- **Formatierung**:
+  - ` - ` vor dem gesamten Risiko-Block
+  - Leerzeichen zwischen HIGH, MAX und M-Gruppen
+  - Kommagetrennte numerische IDs in eckigen Klammern
+
+### Beispiel
+```
+WARN Waldbrand - Z:HIGH[204,208] MAX[209] M:[3,5,9]
+```
+
+### Zeichenbudget
+- **Nur anzeigen**, wenn Gesamttext unter 160 Zeichen bleibt
+- Ansonsten Risiko-Block weglassen, aber Logging in `output/logs/overflow.log`

@@ -203,6 +203,9 @@ class ReportConfig:
     # Data sources
     primary_data_source: str = "meteofrance-api"
     fallback_data_source: str = "open-meteo"
+    
+    # Formatter settings
+    use_compact_formatter: bool = False
 
 
 def create_report_config_from_yaml(config_dict: Dict[str, Any]) -> ReportConfig:
@@ -224,7 +227,8 @@ def create_report_config_from_yaml(config_dict: Dict[str, Any]) -> ReportConfig:
         wind_speed_threshold=thresholds.get('wind_speed', 20.0),
         temperature_threshold=thresholds.get('temperature', 32.0),
         max_report_length=config_dict.get('max_characters', 160),
-        subject_base=config_dict.get('smtp', {}).get('subject', 'GR20 Wetter')
+        subject_base=config_dict.get('smtp', {}).get('subject', 'GR20 Wetter'),
+        use_compact_formatter=config_dict.get('use_compact_formatter', False)
     )
 
 

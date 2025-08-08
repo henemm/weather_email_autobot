@@ -1,0 +1,31 @@
+{
+  "stage_name": "Ballone",
+  "report_date": "2025-08-06",
+  "comparison_time": "2025-08-06T06:00:02.647764",
+  "should_send": true,
+  "change_details": {
+    "reason": "significant_changes_detected",
+    "changes": [
+      {
+        "element": "rain_percent",
+        "threshold_key": "rain_probability"
+      }
+    ],
+    "rain_percent": {
+      "changed": true,
+      "old_value": 10.0,
+      "new_value": 20.0,
+      "old_time": "17",
+      "new_time": "17"
+    }
+  },
+  "delta_thresholds": {
+    "rain_probability": 10.0,
+    "rain_amount": 1.0,
+    "temperature": 5.0,
+    "thunderstorm": 1,
+    "wind_speed": 5.0,
+    "max_daily_reports": 4,
+    "min_interval_min": 59
+  }
+}

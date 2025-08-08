@@ -1,0 +1,42 @@
+{
+  "stage_name": "Chaumont",
+  "report_date": "2025-08-05",
+  "comparison_time": "2025-08-05T10:00:02.621684",
+  "should_send": true,
+  "change_details": {
+    "reason": "significant_changes_detected",
+    "changes": [
+      {
+        "element": "rain_percent",
+        "threshold_key": "rain_probability"
+      },
+      {
+        "element": "gust",
+        "threshold_key": "wind_speed"
+      }
+    ],
+    "rain_percent": {
+      "changed": true,
+      "old_value": 40.0,
+      "new_value": 50.0,
+      "old_time": "14",
+      "new_time": "14"
+    },
+    "gust": {
+      "changed": true,
+      "old_value": 43.2,
+      "new_value": 46.8,
+      "old_time": "13",
+      "new_time": "13"
+    }
+  },
+  "delta_thresholds": {
+    "rain_probability": 1.0,
+    "rain_amount": 1.5,
+    "temperature": 1.0,
+    "thunderstorm": 1,
+    "wind_speed": 1.0,
+    "max_daily_reports": 4,
+    "min_interval_min": 90
+  }
+}

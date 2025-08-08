@@ -1,0 +1,11 @@
+{
+  "rain_detected": false,
+  "thunderstorm_detected": false,
+  "wind_detected": false,
+  "high_temp_detected": false,
+  "low_temp_detected": false,
+  "temperature_range": null,
+  "wind_speed_range": null,
+  "rain_amounts": [],
+  "thunderstorm_conditions": []
+}

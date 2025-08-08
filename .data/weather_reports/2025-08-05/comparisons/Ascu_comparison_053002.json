@@ -1,0 +1,53 @@
+{
+  "stage_name": "Ascu",
+  "report_date": "2025-08-05",
+  "comparison_time": "2025-08-05T05:30:02.584367",
+  "should_send": true,
+  "change_details": {
+    "reason": "significant_changes_detected",
+    "changes": [
+      {
+        "element": "rain_mm",
+        "threshold_key": "rain_amount"
+      },
+      {
+        "element": "wind",
+        "threshold_key": "wind_speed"
+      },
+      {
+        "element": "gust",
+        "threshold_key": "wind_speed"
+      }
+    ],
+    "rain_mm": {
+      "changed": true,
+      "old_value": 0,
+      "new_value": 0,
+      "old_time": "04",
+      "new_time": "05"
+    },
+    "wind": {
+      "changed": true,
+      "old_value": 10.8,
+      "new_value": 10.8,
+      "old_time": "04",
+      "new_time": "05"
+    },
+    "gust": {
+      "changed": true,
+      "old_value": 0.0,
+      "new_value": 0.0,
+      "old_time": "04",
+      "new_time": "05"
+    }
+  },
+  "delta_thresholds": {
+    "rain_probability": 1.0,
+    "rain_amount": 1.5,
+    "temperature": 1.0,
+    "thunderstorm": 1,
+    "wind_speed": 1.0,
+    "max_daily_reports": 4,
+    "min_interval_min": 90
+  }
+}

@@ -6,7 +6,7 @@ with automatic fallback to open-meteo when meteofrance-api is not available.
 """
 
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import logging
 
 from meteofrance_api.client import MeteoFranceClient
@@ -38,6 +38,7 @@ class ForecastResult:
     precipitation: Optional[float] = None  # Add precipitation amount
     thunderstorm_probability: Optional[float] = None  # Add thunderstorm probability
     data_source: str = "meteofrance-api"
+    raw_forecast_data: Optional[List[Dict[str, Any]]] = None  # Raw hourly data for enhanced processing
 
 
 @dataclass
@@ -318,13 +319,16 @@ def get_alerts(lat: float, lon: float) -> List[Alert]:
 def get_forecast_with_fallback(lat: float, lon: float) -> ForecastResult:
     """
     Get weather forecast with fallback to open-meteo.
+    
+    This function now returns raw hourly MeteoFrance data for better compatibility
+    with Evening-Bericht processing, while maintaining fallback to open-meteo.
 
     Args:
         lat: Latitude in decimal degrees
         lon: Longitude in decimal degrees
 
     Returns:
-        ForecastResult containing weather data
+        ForecastResult containing weather data (raw hourly data for MeteoFrance)
 
     Raises:
         ValueError: If coordinates are invalid
@@ -334,7 +338,56 @@ def get_forecast_with_fallback(lat: float, lon: float) -> ForecastResult:
 
     # Try meteofrance-api first
     try:
-        return get_forecast(lat, lon)
+        # Get raw hourly data from MeteoFrance API
+        client = MeteoFranceClient()
+        forecast = client.get_forecast(lat, lon)
+
+        if not forecast.forecast or len(forecast.forecast) == 0:
+            raise RuntimeError("No forecast data received")
+
+        # Return the first forecast entry for backward compatibility
+        # but also include the raw forecast data for enhanced processing
+        first_forecast = forecast.forecast[0]
+
+        # Extract wind data from the nested structure
+        wind_data = first_forecast.get('wind', {})
+        wind_speed = wind_data.get('speed', 0.0)
+        wind_gusts = wind_data.get('gust', 0.0)
+
+        # Extract precipitation data
+        precipitation = None
+        if 'rain' in first_forecast:
+            rain_data = first_forecast['rain']
+            if isinstance(rain_data, dict) and '1h' in rain_data:
+                precipitation = rain_data['1h']
+            elif isinstance(rain_data, (int, float)):
+                precipitation = float(rain_data)
+
+        # Extract thunderstorm probability from weather condition
+        thunderstorm_probability = None
+        weather_desc = first_forecast.get('weather', {}).get('desc', '')
+        if weather_desc in ['thunderstorm', 'Orages', 'Risque d\'orages']:
+            # If thunderstorm condition is detected, use precipitation probability as thunderstorm probability
+            thunderstorm_probability = first_forecast.get('precipitation_probability', 0)
+
+        # Create result with raw forecast data for enhanced processing
+        result = ForecastResult(
+            temperature=first_forecast['T']['value'],
+            weather_condition=first_forecast.get('weather', {}).get('desc'),
+            precipitation_probability=first_forecast.get('precipitation_probability'),
+            precipitation=precipitation,
+            thunderstorm_probability=thunderstorm_probability,
+            timestamp=first_forecast.get('datetime', ''),
+            wind_speed=wind_speed,
+            wind_gusts=wind_gusts,
+            data_source="meteofrance-api"
+        )
+        
+        # Add raw forecast data for enhanced processing
+        result.raw_forecast_data = forecast.forecast
+        
+        return result
+        
     except Exception as e:
         logger.warning(f"MeteoFrance API failed, trying open-meteo: {e}")
 
@@ -546,4 +599,104 @@ def get_tomorrow_forecast(lat: float, lon: float) -> List[ForecastResult]:
 
     except Exception as e:
         logger.error(f"Failed to fetch tomorrow's forecast from meteofrance-api: {e}")
-        raise RuntimeError(f"Failed to fetch tomorrow's forecast: {str(e)}") 
+        raise RuntimeError(f"Failed to fetch tomorrow's forecast: {str(e)}")
+
+
+def get_french_weather_text(lat: float, lon: float) -> Dict[str, List[Dict[str, Any]]]:
+    """
+    Get French weather text descriptions for today and tomorrow from MeteoFrance API.
+    
+    Args:
+        lat: Latitude in decimal degrees
+        lon: Longitude in decimal degrees
+        
+    Returns:
+        Dictionary with 'today' and 'tomorrow' keys, each containing a list of weather entries
+        with French descriptions, timestamps, and other weather data
+        
+    Raises:
+        ValueError: If coordinates are invalid
+        RuntimeError: If API request fails
+    """
+    _validate_coordinates(lat, lon)
+    
+    try:
+        client = MeteoFranceClient()
+        forecast = client.get_forecast(lat, lon)
+        
+        if not forecast.forecast or len(forecast.forecast) == 0:
+            raise RuntimeError("No forecast data received")
+        
+        from datetime import datetime, date
+        
+        today = date.today()
+        tomorrow = today.replace(day=today.day + 1)
+        
+        today_entries = []
+        tomorrow_entries = []
+        
+        for entry in forecast.forecast:
+            # Parse the datetime from the forecast entry
+            dt_timestamp = entry.get('dt')
+            if not dt_timestamp:
+                continue
+                
+            try:
+                entry_datetime = datetime.fromtimestamp(dt_timestamp)
+                entry_date = entry_datetime.date()
+                
+                # Extract weather description in French
+                weather_data = entry.get('weather', {})
+                if isinstance(weather_data, dict):
+                    weather_desc = weather_data.get('desc', '')
+                else:
+                    weather_desc = str(weather_data) if weather_data else ''
+                
+                # Extract temperature
+                temp_data = entry.get('T', {})
+                if isinstance(temp_data, dict):
+                    temperature = temp_data.get('value', 0.0)
+                else:
+                    temperature = float(temp_data) if temp_data else 0.0
+                
+                # Extract wind data
+                wind_data = entry.get('wind', {})
+                wind_speed = wind_data.get('speed', 0.0) if isinstance(wind_data, dict) else 0.0
+                wind_gusts = wind_data.get('gust', 0.0) if isinstance(wind_data, dict) else 0.0
+                
+                # Extract precipitation data
+                rain_data = entry.get('rain', {})
+                precipitation = rain_data.get('1h', 0.0) if isinstance(rain_data, dict) else 0.0
+                
+                # Create weather entry
+                weather_entry = {
+                    'datetime': entry_datetime.strftime('%Y-%m-%d %H:%M'),
+                    'hour': entry_datetime.hour,
+                    'french_description': weather_desc,
+                    'temperature': temperature,
+                    'wind_speed': wind_speed,
+                    'wind_gusts': wind_gusts,
+                    'precipitation': precipitation,
+                    'precipitation_probability': entry.get('precipitation_probability'),
+                    'humidity': entry.get('humidity'),
+                    'clouds': entry.get('clouds')
+                }
+                
+                # Categorize by date
+                if entry_date == today:
+                    today_entries.append(weather_entry)
+                elif entry_date == tomorrow:
+                    tomorrow_entries.append(weather_entry)
+                    
+            except (ValueError, TypeError) as e:
+                logger.warning(f"Skipping entry with invalid dt '{dt_timestamp}': {e}")
+                continue
+        
+        return {
+            'today': sorted(today_entries, key=lambda x: x['hour']),
+            'tomorrow': sorted(tomorrow_entries, key=lambda x: x['hour'])
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to fetch French weather text: {e}")
+        raise RuntimeError(f"Failed to fetch French weather text: {str(e)}") 

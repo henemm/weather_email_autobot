@@ -1,0 +1,1295 @@
+[2025-08-04 18:32:27] [utils.logging_setup] [INFO] Logging system initialized with level INFO
+[2025-08-04 18:32:27] [utils.logging_setup] [INFO] Log file: /opt/weather_email_autobot/logs/warning_monitor.log
+[2025-08-04 18:32:27] [logic.report_scheduler] [INFO] Report scheduler initialized with state file: data/gr20_report_state.json
+[2025-08-04 18:32:27] [notification.providers.seven_provider] [INFO] Seven.io SMS provider initialized
+[2025-08-04 18:32:27] [notification.modular_sms_client] [INFO] Modular SMS client initialized with seven provider
+[2025-08-04 18:32:27] [notification.modular_sms_client] [INFO] SMS mode: production
+[2025-08-04 18:32:27] [notification.modular_sms_client] [INFO] SMS recipient: +4917717816897
+[2025-08-04 18:32:27] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 18:32:27] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 18:32:27] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 18:32:27] [weather.core.morning_evening_refactor] [INFO] Generating evening report for Manganu on 2025-08-04
+[2025-08-04 18:32:27] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] EnhancedMeteoFranceAPI initialized
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_4 (42.22026, 8.980731)
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Received 73 hourly entries for Manganu_point_4
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 73 hourly entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 probability entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 rain probability entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_4
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] EnhancedMeteoFranceAPI initialized
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Petra_point_1 (42.219882, 8.980494)
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Received 73 hourly entries for Petra_point_1
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 73 hourly entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 probability entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 rain probability entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Petra_point_1
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Petra_point_2 (42.210865, 9.006806)
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Received 73 hourly entries for Petra_point_2
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 73 hourly entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 probability entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 rain probability entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Petra_point_2
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Petra_point_3 (42.198058, 9.051533)
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Received 73 hourly entries for Petra_point_3
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 73 hourly entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 probability entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 rain probability entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Petra_point_3
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [INFO] Wind processing result: threshold_time=17, threshold_value=10.8, max_time=17, max_value=14.4
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [INFO] Wind processing final result: threshold_time=17, threshold_value=10.8, max_time=17, max_value=14.4
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Error in _get_tg_reference: report_date must be provided for consistent T-G reference calculation
+[2025-08-04 18:32:28] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 18:32:28] [fire.risk_block_formatter] [INFO] Found GR20 zone 208 with level 2
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [INFO] Generated risk block for Manganu: Z:HIGH208
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [ERROR] Failed to save persistence data: [Errno 13] Permission denied: '.data/weather_reports/2025-08-04/Manganu.json'
+[2025-08-04 18:32:28] [weather.core.morning_evening_refactor] [INFO] Generated evening report for Manganu
+[2025-08-04 18:32:28] [position.etappenlogik] [INFO] Current stage: Manganu (day 8)
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] EnhancedMeteoFranceAPI initialized
+[2025-08-04 18:32:28] [wetter.weather_data_processor] [INFO] WeatherDataProcessor initialized with enhanced MeteoFrance API
+[2025-08-04 18:32:28] [wetter.weather_data_processor] [INFO] Processing weather data for stage: Manganu
+[2025-08-04 18:32:28] [wetter.weather_data_processor] [INFO] Number of coordinate points: 4
+[2025-08-04 18:32:28] [wetter.weather_data_processor] [INFO] Fetching data for point 1: Manganu_point_1 (42.286473, 8.893564)
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_1 (42.286473, 8.893564)
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Received 73 hourly entries for Manganu_point_1
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 73 hourly entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 probability entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 rain probability entries
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_1
+[2025-08-04 18:32:28] [wetter.weather_data_processor] [INFO] Successfully added data for Manganu_point_1 (73 entries)
+[2025-08-04 18:32:28] [wetter.weather_data_processor] [INFO] Fetching data for point 2: Manganu_point_2 (42.25421, 8.925527)
+[2025-08-04 18:32:28] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_2 (42.25421, 8.925527)
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Received 73 hourly entries for Manganu_point_2
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 73 hourly entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 rain probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_2
+[2025-08-04 18:32:29] [wetter.weather_data_processor] [INFO] Successfully added data for Manganu_point_2 (73 entries)
+[2025-08-04 18:32:29] [wetter.weather_data_processor] [INFO] Fetching data for point 3: Manganu_point_3 (42.229355, 8.977679)
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_3 (42.229355, 8.977679)
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Received 73 hourly entries for Manganu_point_3
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 73 hourly entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 rain probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_3
+[2025-08-04 18:32:29] [wetter.weather_data_processor] [INFO] Successfully added data for Manganu_point_3 (73 entries)
+[2025-08-04 18:32:29] [wetter.weather_data_processor] [INFO] Fetching data for point 4: Manganu_point_4 (42.22026, 8.980731)
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_4 (42.22026, 8.980731)
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Received 73 hourly entries for Manganu_point_4
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 73 hourly entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 rain probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_4
+[2025-08-04 18:32:29] [wetter.weather_data_processor] [INFO] Successfully added data for Manganu_point_4 (73 entries)
+[2025-08-04 18:32:29] [wetter.weather_data_processor] [INFO] Successfully processed weather data for stage Manganu with 4 points
+[2025-08-04 18:32:29] [wetter.weather_data_processor] [INFO] Generating weather summary for Manganu
+[2025-08-04 18:32:29] [wetter.weather_data_processor] [INFO] Time range: 04:00 - 22:00
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Found tomorrow's date: 2025-08-05
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Analyzing thunderstorm forecast for tomorrow (2025-08-05)
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Found tomorrow's date: 2025-08-05
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Analyzing thunderstorm forecast for tomorrow (2025-08-05)
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Generated comprehensive weather summary for Manganu
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_1 (42.286473, 8.893564)
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Received 73 hourly entries for Manganu_point_1
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 73 hourly entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 rain probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_1
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_2 (42.25421, 8.925527)
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Received 73 hourly entries for Manganu_point_2
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 73 hourly entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 rain probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_2
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_3 (42.229355, 8.977679)
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Received 73 hourly entries for Manganu_point_3
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 73 hourly entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 rain probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_3
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Fetching complete forecast data for Manganu_point_4 (42.22026, 8.980731)
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Received 73 hourly entries for Manganu_point_4
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 73 hourly entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 15 daily entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted current weather data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted position data
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 0 thunderstorm entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Extracted 44 rain probability entries
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Successfully extracted complete data for Manganu_point_4
+[2025-08-04 18:32:29] [wetter.weather_data_processor] [INFO] Getting tomorrow's thunderstorm forecast for Manganu
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Found tomorrow's date: 2025-08-05
+[2025-08-04 18:32:29] [wetter.enhanced_meteofrance_api] [INFO] Analyzing thunderstorm forecast for tomorrow (2025-08-05)
+[2025-08-04 18:32:29] [wetter.weather_data_processor] [INFO] Successfully retrieved thunderstorm forecast for Manganu
+[2025-08-04 18:32:29] [wetter.weather_data_processor] [INFO] Prepared enhanced data with 24 hourly entries
+[2025-08-04 18:32:29] [wetter.weather_data_processor] [INFO] Successfully generated weather summary for Manganu
+[2025-08-04 18:32:29] [position.etappenlogik] [INFO] Next stage: Petra
+[2025-08-04 18:32:29] [wetter.fetch_meteofrance] [INFO] Found 13 tomorrow forecast entries for 42.219882, 8.980494
+[2025-08-04 18:32:29] [wetter.fetch_meteofrance] [INFO] Found 13 tomorrow forecast entries for 42.210865, 9.006806
+[2025-08-04 18:32:29] [wetter.fetch_meteofrance] [INFO] Found 13 tomorrow forecast entries for 42.198058, 9.051533
+[2025-08-04 18:32:29] [position.etappenlogik] [INFO] Day after tomorrow stage: Onda
+[2025-08-04 18:32:29] [logic.analyse_weather] [INFO] Starting weather data analysis
+[2025-08-04 18:32:29] [logic.analyse_weather] [INFO] Merging 39 weather data sources
+[2025-08-04 18:32:29] [logic.analyse_weather] [INFO] Using thresholds: {'rain_probability': 15.0, 'rain_amount': 0.5, 'thunderstorm_probability': 10.0, 'wind_speed': 1.0, 'temperature': 25.0, 'cloud_cover': 90.0, 'thunderstorm_warning_level': 'low', 'wind_gust_threshold': 5.0, 'wind_gust_percentage': 50.0}
+[2025-08-04 18:32:29] [logic.analyse_weather] [INFO] Weather analysis completed: 14 risks detected, risk score: 0.00
+[2025-08-04 18:32:29] [logic.analyse_weather] [INFO] Starting weather data analysis
+[2025-08-04 18:32:29] [logic.analyse_weather] [INFO] Merging 3 weather data sources
+[2025-08-04 18:32:29] [logic.analyse_weather] [INFO] Using thresholds: {'rain_probability': 15.0, 'rain_amount': 0.5, 'thunderstorm_probability': 10.0, 'wind_speed': 1.0, 'temperature': 25.0, 'cloud_cover': 90.0, 'thunderstorm_warning_level': 'low', 'wind_gust_threshold': 5.0, 'wind_gust_percentage': 50.0}
+[2025-08-04 18:32:29] [logic.analyse_weather] [INFO] Weather analysis completed: 3 risks detected, risk score: 0.00
+[2025-08-04 18:32:29] [position.etappenlogik] [INFO] Next stage: Petra
+[2025-08-04 18:32:30] [position.etappenlogik] [INFO] Next stage: Petra
+[2025-08-04 18:32:30] [position.etappenlogik] [INFO] Next stage: Petra
+[2025-08-04 18:32:30] [notification.email_client] [INFO] Using MorningEveningRefactor result_output: Manganu: N12 D29 R- PR- W10.8@17(14.4@17) G- TH- TH+:- HR:-TH:- Z:Z:HIGH208
+[2025-08-04 18:32:30] [notification.email_client] [INFO] Using MorningEveningRefactor debug_output (length: 5979 characters)
+[2025-08-04 18:32:30] [fire.risk_block_formatter] [INFO] Found GR20 zone 208 with level 2
+[2025-08-04 18:32:30] [notification.email_client] [INFO] Setting report_type to: evening
+[2025-08-04 18:32:30] [notification.email_client] [INFO] Weather data report_type after setting: evening
+[2025-08-04 18:32:30] [notification.email_client] [INFO] Weather data keys: ['stage_name', 'stage_date', 'time_range', 'data_points', 'temperature', 'rain', 'wind', 'thunderstorm', 'thunderstorm_tomorrow', 'debug_info', 'enhanced_data', 'vigilance_alerts', 'latitude', 'longitude', 'min_temperature', 'tomorrow_thunderstorm_probability', 'tomorrow_rain_probability', 'tomorrow_precipitation', 'tomorrow_temperature', 'tomorrow_wind_speed', 'tomorrow_wind_gusts', 'tomorrow_thunderstorm_threshold_time', 'tomorrow_thunderstorm_threshold_pct', 'tomorrow_thunderstorm_max_time', 'tomorrow_rain_threshold_time', 'tomorrow_rain_threshold_pct', 'tomorrow_rain_max_time', 'tomorrow_rain_total_time', 'day_after_tomorrow_thunderstorm_probability', 'report_type']
+[2025-08-04 18:32:30] [notification.email_client] [INFO] Weather data has forecast: False
+[2025-08-04 18:32:30] [notification.email_client] [INFO] Weather data has enhanced_data: True
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] === ALTERNATIVE RISK ANALYSIS START ===
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Debug data keys: ['stage_name', 'stage_date', 'time_range', 'data_points', 'temperature', 'rain', 'wind', 'thunderstorm', 'thunderstorm_tomorrow', 'debug_info', 'enhanced_data', 'vigilance_alerts', 'latitude', 'longitude', 'min_temperature', 'tomorrow_thunderstorm_probability', 'tomorrow_rain_probability', 'tomorrow_precipitation', 'tomorrow_temperature', 'tomorrow_wind_speed', 'tomorrow_wind_gusts', 'tomorrow_thunderstorm_threshold_time', 'tomorrow_thunderstorm_threshold_pct', 'tomorrow_thunderstorm_max_time', 'tomorrow_rain_threshold_time', 'tomorrow_rain_threshold_pct', 'tomorrow_rain_max_time', 'tomorrow_rain_total_time', 'day_after_tomorrow_thunderstorm_probability', 'report_type']
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Report type: evening
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Enhanced data type: <class 'dict'>
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Enhanced hourly data type: <class 'list'>, length: 24
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Processing 24 enhanced hourly entries
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 17.6°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found wind speed: 3 km/h at 17:00
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 19.1°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 17.7°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 16.6°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 15°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 14.2°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 17.6°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 19.1°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 17.7°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 16.6°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 15°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 14.2°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 23.2°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found wind speed: 4 km/h at 17:00
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 24°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 22.6°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 21.2°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 19°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 16.7°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 23.2°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 24°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 22.6°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 21.2°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 19°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found WeatherEntry with temperature: 16.7°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Found rain probability: 10.0% at 17:00
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Enhanced hourly data type: <class 'list'>, length: 24
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Processing 24 enhanced hourly entries for precipitation
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Daily data type: <class 'list'>, length: 0
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [WARNING] Daily data is not available or empty for rain sum extraction
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Debug info type: <class 'str'>
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Max precipitation before regex: 0.0
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Regex matches: []
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Debug info sample: Stage: Manganu
+Date: 2025-08-04
+Data points: 4
+Time range: 04:00 - 22:00
+
+Point 1: Manganu_point_1
+  Coordinates: (42.286473, 8.893564)
+  Total entries: 73
+  Temperature: 14.2°C - 19.1°C
+  Wind: avg 1...
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Daily data type: <class 'list'>, length: 0
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] === EXTRACTED VALUES ===
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Max temperature: 24°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Min temperature: 14.2°C
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Max rain probability: 10.0% at 17:00
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Max thunderstorm probability: 0.0% at 
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Max precipitation: 0.0mm at 
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Max wind speed: 4.0 km/h at 17:00
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Max wind gusts: 0.0 km/h at 
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] === EVENING-REPORT: Using special cold analysis ===
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] === EVENING-REPORT: Analyzing cold risk for TODAY ===
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Today's date: 2025-08-04
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Daily forecast data type: <class 'dict'>
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Daily forecast data keys: []
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] === ALL DAILY_FORECAST DATA ===
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] === END DAILY_FORECAST DATA ===
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [WARNING] No DAILY_FORECAST data found for today (2025-07-31) in evening report
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] === EVENING-REPORT: Analyzing g1_next thunderstorm for DAY AFTER TOMORROW ===
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Day after tomorrow's date: 2025-08-06
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Probability forecast data type: <class 'dict'>
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] Probability forecast data keys: []
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] === ALL PROBABILITY_FORECAST DATA ===
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] === END PROBABILITY_FORECAST DATA ===
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [WARNING] No PROBABILITY_FORECAST data found for day after tomorrow (2025-08-02) in evening report
+[2025-08-04 18:32:30] [risiko.alternative_risk_analysis] [INFO] === ALTERNATIVE RISK ANALYSIS COMPLETE ===
+[2025-08-04 18:32:30] [notification.email_client] [INFO] EMAIL GENERATED - Subject: GR20 Manganu:  (evening)
+[2025-08-04 18:32:30] [notification.email_client] [INFO] EMAIL GENERATED - Message: Manganu: N12 D29 R- PR- W10.8@17(14.4@17) G- TH- TH+:- HR:-TH:- Z:Z:HIGH208
+
+# DEBUG DATENEXPORT
+
+Berichts-Typ: evening
+
+heute: 2025-08-04, Manganu, 4 Punkte
+  T1G1 "lat": 42.286473, "lon": 8.893564
+  T1G2 "lat": 42.25421, "lon": 8.925527
+  T1G3 "lat": 42.229355, "lon": 8.977679
+  T1G4 "lat": 42.22026, "lon": 8.980731
+morgen: 2025-08-05, Petra, 3 Punkte
+  T2G1 "lat": 42.219882, "lon": 8.980494
+  T2G2 "lat": 42.210865, "lon": 9.006806
+  T2G3 "lat": 42.198058, "lon": 9.051533
+übermorgen: 2025-08-06, Onda, 3 Punkte
+  T3G1 "lat": 42.198159, "lon": 9.0522
+  T3G2 "lat": 42.194579, "lon": 9.06349
+  T3G3 "lat": 42.153294, "lon": 9.074076
+
+####### NIGHT (N) #######
+T1G3 | 12
+=========
+MIN | 12
+
+####### DAY (D) #######
+T2G1 | 28.9
+T2G2 | 28.4
+T2G3 | 28.4
+=========
+MAX | 29
+
+####### RAIN (R) #######
+T2G1
+Time | Rain (mm)
+4:00 | 0
+5:00 | 0
+6:00 | 0
+7:00 | 0
+8:00 | 0
+9:00 | 0
+10:00 | 0
+11:00 | 0
+12:00 | 0
+13:00 | 0
+14:00 | 0
+15:00 | 0
+16:00 | 0
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+Threshold????
+17:00 | 0 (Max)
+
+T2G2
+Time | Rain (mm)
+4:00 | 0
+5:00 | 0
+6:00 | 0
+7:00 | 0
+8:00 | 0
+9:00 | 0
+10:00 | 0
+11:00 | 0
+12:00 | 0
+13:00 | 0
+14:00 | 0
+15:00 | 0
+16:00 | 0
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+Threshold????
+17:00 | 0 (Max)
+
+T2G3
+Time | Rain (mm)
+4:00 | 0
+5:00 | 0
+6:00 | 0
+7:00 | 0
+8:00 | 0
+9:00 | 0
+10:00 | 0
+11:00 | 0
+12:00 | 0
+13:00 | 0
+14:00 | 0
+15:00 | 0
+16:00 | 0
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+Threshold????
+17:00 | 0 (Max)
+
+T2G3
+Time | Rain (mm)
+4:00 | 0
+5:00 | 0
+6:00 | 0
+7:00 | 0
+8:00 | 0
+9:00 | 0
+10:00 | 0
+11:00 | 0
+12:00 | 0
+13:00 | 0
+14:00 | 0
+15:00 | 0
+16:00 | 0
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+Threshold????
+17:00 | 0 (Max)
+
+Threshold
+GEO | Time | mm
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G4 | - | -
+=========
+Threshold | - | -
+Maximum:
+GEO | Time | Max
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G4 | - | -
+=========
+MAX | - | -
+
+####### PRAIN (PR) #######
+T2G1
+Time | Rain (%)
+05:00 | 0
+08:00 | 0
+11:00 | 0
+14:00 | 0
+17:00 | 10
+=========
+17:00 | 10.0% (Max)
+
+T2G2
+Time | Rain (%)
+05:00 | 0
+08:00 | 0
+11:00 | 0
+14:00 | 0
+17:00 | 10
+=========
+17:00 | 10.0% (Max)
+
+T2G3
+Time | Rain (%)
+05:00 | 0
+08:00 | 0
+11:00 | 0
+14:00 | 0
+17:00 | 10
+=========
+17:00 | 10.0% (Max)
+
+Threshold
+GEO | Time | %
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+=========
+Threshold | - | -
+
+Maximum:
+GEO | Time | Max
+T2G1 | 17:00 | 10
+T2G2 | 17:00 | 10
+T2G3 | 17:00 | 10
+=========
+MAX | 17:00 | 10.0
+
+####### WIND (W) #######
+T2G1
+Time | Wind (km/h)
+17:00 | 10.8
+18:00 | 3.6
+19:00 | 3.6
+=========
+17:00 | 10.8 (Threshold)
+17:00 | 10.8 (Max)
+
+T2G2
+Time | Wind (km/h)
+17:00 | 10.8
+18:00 | 3.6
+19:00 | 3.6
+=========
+17:00 | 10.8 (Threshold)
+17:00 | 10.8 (Max)
+
+T2G3
+Time | Wind (km/h)
+17:00 | 14.4
+18:00 | 7.2
+19:00 | 7.2
+=========
+17:00 | 14.4 (Threshold)
+17:00 | 14.4 (Max)
+
+Threshold
+GEO | Time | km/h
+T2G1 | 17 | 10.8
+T2G2 | 17 | 10.8
+T2G3 | 17 | 14.4
+T2G4 | 17 | 14.4
+=========
+Threshold | 17 | 10.8
+
+Maximum:
+GEO | Time | Max
+T2G1 | 17 | 10.8
+T2G2 | 17 | 10.8
+T2G3 | 17 | 14.4
+T2G4 | 17 | 14.4
+=========
+MAX | 17 | 14.4
+
+####### GUST (G) #######
+T2G1
+Time | Gust (km/h)
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+17:00 | 0.0 (Max)
+
+T2G2
+Time | Gust (km/h)
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+17:00 | 0.0 (Max)
+
+T2G3
+Time | Gust (km/h)
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+17:00 | 0.0 (Max)
+
+Threshold
+GEO | Time | km/h
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G4 | - | -
+=========
+Threshold | - | -
+
+Maximum:
+GEO | Time | Max
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G4 | - | -
+=========
+MAX | - | -
+
+####### THUNDERSTORM (TH) #######
+T2G1
+Time | Storm
+4:00 | none
+5:00 | none
+6:00 | none
+7:00 | none
+8:00 | none
+9:00 | none
+10:00 | none
+11:00 | none
+12:00 | none
+13:00 | none
+14:00 | none
+15:00 | none
+16:00 | none
+17:00 | none
+18:00 | none
+19:00 | none
+=========
+Threshold????
+Maximum????
+
+T2G2
+Time | Storm
+4:00 | none
+5:00 | none
+6:00 | none
+7:00 | none
+8:00 | none
+9:00 | none
+10:00 | none
+11:00 | none
+12:00 | none
+13:00 | none
+14:00 | none
+15:00 | none
+16:00 | none
+17:00 | none
+18:00 | none
+19:00 | none
+=========
+Threshold????
+Maximum????
+
+T2G3
+Time | Storm
+4:00 | none
+5:00 | none
+6:00 | none
+7:00 | none
+8:00 | none
+9:00 | none
+10:00 | none
+11:00 | none
+12:00 | none
+13:00 | none
+14:00 | none
+15:00 | none
+16:00 | none
+17:00 | none
+18:00 | none
+19:00 | none
+=========
+Threshold????
+Maximum????
+
+T2G3
+Time | Storm
+4:00 | none
+5:00 | none
+6:00 | none
+7:00 | none
+8:00 | none
+9:00 | none
+10:00 | none
+11:00 | none
+12:00 | none
+13:00 | none
+14:00 | none
+15:00 | none
+16:00 | none
+17:00 | none
+18:00 | none
+19:00 | none
+=========
+Threshold????
+Maximum????
+
+Threshold
+GEO | Time | level
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G3 | - | -
+=========
+Threshold | - | -
+
+Maximum:
+GEO | Time | Max
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G3 | - | -
+=========
+MAX | - | -
+####### THUNDERSTORM +1 (TH+1) #######
+T3G1
+Time | Storm
+05:00 | none
+08:00 | none
+11:00 | none
+14:00 | none
+17:00 | none
+=========
+Threshold????
+Maximum????
+
+T3G2
+Time | Storm
+05:00 | none
+08:00 | none
+11:00 | none
+14:00 | none
+17:00 | none
+=========
+Threshold????
+Maximum????
+
+T3G3
+Time | Storm
+05:00 | none
+08:00 | none
+11:00 | none
+14:00 | none
+17:00 | none
+=========
+Threshold????
+Maximum????
+
+####### RISKS (HR/TH) #######
+T2G1
+Time | HRain | Storm
+17:00 | none | none
+18:00 | none | none
+19:00 | none | none
+=========
+HRain | Threshold????
+Storm | Threshold????
+
+T2G2
+Time | HRain | Storm
+17:00 | none | none
+18:00 | none | none
+19:00 | none | none
+=========
+HRain | Threshold????
+Storm | Threshold????
+
+T2G3
+Time | HRain | Storm
+17:00 | none | none
+18:00 | none | none
+19:00 | none | none
+=========
+HRain | Threshold????
+Storm | Threshold????
+
+T2G4
+Time | HRain | Storm
+17:00 | none | none
+18:00 | none | none
+19:00 | none | none
+=========
+HRain | Threshold????
+Storm | Threshold????
+
+Maximum HRain:
+GEO | Time | Max
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G4 | - | -
+=========
+MAX | - | -
+
+Maximum Storm:
+GEO | Time | Max
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G4 | - | -
+=========
+MAX | - | -
+
+Maximum Thunder:
+GEO | Time | Max
+=========
+MAX | - | -
+ Z:HIGH208
+
+---
+
+## Alternative Risikoanalyse
+
+Heat24–Cold0–Rain10%@17–Wind4@17–Gew:-–Gew+1:-
+[2025-08-04 18:32:30] [notification.email_client] [INFO] EMAIL GENERATED - Length: 6149 characters
+[2025-08-04 18:32:31] [notification.email_client] [INFO] EMAIL SENT SUCCESSFULLY to henningemmrich@icloud.com
+[2025-08-04 18:32:31] [notification.modular_sms_client] [INFO] Modular SMS send_gr20_report called
+[2025-08-04 18:32:31] [notification.modular_sms_client] [INFO] SMS sending disabled
+[2025-08-04 18:32:31] [logic.report_scheduler] [INFO] Updated state after scheduled report at 2025-08-04 18:32:29.219044
+Starting GR20 Weather Report Monitor...
+Configuration loaded successfully
+SMS client initialized successfully
+SMS mode: production
+SMS recipient: +4917717816897
+Components initialized successfully
+Current stage: Manganu
+Using first point: 42.286473, 8.893564
+Current position: 42.286473, 8.893564
+Current stage: Manganu
+Generating evening report for stage: Manganu
+Report generated successfully
+Result Output: Manganu: N12 D29 R- PR- W10.8@17(14.4@17) G- TH- TH+:- HR:-TH:- Z:Z:HIGH208
+Debug Output Length: 5979 characters
+Current risk score for Manganu: 0.00
+Manual mode: evening
+Getting tomorrow's weather data for evening report...
+Fetching weather data for tomorrow's stage: Petra
+Fetching weather for point 1/3: 42.219882, 8.980494
+MeteoFrance tomorrow data fetched for point 1 (13 entries)
+Fetching weather for point 2/3: 42.210865, 9.006806
+MeteoFrance tomorrow data fetched for point 2 (13 entries)
+Fetching weather for point 3/3: 42.198058, 9.051533
+MeteoFrance tomorrow data fetched for point 3 (13 entries)
+Total tomorrow weather data sources: 39
+Getting day after tomorrow's thunderstorm data for evening report...
+Fetching thunderstorm data for day after tomorrow's stage: Onda
+Fetching thunderstorm data for point 1/3: 42.198159, 9.0522
+MeteoFrance thunderstorm data fetched for point 1
+Fetching thunderstorm data for point 2/3: 42.194579, 9.06349
+MeteoFrance thunderstorm data fetched for point 2
+Fetching thunderstorm data for point 3/3: 42.153294, 9.074076
+MeteoFrance thunderstorm data fetched for point 3
+Total thunderstorm data sources for day after tomorrow: 3
+Analyzing tomorrow's weather data...
+Analyzing day after tomorrow's thunderstorm data...
+Report should be sent (type: evening)
+Fetching vigilance alerts...
+Added 6 vigilance alerts to report data
+Sending email weather report...
+
+=== EMAIL CONTENT ===
+Subject: GR20 Manganu:  (evening)
+Message: Manganu: N12 D29 R- PR- W10.8@17(14.4@17) G- TH- TH+:- HR:-TH:- Z:Z:HIGH208
+
+# DEBUG DATENEXPORT
+
+Berichts-Typ: evening
+
+heute: 2025-08-04, Manganu, 4 Punkte
+  T1G1 "lat": 42.286473, "lon": 8.893564
+  T1G2 "lat": 42.25421, "lon": 8.925527
+  T1G3 "lat": 42.229355, "lon": 8.977679
+  T1G4 "lat": 42.22026, "lon": 8.980731
+morgen: 2025-08-05, Petra, 3 Punkte
+  T2G1 "lat": 42.219882, "lon": 8.980494
+  T2G2 "lat": 42.210865, "lon": 9.006806
+  T2G3 "lat": 42.198058, "lon": 9.051533
+übermorgen: 2025-08-06, Onda, 3 Punkte
+  T3G1 "lat": 42.198159, "lon": 9.0522
+  T3G2 "lat": 42.194579, "lon": 9.06349
+  T3G3 "lat": 42.153294, "lon": 9.074076
+
+####### NIGHT (N) #######
+T1G3 | 12
+=========
+MIN | 12
+
+####### DAY (D) #######
+T2G1 | 28.9
+T2G2 | 28.4
+T2G3 | 28.4
+=========
+MAX | 29
+
+####### RAIN (R) #######
+T2G1
+Time | Rain (mm)
+4:00 | 0
+5:00 | 0
+6:00 | 0
+7:00 | 0
+8:00 | 0
+9:00 | 0
+10:00 | 0
+11:00 | 0
+12:00 | 0
+13:00 | 0
+14:00 | 0
+15:00 | 0
+16:00 | 0
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+Threshold????
+17:00 | 0 (Max)
+
+T2G2
+Time | Rain (mm)
+4:00 | 0
+5:00 | 0
+6:00 | 0
+7:00 | 0
+8:00 | 0
+9:00 | 0
+10:00 | 0
+11:00 | 0
+12:00 | 0
+13:00 | 0
+14:00 | 0
+15:00 | 0
+16:00 | 0
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+Threshold????
+17:00 | 0 (Max)
+
+T2G3
+Time | Rain (mm)
+4:00 | 0
+5:00 | 0
+6:00 | 0
+7:00 | 0
+8:00 | 0
+9:00 | 0
+10:00 | 0
+11:00 | 0
+12:00 | 0
+13:00 | 0
+14:00 | 0
+15:00 | 0
+16:00 | 0
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+Threshold????
+17:00 | 0 (Max)
+
+T2G3
+Time | Rain (mm)
+4:00 | 0
+5:00 | 0
+6:00 | 0
+7:00 | 0
+8:00 | 0
+9:00 | 0
+10:00 | 0
+11:00 | 0
+12:00 | 0
+13:00 | 0
+14:00 | 0
+15:00 | 0
+16:00 | 0
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+Threshold????
+17:00 | 0 (Max)
+
+Threshold
+GEO | Time | mm
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G4 | - | -
+=========
+Threshold | - | -
+Maximum:
+GEO | Time | Max
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G4 | - | -
+=========
+MAX | - | -
+
+####### PRAIN (PR) #######
+T2G1
+Time | Rain (%)
+05:00 | 0
+08:00 | 0
+11:00 | 0
+14:00 | 0
+17:00 | 10
+=========
+17:00 | 10.0% (Max)
+
+T2G2
+Time | Rain (%)
+05:00 | 0
+08:00 | 0
+11:00 | 0
+14:00 | 0
+17:00 | 10
+=========
+17:00 | 10.0% (Max)
+
+T2G3
+Time | Rain (%)
+05:00 | 0
+08:00 | 0
+11:00 | 0
+14:00 | 0
+17:00 | 10
+=========
+17:00 | 10.0% (Max)
+
+Threshold
+GEO | Time | %
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+=========
+Threshold | - | -
+
+Maximum:
+GEO | Time | Max
+T2G1 | 17:00 | 10
+T2G2 | 17:00 | 10
+T2G3 | 17:00 | 10
+=========
+MAX | 17:00 | 10.0
+
+####### WIND (W) #######
+T2G1
+Time | Wind (km/h)
+17:00 | 10.8
+18:00 | 3.6
+19:00 | 3.6
+=========
+17:00 | 10.8 (Threshold)
+17:00 | 10.8 (Max)
+
+T2G2
+Time | Wind (km/h)
+17:00 | 10.8
+18:00 | 3.6
+19:00 | 3.6
+=========
+17:00 | 10.8 (Threshold)
+17:00 | 10.8 (Max)
+
+T2G3
+Time | Wind (km/h)
+17:00 | 14.4
+18:00 | 7.2
+19:00 | 7.2
+=========
+17:00 | 14.4 (Threshold)
+17:00 | 14.4 (Max)
+
+Threshold
+GEO | Time | km/h
+T2G1 | 17 | 10.8
+T2G2 | 17 | 10.8
+T2G3 | 17 | 14.4
+T2G4 | 17 | 14.4
+=========
+Threshold | 17 | 10.8
+
+Maximum:
+GEO | Time | Max
+T2G1 | 17 | 10.8
+T2G2 | 17 | 10.8
+T2G3 | 17 | 14.4
+T2G4 | 17 | 14.4
+=========
+MAX | 17 | 14.4
+
+####### GUST (G) #######
+T2G1
+Time | Gust (km/h)
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+17:00 | 0.0 (Max)
+
+T2G2
+Time | Gust (km/h)
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+17:00 | 0.0 (Max)
+
+T2G3
+Time | Gust (km/h)
+17:00 | 0
+18:00 | 0
+19:00 | 0
+=========
+17:00 | 0.0 (Max)
+
+Threshold
+GEO | Time | km/h
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G4 | - | -
+=========
+Threshold | - | -
+
+Maximum:
+GEO | Time | Max
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G4 | - | -
+=========
+MAX | - | -
+
+####### THUNDERSTORM (TH) #######
+T2G1
+Time | Storm
+4:00 | none
+5:00 | none
+6:00 | none
+7:00 | none
+8:00 | none
+9:00 | none
+10:00 | none
+11:00 | none
+12:00 | none
+13:00 | none
+14:00 | none
+15:00 | none
+16:00 | none
+17:00 | none
+18:00 | none
+19:00 | none
+=========
+Threshold????
+Maximum????
+
+T2G2
+Time | Storm
+4:00 | none
+5:00 | none
+6:00 | none
+7:00 | none
+8:00 | none
+9:00 | none
+10:00 | none
+11:00 | none
+12:00 | none
+13:00 | none
+14:00 | none
+15:00 | none
+16:00 | none
+17:00 | none
+18:00 | none
+19:00 | none
+=========
+Threshold????
+Maximum????
+
+T2G3
+Time | Storm
+4:00 | none
+5:00 | none
+6:00 | none
+7:00 | none
+8:00 | none
+9:00 | none
+10:00 | none
+11:00 | none
+12:00 | none
+13:00 | none
+14:00 | none
+15:00 | none
+16:00 | none
+17:00 | none
+18:00 | none
+19:00 | none
+=========
+Threshold????
+Maximum????
+
+T2G3
+Time | Storm
+4:00 | none
+5:00 | none
+6:00 | none
+7:00 | none
+8:00 | none
+9:00 | none
+10:00 | none
+11:00 | none
+12:00 | none
+13:00 | none
+14:00 | none
+15:00 | none
+16:00 | none
+17:00 | none
+18:00 | none
+19:00 | none
+=========
+Threshold????
+Maximum????
+
+Threshold
+GEO | Time | level
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G3 | - | -
+=========
+Threshold | - | -
+
+Maximum:
+GEO | Time | Max
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G3 | - | -
+=========
+MAX | - | -
+####### THUNDERSTORM +1 (TH+1) #######
+T3G1
+Time | Storm
+05:00 | none
+08:00 | none
+11:00 | none
+14:00 | none
+17:00 | none
+=========
+Threshold????
+Maximum????
+
+T3G2
+Time | Storm
+05:00 | none
+08:00 | none
+11:00 | none
+14:00 | none
+17:00 | none
+=========
+Threshold????
+Maximum????
+
+T3G3
+Time | Storm
+05:00 | none
+08:00 | none
+11:00 | none
+14:00 | none
+17:00 | none
+=========
+Threshold????
+Maximum????
+
+####### RISKS (HR/TH) #######
+T2G1
+Time | HRain | Storm
+17:00 | none | none
+18:00 | none | none
+19:00 | none | none
+=========
+HRain | Threshold????
+Storm | Threshold????
+
+T2G2
+Time | HRain | Storm
+17:00 | none | none
+18:00 | none | none
+19:00 | none | none
+=========
+HRain | Threshold????
+Storm | Threshold????
+
+T2G3
+Time | HRain | Storm
+17:00 | none | none
+18:00 | none | none
+19:00 | none | none
+=========
+HRain | Threshold????
+Storm | Threshold????
+
+T2G4
+Time | HRain | Storm
+17:00 | none | none
+18:00 | none | none
+19:00 | none | none
+=========
+HRain | Threshold????
+Storm | Threshold????
+
+Maximum HRain:
+GEO | Time | Max
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G4 | - | -
+=========
+MAX | - | -
+
+Maximum Storm:
+GEO | Time | Max
+T2G1 | - | -
+T2G2 | - | -
+T2G3 | - | -
+T2G4 | - | -
+=========
+MAX | - | -
+
+Maximum Thunder:
+GEO | Time | Max
+=========
+MAX | - | -
+ Z:HIGH208
+
+---
+
+## Alternative Risikoanalyse
+
+Heat24–Cold0–Rain10%@17–Wind4@17–Gew:-–Gew+1:-
+Length: 6149 characters
+=====================
+
+Email weather report sent successfully
+Sending SMS weather report...
+Failed to send SMS weather report
+Scheduler state updated

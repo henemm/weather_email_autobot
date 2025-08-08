@@ -1,0 +1,42 @@
+{
+  "stage_name": "Vergio",
+  "report_date": "2025-08-07",
+  "comparison_time": "2025-08-07T08:30:03.740027",
+  "should_send": true,
+  "change_details": {
+    "reason": "significant_changes_detected",
+    "changes": [
+      {
+        "element": "rain_mm",
+        "threshold_key": "rain_amount"
+      },
+      {
+        "element": "gust",
+        "threshold_key": "wind_speed"
+      }
+    ],
+    "rain_mm": {
+      "changed": true,
+      "old_value": 0,
+      "new_value": 0,
+      "old_time": "05",
+      "new_time": "08"
+    },
+    "gust": {
+      "changed": true,
+      "old_value": 0.0,
+      "new_value": 0.0,
+      "old_time": "05",
+      "new_time": "08"
+    }
+  },
+  "delta_thresholds": {
+    "rain_probability": 10.0,
+    "rain_amount": 1.0,
+    "temperature": 5.0,
+    "thunderstorm": 1,
+    "wind_speed": 5.0,
+    "max_daily_reports": 4,
+    "min_interval_min": 59
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "stage_name": "FONT-ROMEU-ODEILLO-VIA",
+  "report_date": "2025-08-08",
+  "comparison_time": "2025-08-08T15:00:02.685646",
+  "should_send": true,
+  "change_details": {
+    "reason": "significant_changes_detected",
+    "changes": [
+      {
+        "element": "rain_mm",
+        "threshold_key": "rain_amount"
+      },
+      {
+        "element": "rain_percent",
+        "threshold_key": "rain_probability"
+      },
+      {
+        "element": "wind",
+        "threshold_key": "wind_speed"
+      },
+      {
+        "element": "gust",
+        "threshold_key": "wind_speed"
+      }
+    ],
+    "rain_mm": {
+      "changed": true,
+      "old_value": 0,
+      "new_value": 0,
+      "old_time": "04:00",
+      "new_time": "14"
+    },
+    "rain_percent": {
+      "changed": true,
+      "old_value": 50,
+      "new_value": 10.0,
+      "old_time": "17:00",
+      "new_time": "17"
+    },
+    "wind": {
+      "changed": true,
+      "old_value": 6,
+      "new_value": 21.6,
+      "old_time": "14:00",
+      "new_time": "15"
+    },
+    "gust": {
+      "changed": true,
+      "old_value": 12,
+      "new_value": 43.2,
+      "old_time": "15:00",
+      "new_time": "16"
+    }
+  },
+  "delta_thresholds": {
+    "rain_probability": 1.0,
+    "rain_amount": 1.5,
+    "temperature": 1.0,
+    "thunderstorm": 1,
+    "wind_speed": 1.0,
+    "max_daily_reports": 4,
+    "min_interval_min": 90
+  }
+}

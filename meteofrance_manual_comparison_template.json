@@ -1,0 +1,222 @@
+{
+  "comparison_date": "2025-08-03",
+  "location": {
+    "name": "Prunelli-di-Fiumorbo",
+    "coordinates": {
+      "lat": 42.0167,
+      "lon": 9.4000
+    },
+    "meteofrance_url": "https://meteofrance.com/previsions-meteo-france/prunelli-di-fiumorbo/20243"
+  },
+  "meteofrance_website_data": {
+    "current_conditions": {
+      "temperature": null,
+      "condition": null,
+      "wind_speed": null,
+      "wind_gust": null,
+      "rain_1h": null,
+      "notes": "Aktuelle Bedingungen von der Website"
+    },
+    "today_forecast": {
+      "temp_min": null,
+      "temp_max": null,
+      "condition": null,
+      "rain_24h": null,
+      "wind_max": null,
+      "notes": "Tagesvorhersage für heute"
+    },
+    "hourly_forecast": [
+      {
+        "time": "04:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "05:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "06:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "07:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "08:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "09:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "10:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "11:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "12:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "13:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "14:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "15:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "16:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "17:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "18:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      },
+      {
+        "time": "19:00",
+        "temperature": null,
+        "condition": null,
+        "wind_speed": null,
+        "wind_gust": null,
+        "rain_1h": null,
+        "rain_probability": null
+      }
+    ],
+    "weather_conditions_detected": {
+      "rain": false,
+      "thunderstorm": false,
+      "high_wind": false,
+      "high_temperature": false,
+      "low_temperature": false,
+      "notes": "Welche Wetterbedingungen wurden auf der Website erkannt?"
+    }
+  },
+  "our_system_output": {
+    "morning_report": {
+      "result_output": null,
+      "debug_output_sections": {
+        "night": null,
+        "day": null,
+        "rain_mm": null,
+        "rain_percent": null,
+        "wind": null,
+        "gust": null,
+        "thunderstorm": null,
+        "thunderstorm_plus_one": null,
+        "risks": null
+      }
+    },
+    "evening_report": {
+      "result_output": null,
+      "debug_output_sections": {
+        "night": null,
+        "day": null,
+        "rain_mm": null,
+        "rain_percent": null,
+        "wind": null,
+        "gust": null,
+        "thunderstorm": null,
+        "thunderstorm_plus_one": null,
+        "risks": null
+      }
+    }
+  },
+  "comparison_results": {
+    "temperature_match": null,
+    "rain_match": null,
+    "wind_match": null,
+    "thunderstorm_match": null,
+    "overall_accuracy": null,
+    "issues_found": [],
+    "notes": "Vergleich zwischen Météo-France Website und unserem System"
+  }
+} 

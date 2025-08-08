@@ -1,0 +1,19 @@
+{
+  "stage_name": "Chaumont",
+  "report_date": "2025-08-05",
+  "comparison_time": "2025-08-05T17:00:06.442277",
+  "should_send": false,
+  "change_details": {
+    "reason": "no_significant_changes",
+    "changes": []
+  },
+  "delta_thresholds": {
+    "rain_probability": 10.0,
+    "rain_amount": 1.0,
+    "temperature": 5.0,
+    "thunderstorm": 1,
+    "wind_speed": 5.0,
+    "max_daily_reports": 4,
+    "min_interval_min": 59
+  }
+}

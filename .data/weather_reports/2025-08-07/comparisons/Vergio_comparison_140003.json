@@ -1,0 +1,19 @@
+{
+  "stage_name": "Vergio",
+  "report_date": "2025-08-07",
+  "comparison_time": "2025-08-07T14:00:03.094246",
+  "should_send": false,
+  "change_details": {
+    "reason": "no_significant_changes",
+    "changes": []
+  },
+  "delta_thresholds": {
+    "rain_probability": 10.0,
+    "rain_amount": 1.0,
+    "temperature": 5.0,
+    "thunderstorm": 1,
+    "wind_speed": 5.0,
+    "max_daily_reports": 4,
+    "min_interval_min": 59
+  }
+}

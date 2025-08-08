@@ -1,0 +1,18 @@
+---
+alwaysApply: true
+---
+## 🧪 Tests & Debugging
+
+- **Fallback-Tests deaktiviert**
+- Unit-Tests sollen prüfen:
+  - Erfolgreiche MeteoFrance-Response bei realem Request
+  - Fehlertoleranz bei Response mit strukturellem Fehler
+- Entwickler: Fehlerverdacht = erst Code prüfen, dann API
+
+---
+
+## 📦 Status
+
+- ✅ Ab sofort gültig
+- 🔒 Verpflichtend in allen Produktionsläufen
+- 🚫 Open-Meteo ist deaktiviert

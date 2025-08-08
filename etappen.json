@@ -1,5 +1,39 @@
 [
   {
+    "name": "Test-Zevaco",
+    "punkte": [
+      {
+        "lat": 41.9167,
+        "lon": 8.9000
+      },
+      {
+        "lat": 41.9267,
+        "lon": 8.9100
+      },
+      {
+        "lat": 41.9367,
+        "lon": 8.9200
+      }
+    ]
+  },
+  {
+    "name": "Test-Corsica",
+    "punkte": [
+      {
+        "lat": 42.0167,
+        "lon": 9.4000
+      },
+      {
+        "lat": 42.0267,
+        "lon": 9.4100
+      },
+      {
+        "lat": 42.0367,
+        "lon": 9.4200
+      }
+    ]
+  },
+  {
     "name": "Ortu",
     "punkte": [
       {
@@ -85,6 +119,41 @@
     ]
   },
   {
+    "name": "FONT-ROMEU-ODEILLO-VIA",
+    "punkte": [
+      {
+        "lat": 42.471359, 
+
+        "lon": 2.029742
+      },
+      {
+        "lat": 42.114069,
+        "lon": 9.157221
+      },
+      {
+        "lat": 42.077314,
+        "lon": 9.150127
+      }
+    ]
+  },
+  {
+    "name": "FONT-ROMEU-ODEILLO-VIA 2",
+    "punkte": [
+      {
+        "lat": 42.471359,
+        "lon": 2.029742
+      },
+      {
+        "lat": 42.036324,
+        "lon": 9.169495
+      },
+      {
+        "lat": 42.02803,
+        "lon": 9.194359
+      }
+    ]
+  },
+  {
     "name": "Manganu",
     "punkte": [
       {
@@ -105,6 +174,7 @@
       }
     ]
   },
+  
   {
     "name": "Petra",
     "punkte": [
@@ -157,11 +227,12 @@
     ]
   },
   {
-    "name": "Capanelle",
+    "name": "FONT-ROMEU-ODEILLO-VIA",
     "punkte": [
       {
-        "lat": 42.113672,
-        "lon": 9.119232
+        "lat": 42.471359, 
+
+        "lon": 2.029742
       },
       {
         "lat": 42.114069,
@@ -174,11 +245,11 @@
     ]
   },
   {
-    "name": "SanPetru",
+    "name": "FONT-ROMEU-ODEILLO-VIA 2",
     "punkte": [
       {
-        "lat": 42.077314,
-        "lon": 9.150127
+        "lat": 42.471359,
+        "lon": 2.029742
       },
       {
         "lat": 42.036324,

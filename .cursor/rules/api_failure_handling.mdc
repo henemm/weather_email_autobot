@@ -1,0 +1,58 @@
+# Regel: Umgang mit unvollständigen oder fehlerhaften API-Daten
+
+## Ziel
+Stelle sicher, dass Rohdaten aus der MeteoFrance API vollständig, korrekt zugeordnet und verarbeitbar vorliegen. Fehlerhafte oder unzureichend aufbereitete API-Daten müssen zuverlässig erkannt, dokumentiert und lokalisiert werden – insbesondere wenn es sich **nicht** um echte API-Ausfälle handelt.
+
+---
+
+## Regel 1: Differenzierung echter API-Ausfälle vs. Parsing-/Nutzungsfehler
+
+- Es darf **nicht** pauschal ein „API-Failure“ angenommen werden, wenn einzelne Datenfelder leer oder `None` sind.
+- Nur wenn die API eine Fehlerantwort liefert (z. B. HTTP 500, 503, API-spezifischer Fehlercode), darf der Begriff `MeteoFrance API failure` verwendet werden.
+- In allen anderen Fällen ist von einem **Daten- oder Verarbeitungsfehler auf Cursor-Seite** auszugehen und entsprechend zu kennzeichnen.
+
+---
+
+## Regel 2: Behandlung fehlerhafter Daten (Beispiele)
+
+| Problemart                             | Beschreibung                                                                 | Folge                                       |
+|----------------------------------------|------------------------------------------------------------------------------|---------------------------------------------|
+| UNIX-Timestamps statt Uhrzeit (z. B. `1753844400`) | Zeitstempel wurde nicht in lesbare Zeit umgerechnet                         | Muss lokal zu `HH:MM` konvertiert werden    |
+| Uhrzeit = `Unknown`                    | Zeitinformation fehlt – vermutlich fehlerhafte Verarbeitung durch Cursor     | Muss als **Cursor-Fehler** markiert werden  |
+| Temperaturdaten ohne Quelle            | Temperaturdaten vorhanden, aber keine Zuordnung zur Tagesstruktur           | Muss analysiert und repariert werden        |
+| Alert-Felder leer oder `unbekannt`     | Struktur oder Zuordnung der Alert-Daten nicht korrekt umgesetzt             | Parsing-Fehler prüfen                       |
+
+---
+
+## Regel 3: Debug-Darstellung der Rohdaten
+
+- Alle Tabellen **müssen Uhrzeit-Felder enthalten**, korrekt lesbar (lokale Zeitzone, `HH:MM`).
+- Leere Zellen oder Felder mit `None`, `Unknown`, `-` **müssen** separat gezählt und im Kopftext je Abschnitt als `leere/ungültige Werte: X/Y` zusammengefasst werden.
+- Tabellen mit durchgehend leeren Feldern dürfen **nicht kommentarlos** erzeugt werden.
+- Jede Tabelle muss mit einem Metakopf eingeleitet werden:
+
+```markdown
+### Quelle: <API> / <Substruktur>
+Position: <Lat>, <Lon>
+Datum: YYYY-MM-DD
+Einträge: 4 (gültig: 2, ungültig: 2)
+
+## Regel 4: Prioritätensetzung bei Reparatur
+	•	Wichtigste Aufgaben:
+	1.	Umrechnung aller Zeitstempel in Uhrzeiten
+	2.	Korrekte Zeitzuordnung (lokal, falls UTC geliefert wird)
+	3.	Sicherstellung der Tagesstruktur (forecast → täglich/stündlich)
+	4.	Alerts auf Regionsebene klar strukturiert
+	5.	Verzicht auf Fehlannahme „API-Failure“, wenn Felder leer sind
+
+⸻
+
+## TODO für Cursor (konkret):
+	•	Zeitstempel in probability_forecast korrekt zu Uhrzeiten konvertieren
+	•	Unknown-Uhrzeiten im forecast (stundenweise) durch echte Uhrzeiten ersetzen
+	•	Leere Felder wie rain_intensity, storm_3h, condition systematisch prüfen und zählen
+	•	Alert-Farben und Stufen korrekt verarbeiten, statt „unbekannt“ zu verwenden
+	•	Differenzieren, ob None-Werte aus der API oder durch Parsingfehler entstehen
+	•	Alle bereinigten Tabellen wie in debug/example_weather_debug_2025-07-30.md strukturieren
+
+⸻
