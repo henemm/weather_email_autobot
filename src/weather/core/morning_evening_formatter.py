@@ -161,14 +161,15 @@ class MorningEveningFormatter:
                 max_time = self._format_time_hour(weather_data.wind_max_time)
                 return f"W{threshold_value:.0f}@{threshold_time}({max_value:.0f}@{max_time})"
             else:
+                # Fallback: show at least threshold@time if we have a max above threshold
                 return f"W{threshold_value:.0f}@{threshold_time}"
         
         return "W-"
     
     def _format_gust_field(self, weather_data: AggregatedWeatherData) -> str:
         """Format wind gust field (G20@11(30@17))."""
-        # Use wind_speed_threshold as gust threshold for now
-        threshold_kmh = self.config.wind_speed_threshold
+        # Prefer dedicated gust threshold; fallback to wind threshold
+        threshold_kmh = getattr(self.config, 'wind_gust_threshold', self.config.wind_speed_threshold)
         
         # Check if we have threshold data
         has_threshold = (weather_data.max_wind_gusts and 
@@ -179,16 +180,20 @@ class MorningEveningFormatter:
             threshold_time = self._format_time_hour(weather_data.wind_gusts_max_time)
             max_value = weather_data.max_wind_gusts
             
-            # For gust, we need threshold and max values
-            # Threshold should be the config threshold, max is the actual max
+            # Threshold shown is the configured threshold; max is actual
             threshold_value = threshold_kmh
             
-            # For now, assume max time is 17 (as per test expectation)
-            # In real implementation, this should be calculated from hourly data
-            max_time = "17"
+            # If we know a distinct max time, use it; else fallback to '-'
+            max_time = self._format_time_hour(weather_data.wind_gusts_max_time) if weather_data.wind_gusts_max_time else "-"
             
             return f"G{threshold_value:.0f}@{threshold_time}({max_value:.0f}@{max_time})"
         
+        # Fallback: if max gust exists above threshold but metadata incomplete, still show value
+        if weather_data.max_wind_gusts and weather_data.max_wind_gusts >= threshold_kmh:
+            max_value = weather_data.max_wind_gusts
+            max_time = self._format_time_hour(weather_data.wind_gusts_max_time) if weather_data.wind_gusts_max_time else "-"
+            return f"G{threshold_kmh:.0f}@-({max_value:.0f}@{max_time})"
+
         return "G-"
     
     def _format_thunderstorm_field(self, weather_data: AggregatedWeatherData) -> str:

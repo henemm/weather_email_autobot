@@ -185,6 +185,7 @@ class ReportConfig:
     thunderstorm_probability_threshold: float = 20.0
     rain_amount_threshold: float = 2.0
     wind_speed_threshold: float = 20.0
+    wind_gust_threshold: float = 20.0
     temperature_threshold: float = 32.0
     
     # Time windows
@@ -225,6 +226,7 @@ def create_report_config_from_yaml(config_dict: Dict[str, Any]) -> ReportConfig:
         thunderstorm_probability_threshold=thresholds.get('thunderstorm_probability', 20.0),
         rain_amount_threshold=thresholds.get('rain_amount', 2.0),
         wind_speed_threshold=thresholds.get('wind_speed', 20.0),
+        wind_gust_threshold=thresholds.get('wind_gust_threshold', thresholds.get('wind_speed', 20.0)),
         temperature_threshold=thresholds.get('temperature', 32.0),
         max_report_length=config_dict.get('max_characters', 160),
         subject_base=config_dict.get('smtp', {}).get('subject', 'GR20 Wetter'),

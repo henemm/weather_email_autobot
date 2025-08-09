@@ -213,8 +213,17 @@ class ModularSmsClient:
             logger.info("SMS sending disabled")
             return False
         
-        # Use the central report text generation for SMS
-        message_text = generate_gr20_report_text(report_data, self.config)
+        # SMS must ONLY contain the compact result_output (no debug)
+        message_text = report_data.get("result_output")
+        if not message_text:
+            # Fallback: generate text but do NOT append debug
+            generated = generate_gr20_report_text(report_data, self.config)
+            # If generate_gr20_report_text appended debug, strip it at marker
+            marker = "# DEBUG DATENEXPORT"
+            if marker in generated:
+                message_text = generated.split(marker, 1)[0].strip()
+            else:
+                message_text = generated
         logger.info(f"Generated SMS text: {message_text}")
         
         # Send SMS

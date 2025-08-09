@@ -940,14 +940,50 @@ class MorningEveningRefactor:
             # Use first coordinate point for department mapping
             lat, lon = stage_coordinates[0]
             
-            # Import department mapper
-            from wetter.department_mapper import get_warning_data_for_coordinates
-            
-            # Get warning data using department mapping
-            warning_data = get_warning_data_for_coordinates(lat, lon)
-            if not warning_data:
-                logger.warning(f"No warning data available for risks processing on {stage_date} for coordinates {lat}, {lon}")
+            # Map to department and fetch warnings
+            from wetter.department_mapper import get_department_from_coordinates
+            department = get_department_from_coordinates(lat, lon)
+            if not department:
+                logger.warning(f"No department mapping available for coordinates {lat}, {lon}")
                 return result
+            
+            # Import API client locally
+            from meteofrance_api.client import MeteoFranceClient
+            client = MeteoFranceClient()
+            
+            # For evening, prefer D+1 from full warnings; for morning, use current
+            warning_data = None
+            tomorrow_available = True
+            if report_type == 'evening':
+                try:
+                    full = client.get_warning_full(department)
+                    # Try to read timelaps/timeline for target date
+                    days = getattr(full, 'timelaps', None) or getattr(full, 'timelapse', None) or getattr(full, 'time_laps', None)
+                    found = False
+                    if days:
+                        for day in days:
+                            ts = day.get('dt') or day.get('date') or day.get('day_date')
+                            ddate = None
+                            if ts is not None:
+                                try:
+                                    ddate = datetime.fromtimestamp(ts).date() if isinstance(ts, (int, float)) else date.fromisoformat(str(ts)[:10])
+                                except Exception:
+                                    ddate = None
+                            if ddate == stage_date:
+                                warning_data = day
+                                found = True
+                                break
+                    if not found:
+                        tomorrow_available = False
+                except Exception as e:
+                    logger.warning(f"Failed to fetch warning_full for department {department}: {e}")
+                    tomorrow_available = False
+            else:
+                try:
+                    warning_data = client.get_warning_current_phenomenons(department)
+                except Exception as e:
+                    logger.warning(f"Failed to fetch current phenomenons for department {department}: {e}")
+                    return result
             
             # Level hierarchy for threshold comparison
             level_hierarchy = {'none': 0, 'L': 1, 'M': 2, 'H': 3, 'R': 4}
@@ -963,9 +999,17 @@ class MorningEveningRefactor:
             storm_threshold_level = None
             storm_threshold_time = None
             
-            # Process warning data from CurrentPhenomenons object
-            # The warning_data is a CurrentPhenomenons object with phenomenons_max_colors
-            phenomenons_data = warning_data.phenomenons_max_colors
+            # Process warning data
+            if report_type == 'evening':
+                if not tomorrow_available:
+                    # Mark as not available and return empty to suppress output
+                    result.debug_info = {'tomorrow_available': False}
+                    return result
+                # warning_data is a dict-like day entry with 'phenomenons_items'
+                phenomenons_data = warning_data.get('phenomenons_items') or warning_data.get('phenomenons') or []
+            else:
+                # Morning: CurrentPhenomenons object with phenomenons_max_colors
+                phenomenons_data = getattr(warning_data, 'phenomenons_max_colors', [])
             
             # Phenomenon ID mapping based on Météo-France API documentation
             # 1: Vent violent (Wind)
@@ -974,14 +1018,19 @@ class MorningEveningRefactor:
             # 4: Neige-verglas (Snow/Ice)
             # 5: Canicule (Heat wave)
             # 6: Grand-froid (Cold wave)
-            
-            # Level mapping: 1=L, 2=M, 3=H, 4=R
-            level_mapping = {1: 'L', 2: 'M', 3: 'H', 4: 'R'}
+
+            # Correct level mapping (Météo-France):
+            # 1 = Green (no vigilance) -> none
+            # 2 = Yellow -> L
+            # 3 = Orange -> M
+            # 4 = Red -> H
+            level_mapping = {2: 'L', 3: 'M', 4: 'H'}
             
             for phenomenon in phenomenons_data:
                 try:
-                    phenomenon_id = phenomenon.get('phenomenon_id')
-                    max_color_id = phenomenon.get('phenomenon_max_color_id')
+                    # Handle both dict shapes
+                    phenomenon_id = str(phenomenon.get('phenomenon_id'))
+                    max_color_id = phenomenon.get('phenomenon_max_color_id') or phenomenon.get('color_id') or phenomenon.get('max_color_id')
                     
                     if not phenomenon_id or not max_color_id:
                         continue
@@ -999,21 +1048,19 @@ class MorningEveningRefactor:
                     if hrain_level != 'none':
                         if hrain_max_level is None or level_hierarchy[hrain_level] > level_hierarchy[hrain_max_level]:
                             hrain_max_level = hrain_level
-                            hrain_max_time = '17'  # Default time for current warnings
-                        
+                            hrain_max_time = None  # No time
                         if hrain_threshold_level is None:
                             hrain_threshold_level = hrain_level
-                            hrain_threshold_time = '17'  # Default time for current warnings
+                            hrain_threshold_time = None  # No time
                     
                     # Track Storm levels
                     if storm_level != 'none':
                         if storm_max_level is None or level_hierarchy[storm_level] > level_hierarchy[storm_max_level]:
                             storm_max_level = storm_level
-                            storm_max_time = '17'  # Default time for current warnings
-                        
+                            storm_max_time = None
                         if storm_threshold_level is None:
                             storm_threshold_level = storm_level
-                            storm_threshold_time = '17'  # Default time for current warnings
+                            storm_threshold_time = None
                     
                 except Exception as e:
                     logger.warning(f"Error processing phenomenon data for risks: {e}")
@@ -1034,7 +1081,8 @@ class MorningEveningRefactor:
                 'storm_threshold_value': storm_threshold_level,
                 'storm_threshold_time': storm_threshold_time,
                 'storm_max_value': storm_max_level,
-                'storm_max_time': storm_max_time
+                'storm_max_time': storm_max_time,
+                'tomorrow_available': True if report_type != 'evening' else tomorrow_available
             }
             
             return result
@@ -1281,7 +1329,41 @@ class MorningEveningRefactor:
                 else:
                     parts.append(f"W{threshold_part}")
             else:
-                parts.append("W-")
+                # Fallback: if processing didn't capture values, try deriving from last raw data
+                wind_threshold_cfg = self.thresholds.get('wind_speed', 20.0)
+                derived_max = None
+                derived_time = None
+                derived_threshold_time = None
+                try:
+                    if hasattr(self, '_last_weather_data') and self._last_weather_data:
+                        hourly_data = self._last_weather_data.get('hourly_data', [])
+                        # Determine stage date: evening -> tomorrow, morning -> today
+                        stage_date = report_data.report_date + timedelta(days=1) if report_data.report_type == 'evening' else report_data.report_date
+                        for point in hourly_data:
+                            for hour_data in point.get('data', []):
+                                if 'dt' in hour_data:
+                                    hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                    if hour_time.date() != stage_date:
+                                        continue
+                                    hour = hour_time.hour
+                                    if hour < 4 or hour > 19:
+                                        continue
+                                    speed_ms = hour_data.get('wind', {}).get('speed', 0) or 0
+                                    speed_kmh = speed_ms * 3.6
+                                    # capture first threshold crossing time
+                                    if derived_threshold_time is None and speed_kmh >= wind_threshold_cfg:
+                                        derived_threshold_time = f"{hour}"
+                                    if derived_max is None or speed_kmh > derived_max:
+                                        derived_max = speed_kmh
+                                        derived_time = f"{hour}"
+                except Exception:
+                    pass
+
+                if derived_max is not None and derived_max >= wind_threshold_cfg:
+                    # use derived_threshold_time if available
+                    parts.append(f"W{int(round(wind_threshold_cfg))}@{derived_threshold_time or '-'}({int(round(derived_max))}@{derived_time or '-'})")
+                else:
+                    parts.append("W-")
             
             # Gust - Use actual maximum values
             if report_data.gust.threshold_value is not None:
@@ -1295,7 +1377,39 @@ class MorningEveningRefactor:
                 else:
                     parts.append(f"G{threshold_part}")
             else:
-                parts.append("G-")
+                # Fallback: try deriving from last raw data
+                gust_threshold_cfg = self.thresholds.get('wind_gust_threshold', self.thresholds.get('wind_speed', 20.0))
+                derived_max = None
+                derived_time = None
+                derived_threshold_time = None
+                try:
+                    if hasattr(self, '_last_weather_data') and self._last_weather_data:
+                        hourly_data = self._last_weather_data.get('hourly_data', [])
+                        stage_date = report_data.report_date + timedelta(days=1) if report_data.report_type == 'evening' else report_data.report_date
+                        for point in hourly_data:
+                            for hour_data in point.get('data', []):
+                                if 'dt' in hour_data:
+                                    hour_time = datetime.fromtimestamp(hour_data['dt'])
+                                    if hour_time.date() != stage_date:
+                                        continue
+                                    hour = hour_time.hour
+                                    if hour < 4 or hour > 19:
+                                        continue
+                                    gust_ms = hour_data.get('wind', {}).get('gust', 0) or 0
+                                    gust_kmh = gust_ms * 3.6
+                                    # capture first threshold crossing time for gust
+                                    if derived_threshold_time is None and gust_kmh >= gust_threshold_cfg:
+                                        derived_threshold_time = f"{hour}"
+                                    if derived_max is None or gust_kmh > derived_max:
+                                        derived_max = gust_kmh
+                                        derived_time = f"{hour}"
+                except Exception:
+                    pass
+
+                if derived_max is not None and derived_max >= gust_threshold_cfg:
+                    parts.append(f"G{int(round(gust_threshold_cfg))}@{derived_threshold_time or '-'}({int(round(derived_max))}@{derived_time or '-'})")
+                else:
+                    parts.append("G-")
             
             # Thunderstorm
             if report_data.thunderstorm.threshold_value is not None:
@@ -1365,20 +1479,25 @@ class MorningEveningRefactor:
                 storm_max_value = report_data.risks.debug_info.get('storm_max_value')
                 storm_max_time = report_data.risks.debug_info.get('storm_max_time')
             
-            if hrain_threshold_value is not None or storm_threshold_value is not None:
-                # Format HRain part
+            # If evening and tomorrow not available, suppress HR/TH entirely
+            if report_data.report_type == 'evening' and hasattr(report_data.risks, 'debug_info') and report_data.risks.debug_info and report_data.risks.debug_info.get('tomorrow_available') is False:
+                parts.append("HR:-TH:-")
+            elif hrain_threshold_value is not None or storm_threshold_value is not None:
+                # Format HRain part (omit times; placeholders like @17 should not be shown)
                 if hrain_threshold_value is not None:
-                    hrain_part = f"{hrain_threshold_value}@{hrain_threshold_time}"
-                    if hrain_max_value != hrain_threshold_value:
-                        hrain_part = f"{hrain_threshold_value}@{hrain_threshold_time}({hrain_max_value}@{hrain_max_time})"
+                    if hrain_max_value is not None and hrain_max_value != hrain_threshold_value:
+                        hrain_part = f"{hrain_threshold_value}({hrain_max_value})"
+                    else:
+                        hrain_part = f"{hrain_threshold_value}"
                 else:
                     hrain_part = "-"
                 
-                # Format Storm part
+                # Format Storm part (omit times; placeholders like @17 should not be shown)
                 if storm_threshold_value is not None:
-                    storm_part = f"{storm_threshold_value}@{storm_threshold_time}"
-                    if storm_max_value != storm_threshold_value:
-                        storm_part = f"{storm_threshold_value}@{storm_threshold_time}({storm_max_value}@{storm_max_time})"
+                    if storm_max_value is not None and storm_max_value != storm_threshold_value:
+                        storm_part = f"{storm_threshold_value}({storm_max_value})"
+                    else:
+                        storm_part = f"{storm_threshold_value}"
                 else:
                     storm_part = "-"
                 
